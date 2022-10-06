@@ -1,0 +1,48 @@
+---
+title: "MPSA 2023 proposal" 
+date: "October 6, 2022"
+author:
+  - name: Andrew Heiss
+    email: aheiss@gsu.edu
+    orcid: 0000-0002-3948-3914
+    affiliations: 
+      - id: ays
+        name: Georgia State University
+        department: Andrew Young School of Policy Studies
+        city: Atlanta
+        region: GA
+    attributes:
+      corresponding: true
+  - name: Meng Ye
+    email: mye2@gsu.edu
+    affiliations:
+      - ref: ays
+format:
+  html: default
+  docx: default
+  pdf: default
+---
+
+# Title 
+
+*(102 characters; 250 limit)*
+
+The Implementation of China’s Overseas NGO Law and the Operating Space for International Civil Society
+
+# Brief Overview
+
+*(244 characters; 250 limit)*
+
+To better understand the effect of closing space for global civil society, we use administrative data collected under China’s 2017 Overseas NGO law to explore how NGO issue areas influence their operational flexibility under strict regulations.
+
+# Keywords
+
+*(49 characters; 250 limit)*
+
+China, international NGO, civil society, ONGO law
+
+# Abstract 
+
+*(1,500 characters; 1,500 limit)*
+
+China’s 2017 Overseas NGO (ONGO) Law is part of a larger global trend of legal restrictions on international NGOs (INGOs). However, the effects of this global crackdown on INGOs have been difficult to measure since there is often divergence between the formal de jure regulations and the de facto implementation of these laws. The enforcement of these laws also depends on the services provided by these organizations. In particular, authoritarian regimes display conflicting attitudes towards claim-making (e.g. advocacy) INGOs versus service-providing (e.g. humanitarian assistance) INGOs. In this paper, we measure the effect of China’s ONGO law on INGO operations since 2017. We test how INGO operational flexibility under the ONGO law is influenced by organizations’ issue areas. We argue that service provision INGOs have greater flexibility and are allowed to work in a larger number of provinces than their claim-making counterparts. China provides an excellent setting for testing our claim—the 2017 ONGO law regulates both claim-making and service-providing NGOs, and ambiguity in the law gives ample room for arbitrary discretion by authorities. We test our argument using multilevel Bayesian models with administrative data from 635 registered representative offices of INGOs registered in China between 2017–2021. Our results speak to the broader literature on closing civic space and provide an empirical illustration of the practical effect of NGO restrictions on global civil society.
