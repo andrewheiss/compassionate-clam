@@ -1,0 +1,274 @@
+---
+title: "ongo data cleaning"
+author: "Meng Ye"
+date: "2022-10-07"
+output: html_document
+---
+
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(here)
+library(lubridate)
+library(sf)
+library(mapchina)
+```
+
+
+## Import Data
+
+```{r import csv, message=FALSE, warning=FALSE}
+# manually cleaned Chinese ONGO regulator administrative data
+# ongo_manual_csv <- read_csv(here("data", "manual_data", "ongo-manual-clean.csv"))
+```
+
+```{r save rds}
+# saveRDS(ongo_manual_csv, here("data", "manual_data", "ongo_manual.rds"))
+```
+
+```{r import data from rds}
+ongo_manual <- readRDS(here("data", "manual_data", "ongo_manual.rds"))
+```
+
+
+Documentation of the pre-processing of scraped data 
+
+
+The inspected raw data is the version derived after inspecting the scraped csv file against the source website. The blank lines in the scraped csv file are from ROs that have been de-registered. The website (https://ngo.mps.gov.cn/ngo/portal/toInfogs.do) keep their names in the general list but their profiles are all blank now. 
+
+A couple of scraping errors have also been corrected in the process. That is cases where the RO is active but shown as blank rows in the scraped. I manually added those rows back.  
+
+For those that already been de-registered, I added back their `index`, `ro_name`, and `ro_id`, and generated a dichotomous indicator that they are no more "active" in the `still_active` column. 
+
+For the `still_active` variable, the values are manually input for the blank lines. After checking against the offical website, `FALSE` for those have indeed de-register and `TRUE` for those that turned out to be parsing errors. The rest NAs will be recoded to `TRUE` in data cleaning. 
+
+After the cross-checking process, the index number of ROs in our dataset is the same as the index in the official database as of 2022-10-4.
+
+The following columns are also manually coded:
+
+- `home`
+
+home county or region of the ONGO. Not using the name "country" to be flexible enough to denote, Hong Kong, Macau and Taiwan
+
+- `ro_count`
+
+There are cases where ONGOs are not granted to operate across China, so they register multiple ROs to cover enough number of provinces where they need to work. We surely want to include this variable because it is directly correlated with `geo_scope_num` 
+
+A related `multiple_index` is a index number created to identify siblings, in the form of 100-1, 100-2...(starting from 100 to ensure all have three digits) `NA` for ONGOs only having one RO. Note there can be cases where one of the siblings has been de-registered, but only several. 
+
+- `work_field` 
+
+`work_field` is the original mission statement in Chinese. The name "field" is chosen for the moment, because it seems "area" is more easily to be confused with the geographical scope
+`work_field_code1` is the main work field code
+`work_field_code2` is an alternative code for the work field if the ONGO's works touch on overlapping fields
+
+The field categories are (planed to be) decided based on Article 3 of the law. 
+
+*Overseas NGOs may, in accordance with the provisions of this Law, engage in undertakings of benefit to the public in the areas of the economy, education, science, culture, health, sports and environmental protection, as well as in the areas of poverty and disaster relief.*
+
+Earlier fields used 
+- Commerce and Trade Promotion
+- Science and Technology
+- Education
+- Charity and Public Benefit
+- Environment
+- Industry Promotion and Self-regulation
+- Public Health
+- International Exchange
+- Multiple Fields (usually grant-making foundations)
+
+**to be discussed**
+Some confusing one - plan to mark -> google translate -> discuss/decide together
+
+- `local_aim`
+There are cases where the aim/mission of the ONGO is attached to a locality. So I created this dummy to indicate such situation. 
+
+- `Index`
+
+Index number larger than 700 are ROs that were active at time of data scraping (Jan. 2022) but have been deregistered as of Oct. 2022. 
+
+*Note: RO/ro = representative office of ONGOs
+
+
+## Data Cleaning
+
+
+
+
+```{r corret data format}
+# get rid of extra spaces in the date column
+ongo <- ongo_manual |>
+  mutate(province_cn = str_sub(address, end = 2)) #province name from address
+```
+
+
+## Code Province Names
+
+Extracting Province List to check the name format and prepare for translation tribble
+
+```{r}
+province_list <- ongo |> 
+  group_by(province_cn) |> 
+  summarise(province_cn = first(province_cn)) |>
+  drop_na() |> #de-registered ones
+  as.list()
+province_list
+```
+
+There are totally 29 provinces (including provincial-level cities e.g. Beijing and Shanghai) that have ONGO rep offices.
+
+The maximum number of provinces that a RO can possible operate in is 32. 
+
+## Translation Tribbles
+
+```{r}
+province_name <- tribble(
+  ~province_cn, ~province_en,      ~province_code,
+  "北京",      "Beijing",        "BJ",
+  "上海",      "Shanghai",       "SH",
+  "天津",      "Tianjin",        "TJ",
+  "重庆",      "Chongqing",      "CQ",
+  "河北",      "Hebei",          "HE",
+  "山西",      "Beijing",        "SX",
+  "内蒙",      "Inner Mongolia", "NM",
+  "辽宁",      "Liaoning",       "LN",
+  "吉林",      "Jilin",          "JL",
+  "黑龙",      "Heilongjiang",   "HL",
+  "江苏",      "Jiangsu",        "JS",
+  "浙江",      "Zhejiang",       "ZJ",
+  "安徽",      "Anhui",          "AH",
+  "福建",      "Fujian",         "FJ",
+  "江西",      "Jiangxi",        "JX",
+  "山东",      "Shandong",       "SD",
+  "河南",      "Henan",          "HA",
+  "湖北",      "Hubei",          "HB",
+  "湖南",      "Hunan",          "HN",
+  "广东",      "Guangdong",      "GD",
+  "广西",      "Guangxi",        "GX",
+  "海南",      "Hainan",         "HI",
+  "四川",      "Sichuan",        "SC",
+  "贵州",      "Guizhou",        "GZ",
+  "云南",      "Yunnan",         "YN",
+  "西藏",      "Tibet",          "XZ",
+  "陕西",      "Shaanxi",        "SN",
+  "甘肃",      "Gansu",          "GS",
+  "青海",      "Qinghai",        "QH",
+  "宁夏",      "Ningxia",        "NX",
+  "新疆",      "Xinjiang",       "XJ",
+  "兵团",      "Bingtuan",       "BT"
+)
+```
+
+## Adding English province name and clean other variables
+
+```{r}
+ongo <- ongo |>
+  left_join(province_name, by = "province_cn") |>
+  mutate(registration_date = ymd(registration_date), 
+         still_active = ifelse(is.na(still_active), TRUE, still_active),
+         geo_scope_num = str_count(geo_scope, ",") + 1) |>
+  mutate(geo_scope_num = ifelse(geo_scope == "中国境内", # recode "all over China"
+                                max(geo_scope_num, na.rm = TRUE), geo_scope_num))
+```
+
+
+```{r}
+#a glance at current columns
+summary(ongo)
+```
+
+## China sf data for fun 
+
+(https://github.com/xmc811/mapchina)
+
+```{r}
+#devtools::install_github("xmc811/mapchina", ref = "dev")
+library(mapchina)
+```
+
+```{r message=FALSE, warning=FALSE}
+sf_use_s2(FALSE) #https://github.com/xmc811/mapchina/issues/7#issuecomment-1028792066
+
+sf_china <- china |>
+        group_by(Name_Province) |>
+        summarise(geometry = st_union(geometry)) |> 
+        mutate(province_cn = str_sub(Name_Province, end = 2))
+```
+
+
+```{r }
+# summerize by province
+province_count <- ongo |>
+  group_by(province_cn) |>
+  summarise(ro_count = n())
+
+mapdata <-sf_china |> 
+  left_join(province_count, by = "province_cn") |> 
+  mutate(ro_count = ifelse(is.na(ro_count), 0, ro_count))
+
+labeldata <- mapdata |> 
+  filter(ro_count>0)
+```
+
+
+
+```{r fig.height=6, fig.width=8, message=FALSE, warning=FALSE}
+plot_map <- ggplot() +
+  geom_sf(data = mapdata,
+          aes(fill = ro_count), color = "white") +
+  scale_fill_viridis_c(option = "mako", begin = 0.1, end = 0.9, direction = -1) +
+  geom_sf_label(data = labeldata, aes(label = ro_count), 
+                nudge_y = - 0.8 , nudge_x = -0.1, size = 3, alpha = 0.7,) +
+  theme_minimal()
+plot_map
+```
+
+
+
+
+## Other notes
+
+There should be year fixed/random effects because 2017 is the first year of implementation, had a big first wave. 2018-2019 are normal years that ROs could not registered/were not familiar with the new law got registered. 2020 and 2021 are years when international communication was largely impacted by COVID. 
+
+`home` and `province` of ROs are very unbalanced, I think that's another reason we want to use Bayesian
+
+
+
+## Save data
+
+```{r save cleaned rds}
+saveRDS(ongo, here("data","derived_data", "ongo_cleaned.rds"))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
