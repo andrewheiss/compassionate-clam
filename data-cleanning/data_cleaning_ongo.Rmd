@@ -50,6 +50,11 @@ The following columns are also manually coded:
 
 home county or region of the ONGO. Not using the name "country" to be flexible enough to denote, Hong Kong, Macau and Taiwan
 
+- `psu_level`
+
+Dummy variable indicating whether the official sponsoring unit (for registration and annual audit) is at the national or local level. 
+It is clearly correlated with `geo_scope_num`, but should be a mediating factor for the relationship we are examine. 
+
 - `ro_count`
 
 There are cases where ONGOs are not granted to operate across China, so they register multiple ROs to cover enough number of provinces where they need to work. We surely want to include this variable because it is directly correlated with `geo_scope_num` 
@@ -58,7 +63,8 @@ A related `multiple_index` is a index number created to identify siblings, in th
 
 - `work_field` 
 
-`work_field` is the original mission statement in Chinese. The name "field" is chosen for the moment, because it seems "area" is more easily to be confused with the geographical scope
+`work_field` is the original mission statement in Chinese. The name "field" is chosen for the moment, because it seems "area" is more easily to be confused with the geographical scope. It is not called "mission" to differentiate from the mission of the mother organization which is not subject to approval of the authority. Also, the statement of the work field tends to be more concrete than missions. 
+
 `work_field_code1` is the main work field code
 `work_field_code2` is an alternative code for the work field if the ONGO's works touch on overlapping fields
 
@@ -81,7 +87,7 @@ Earlier fields used
 Some confusing one - plan to mark -> google translate -> discuss/decide together
 
 - `local_aim`
-There are cases where the aim/mission of the ONGO is attached to a locality. So I created this dummy to indicate such situation. 
+There are cases where the aim/mission of the ONGO is attached to a locality. So I created this dummy to indicate such situation. *However,* there seems to be some inconsistency in different ONGO's choices whether to use a location name in their work field. Also, it might be the case that the location limitation is added as requested by the authority. So probably should not use this variable. 
 
 - `Index`
 
