@@ -5,10 +5,12 @@ date: "2022-10-07"
 output: html_document
 ---
 
+Updated 12/15/2022
 
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(here)
+library(rvest)
 library(lubridate)
 library(sf)
 library(mapchina)
@@ -19,17 +21,27 @@ library(mapchina)
 
 ```{r import csv, message=FALSE, warning=FALSE}
 # manually cleaned Chinese ONGO regulator administrative data
-# ongo_manual_csv <- read_csv(here("data", "manual_data", "ongo-manual-clean.csv"))
+ ongo_manual_csv <- read_csv(here("data", "manual_data", "ongo-manual-clean.csv"))
 ```
 
 ```{r save rds}
-# saveRDS(ongo_manual_csv, here("data", "manual_data", "ongo_manual.rds"))
+ saveRDS(ongo_manual_csv, here("data", "manual_data", "ongo_manual.rds"))
 ```
 
 ```{r import data from rds}
 ongo_manual <- readRDS(here("data", "manual_data", "ongo_manual.rds"))
 ```
 
+```{r china file}
+# Chinafile data with English org names
+chinafile <- read_html("https://jessicachinafile.github.io/index_RO_table.html") |> 
+  html_element(css = "#filter") |>
+  html_table() |>
+  select(org_name_cn = `Organization Name (Chinese)`,
+         org_name_en = `Organization Name (English)`) |>
+  group_by(org_name_cn) |>
+  slice(1)
+```
 
 Documentation of the pre-processing of scraped data 
 
@@ -95,6 +107,58 @@ Index number larger than 700 are ROs that were active at time of data scraping (
 
 *Note: RO/ro = representative office of ONGOs
 
+## Work Field Coding notes
+
+
+**Decided by how the work fields of registered NGOs cluster**
+
+- **[Economy and trade]**
+
+- **[Environment]** (including animal protection)
+
+- **[Education]** (including youth development and international cultural exchange)
+
+- **[Charity and humanitarian]** poverty alleviation, disaster relief, etc., including rural development and social work
+  If rural development is researched at the macroeconomics level, coded as science and technology, eg. #375
+  
+- **[Science and technology]**
+
+- **[Industry association]**
+
+- **[Health]** public health and health care system support (professional training)
+
+- **[Arts and Culture]** including sports (noted as “sports” in `work_field_code2`) and international culture exchange
+
+- **[General]** usually grant-making organizations, Or working on general international communication, including among governments, Or working on multiple fields not overlapping
+
+(Chinese background) (ONGOs set up by Chinese communities abroad or by Chinese entities in foreign jurisdictions). Such ONGOs tend to have strong local connection with its origins. Not sure yet if should be kept as a separate variable. Now coded only in work_field_code2. 
+(equality)
+Only in `work_field_code2`, aim to right-based Charity and humanitarian and non-right-based Charity and humanitarian orgs
+
+**Coding rules used and notes**
+
+1. Education vs. Charity
+If charitable activities are all education related, e.g. building schools, donating education facilities and books, coded as education
+If the aids provided include other community support, e.g. building bridges, roads, medical facilities, coded as charity
+
+2. Economy and trade vs. Industry association
+If the trade promoted is focused on a particular industry (poultry, grains etc.), coded as industry association
+
+3. Arts and culture vs. education
+Now includes sports organizations too. 
+4. Industry association vs. health, science and technology, arts and culture
+There are professional association on health providers and certain techniques. Coded as health, science & technology at the moment because they also conducting activities of promoting certain techniques . And their nature of work can be quite different from industry associations on grains, wines, pecans etc. The are more of a professional association with specialized expertise. 
+Same as arts and culture organizations: e.g., ballet dancer association 
+Exception: specialized association coded as industry associations if only serving the member companies #91
+5. Health vs. Charity 
+If only providing medical aids to underprivileged communities, not building schools etc., coded as health 
+6. Charity vs. General 
+If multiple work, e.g., poverty alleviation, education, health can be encompassed by Charity and humanitarian, then former, or latter (e.g.)
+7. International exchange category is dropped because it is assimilated by other fields, i.e., international exchange in education, arts and culture, science and technology
+8. Limitations: The sample/population only covers those INGOs that got successfully registered
+9. Chinese background, equality and sports are coded in `work_field_code2`, we can derive separate variables for them if needed 
+10. Multiple ROs are coded based on the overall work area spans of the mother organization, not the specific RO, so ensure the work_area is consistent across ROs
+
 
 ## Data Cleaning
 
@@ -112,7 +176,7 @@ ongo <- ongo_manual |>
 
 Extracting Province List to check the name format and prepare for translation tribble
 
-```{r}
+```{r province list}
 province_list <- ongo |> 
   group_by(province_cn) |> 
   summarise(province_cn = first(province_cn)) |>
@@ -127,7 +191,7 @@ The maximum number of provinces that a RO can possible operate in is 32.
 
 ## Translation Tribbles
 
-```{r}
+```{r province cn to en tribble}
 province_name <- tribble(
   ~province_cn, ~province_en,      ~province_code,
   "北京",      "Beijing",        "BJ",
@@ -165,17 +229,37 @@ province_name <- tribble(
 )
 ```
 
-## Adding English province name and clean other variables
+### Adding English org name and clean other variables
 
-```{r}
+```{r add data cleanning 1}
 ongo <- ongo |>
   left_join(province_name, by = "province_cn") |>
   mutate(registration_date = ymd(registration_date), 
          still_active = ifelse(is.na(still_active), TRUE, still_active),
          geo_scope_num = str_count(geo_scope, ",") + 1) |>
   mutate(geo_scope_num = ifelse(geo_scope == "中国境内", # recode "all over China"
-                                max(geo_scope_num, na.rm = TRUE), geo_scope_num))
+                                max(geo_scope_num, na.rm = TRUE), geo_scope_num)) |>
+# reformat ro_name to merge with Chinafile data
+  mutate(org_name_cn = ifelse(province_cn == "内蒙", str_sub(ro_name, end = -7), str_sub(ro_name, end = -6))) |>
+  mutate(org_name_cn = ifelse(home == "South Korea", org_name_cn, str_remove(org_name_cn, "\\（.*\\）"))) |>
+  left_join(chinafile, by = "org_name_cn")
+
+table(is.na(ongo$org_name_en))
 ```
+
+
+### data cleaning 2
+```{r data cleanning 2}
+# Derive local connection variable
+ongo <- ongo |>
+  mutate(cn_background = case_when(work_field_code2 == "Chinese background" ~ 1, 
+                                   TRUE ~ 0),
+         local_aim = ifelse(!is.na(local_aim), 1, 0),
+         local_org_name = ifelse(!is.na(local_org_name), 1, 0),
+         local_connect = ifelse (cn_background + local_aim + local_org_name == 0, FALSE, TRUE))
+```
+
+
 
 
 ```{r}
@@ -248,8 +332,21 @@ saveRDS(ongo, here("data","derived_data", "ongo_cleaned.rds"))
 
 
 
+## Toy models
 
+```{r}
+model_simple <- lm(geo_scope_num ~ work_field_code1, data = ongo)
+summary(model_simple)
+```
 
+```{r}
+model_control <- lm(geo_scope_num ~ work_field_code1 + local_connect + psu_level + province_code, data = ongo)
+summary(model_control)
+```
+
+```{r}
+table(ongo$work_field_code1)
+```
 
 
 
