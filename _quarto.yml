@@ -1,0 +1,98 @@
+project:
+  title: "Compassionate Clam"
+  type: website
+
+  preview: 
+    port: 4444
+    browser: true
+    watch-inputs: false
+    navigate: true
+
+  render:
+    # Render all .qmd files
+    - "**/*.qmd"
+
+    # Don't render anything in the manuscript folder because otherwise all the 
+    # output gets placed in _site/ only, which is annoying. Instead this folder 
+    # needs to be rendered separately, and *before* the overall website project 
+    # (which is doable since this whole build process is orchestrated by targets)
+    - "!manuscript/"
+  
+  resources: 
+    # But *do* place the outputs from the manuscript in the rendered site folder
+    - "manuscript/output/"
+
+execute:
+  freeze: auto  # Re-render only when source changes
+
+bibliography: manuscript/references.bib
+csl: manuscript/csl/chicago-author-date.csl
+
+website:
+  repo-url: "https://github.com/andrewheiss/compassionate-clam"
+  repo-actions: [edit, issue]
+
+  page-navigation: true
+
+  navbar:
+    pinned: true
+    background: primary
+    search: true
+    left:
+      - text: "Data"
+        file: notebook/data.qmd
+      - text: "Analysis"
+        file: notebook/analysis.qmd
+      - text: "Presentations"
+        file: presentations/index.qmd
+      - text: "Manuscript"
+        file: notebook/manuscript.qmd
+    
+    right:
+      - icon: github
+        aria-label: github
+        href: https://github.com/andrewheiss/compassionate-clam
+    
+  sidebar:
+    - title: "Data"
+      style: docked
+      background: dark
+      contents:
+        - notebook/data.qmd
+        - notebook/clean-data.qmd
+    
+    - title: "Analysis"
+      contents:
+        - notebook/analysis.qmd
+        - section: "General details"
+          contents:
+            - notebook/exploratory.qmd
+        - section: "Models"
+          contents:
+            - notebook/model-details.qmd
+    
+    - title: "Empty space lol"
+    
+  page-footer:
+    left: |
+      Content {{< fa brands creative-commons >}} 2023 by Andrew Heiss and Meng Ye<br>
+      All content licensed under a {{< fa brands creative-commons >}}
+      {{< fa brands creative-commons-by >}} {{< fa brands creative-commons-nc >}}
+      [Creative Commons Attribution-NonCommercial 4.0 International license (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/)
+    right: |
+      Made with {{< fa brands r-project >}} and [Quarto](https://quarto.org/)<br>
+      [View the source at {{< fa brands github >}} GitHub](https://github.com/andrewheiss/compassionate-clam)
+
+format:
+  html:
+    theme:
+      - zephyr
+      - html/custom.scss
+    toc: true
+    toc-location: right
+    code-fold: true
+    code-tools: true
+    highlight-style: monokai
+
+language: 
+  title-block-published: "Date"

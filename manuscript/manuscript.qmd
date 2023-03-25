@@ -1,0 +1,27 @@
+---
+title: "The Implementation of China’s Overseas NGO Law and the Operating Space for International Civil Society"
+author:
+- name: Andrew Heiss
+  affiliation: Georgia State University
+  email: aheiss@gsu.edu
+  orcid: 0000-0002-3948-3914
+- name: Meng Ye
+  affiliation: Georgia State University
+  email: mye2@student.gsu.edu
+  orcid: 0000-0002-6552-8338
+bibliography: references.bib
+link-citations: true
+format: 
+  html:
+    toc: true
+  pdf: default
+  docx: default
+language: 
+  title-block-published: "Latest version"
+---
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit [@Mayer:2010], sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+## References
+

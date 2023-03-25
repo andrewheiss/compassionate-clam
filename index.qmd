@@ -1,0 +1,24 @@
+---
+title: "The Implementation of China’s Overseas NGO Law and the Operating Space for International Civil Society"
+author:
+- name: Andrew Heiss
+  affiliation: Georgia State University
+  email: aheiss@gsu.edu
+  orcid: 0000-0002-3948-3914
+- name: Meng Ye
+  affiliation: Georgia State University
+  email: mye2@student.gsu.edu
+  orcid: 0000-0002-6552-8338
+format:
+  html:
+    code-tools: false
+    toc: false
+---
+
+## Abstract
+
+Abstract goes here
+
+## Code
+
+All the raw code and data for this paper is available in a [GitHub repository](https://github.com/andrewheiss/compassionate-clam).

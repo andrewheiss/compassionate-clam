@@ -1,0 +1,7 @@
+---
+title: Manuscript
+toc: false
+page-layout: full
+---
+
+The final manuscript will be downloadable from here. ([See this for a similar example.](https://stats.andrewheiss.com/mountainous-mackerel/analysis/manuscript.html))

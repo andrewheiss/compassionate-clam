@@ -1,9 +1,13 @@
+# R stuff
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
 
+# Quarto stuff
 /.quarto/
+_site/
+manuscript/output/
 
 *.pdf
 *.html
