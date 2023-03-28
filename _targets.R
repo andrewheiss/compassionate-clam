@@ -13,7 +13,7 @@ set.seed(58214)  # From random.org
 
 # Global target options
 tar_option_set(
-  packages = c("tibble"),  # Packages available to all targets
+  packages = c("tidyverse"),  # Packages available to all targets
   format = "qs",  # Storage format
   workspace_on_error = TRUE  # Automatically create a debug workspace on errors
 )

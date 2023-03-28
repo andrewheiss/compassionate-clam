@@ -96,7 +96,13 @@ clean_ongo_data <- function(manual, chinafile, province_name) {
     # reformat ro_name to merge with Chinafile data
     mutate(org_name_cn = ifelse(province_cn == "内蒙", str_sub(ro_name, end = -7), str_sub(ro_name, end = -6))) |>
     mutate(org_name_cn = ifelse(home == "South Korea", org_name_cn, str_remove(org_name_cn, "\\（.*\\）"))) |>
-    left_join(chinafile, by = "org_name_cn")
+    left_join(chinafile, by = "org_name_cn") |> 
+    # Derive local connection variable
+    mutate(cn_background = case_when(work_field_code2 == "Chinese background" ~ 1, 
+                                     TRUE ~ 0),
+           local_aim = ifelse(!is.na(local_aim), 1, 0),
+           local_org_name = ifelse(!is.na(local_org_name), 1, 0),
+           local_connect = ifelse(cn_background + local_aim + local_org_name == 0, FALSE, TRUE))
   
   return(ongo)
 }
