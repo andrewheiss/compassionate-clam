@@ -44,6 +44,8 @@ list(
   tar_target(province_name, province_cn_to_en()),
   tar_target(ongo,
              clean_ongo_data(ongo_manual_file, chinafile_clean, province_name)),
+  tar_target(ongo_mapdata,
+             clean_map_data(ongo)),
   
   ## Analysis notebook ----
   tar_quarto(website, path = ".", quiet = FALSE)

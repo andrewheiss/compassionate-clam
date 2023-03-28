@@ -56,6 +56,34 @@ province_cn_to_en <- function() {
 }
 
 
+clean_map_data <- function(ongo) {
+  suppressPackageStartupMessages(library(sf))
+  suppressPackageStartupMessages(library(mapchina))
+  
+  # Clean up the geographic data
+  suppressMessages({
+    sf_use_s2(FALSE)  # https://github.com/xmc811/mapchina/issues/7#issuecomment-1028792066
+    
+    sf_china <- china |>
+      group_by(Name_Province) |>
+      summarise(geometry = st_union(geometry)) |> 
+      mutate(province_cn = str_sub(Name_Province, end = 2))
+  })
+  
+  # Get a count of ONGOs per province
+  province_count <- ongo |>
+    group_by(province_cn) |>
+    summarise(ro_count = n())
+  
+  # Join ONGO count to map
+  mapdata <- sf_china |> 
+    left_join(province_count, by = "province_cn") |> 
+    mutate(ro_count = ifelse(is.na(ro_count), 0, ro_count))
+  
+  return(mapdata)
+}
+
+
 clean_ongo_data <- function(manual, chinafile, province_name) {
   ongo <- read_csv(manual, show_col_types = FALSE) |>
     mutate(province_cn = str_sub(address, end = 2)) |>   # Province name from address

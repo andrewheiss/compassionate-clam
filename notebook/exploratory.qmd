@@ -1,3 +1,33 @@
 ---
 title: EDA
 ---
+
+# Map!
+
+```{r load-packages-data, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(targets)
+library(here)
+library(sf)
+
+# Point to the _targets folder location since this qmd is in a subfolder
+tar_config_set(store = here::here('_targets'),
+               script = here::here('_targets.R'))
+
+# Load targets
+mapdata <- tar_read(ongo_mapdata)
+```
+
+```{r ongo-map, fig.height=6, fig.width=8, message=FALSE, warning=FALSE}
+labeldata <- mapdata |> 
+  filter(ro_count > 0)
+
+plot_map <- ggplot() +
+  geom_sf(data = mapdata,
+          aes(fill = ro_count), color = "white") +
+  scale_fill_viridis_c(option = "mako", begin = 0.1, end = 0.9, direction = -1) +
+  geom_sf_label(data = labeldata, aes(label = ro_count), 
+                nudge_y = -0.8 , nudge_x = -0.1, size = 3, alpha = 0.7) +
+  theme_void()
+plot_map
+```
