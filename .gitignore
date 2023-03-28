@@ -13,6 +13,10 @@ manuscript/output/
 *.html
 *.docx
 
+# Targets stuff
+_targets
+_targets.yaml
+
 # Data stuff
 data/raw_data/
 data/manual_data/

@@ -1,0 +1,16 @@
+{
+  "hash": "2998304410c7f1395b26a33b4fac845b",
+  "result": {
+    "markdown": "---\ntitle: EDA\n---\n\n\n# Map!\n\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nlibrary(tidyverse)\nlibrary(targets)\nlibrary(here)\nlibrary(sf)\n\n# Point to the _targets folder location since this qmd is in a subfolder\ntar_config_set(store = here::here('_targets'),\n               script = here::here('_targets.R'))\n\n# Load targets\nmapdata <- tar_read(ongo_mapdata)\n```\n:::\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nlabeldata <- mapdata |> \n  filter(ro_count > 0)\n\nplot_map <- ggplot() +\n  geom_sf(data = mapdata,\n          aes(fill = ro_count), color = \"white\") +\n  scale_fill_viridis_c(option = \"mako\", begin = 0.1, end = 0.9, direction = -1) +\n  geom_sf_label(data = labeldata, aes(label = ro_count), \n                nudge_y = -0.8 , nudge_x = -0.1, size = 3, alpha = 0.7) +\n  theme_void()\nplot_map\n```\n\n::: {.cell-output-display}\n![](exploratory_files/figure-html/ongo-map-1.png){fig-align='center' width=2400}\n:::\n:::\n",
+    "supporting": [
+      "exploratory_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
