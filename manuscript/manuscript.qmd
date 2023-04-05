@@ -14,6 +14,10 @@ link-citations: true
 format: 
   html:
     toc: true
+    citeproc: false
+    filters: 
+      - "_extensions/andrewheiss/wordcount/citeproc.lua"
+      - "_extensions/andrewheiss/wordcount/wordcount.lua"
   pdf: default
   docx: default
 language: 
@@ -23,5 +27,64 @@ language:
 Lorem ipsum dolor sit amet, consectetur adipisicing elit [@ChaudhryHeiss:2022], sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 
-## References
+# Introduction
 
+ONGO law, what has it meant for ONGOs—how are they responding?
+
+@FaridLi:2021
+
+Charity law + ONGO law happened at the same time - lots of discussion about what it would mean for ONGOs at the time - lots of people looked at the framework of the law, but we don't know what it has actually looked like
+Following up with the actual implementation of law
+
+
+
+# Context of the ONGO law
+
+How the law works, what it looked like pre-2016/7
+
+
+# Literature
+
+## Literature on global crackdown on NGOs
+
+Contentiousness, regime stability, other reasons
+
+
+## Literature on implementation - de jure vs. de facto differences
+
+
+## Literature on organizational flexibility
+
+
+
+# Theory / research questions
+
+- RQ1: Provinces and work field - connects to NGO contentiousness bc everything is noncontentious
+- RQ2: Provinces and PSUs - local vs. national - there's variance in local PSUs - flexibility, venue-seeking maybe
+- RQ3: Provinces and length of time in country / registration date/year - earlier organizations work in more? - flexibility bc more local knowledge, more interest, more support from government to get registered, etc.
+
+
+# Data and methods
+
+No control/pre-group - this is all descriptive about the "after" group of ONGOs that all selected themselves into the regulations
+
+
+
+multiple_id - either treat it as a random organization effect for the parent org, or weight it, so if there are 8, we weight by 1/8
+cn_background = Chinese NGOs
+
+
+Main assumption: We're interested in the potential to be in other provinces, even if an organization is small now, they want to someday spread out
+
+
+# Results
+
+
+TODO: Oxfam and World Vision as short case studies?
+
+
+# Discussion
+
+
+
+# References
