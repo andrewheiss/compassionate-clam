@@ -15,6 +15,7 @@ tar_config_set(store = here::here('_targets'),
                script = here::here('_targets.R'))
 
 # Load targets
+tar_load(ongo)
 mapdata <- tar_read(ongo_mapdata)
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
 set_annotation_fonts()
@@ -27,7 +28,13 @@ TODO
 
 # Distribution of outcome
 
-TODO
+```{r province-count-distribution, warning=FALSE}
+ggplot(ongo, aes(x = province_count)) +
+  geom_histogram(binwidth = 1, color = "white", size = 0.1, boundary = 0) +
+  labs(x = "Number of provinces", y = "Count",
+       title = "Distribution of province counts") +
+  theme_ongo()
+```
 
 
 # Map of provinces and counts
