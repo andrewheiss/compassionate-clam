@@ -1,3 +1,9 @@
 ---
-title: "Analysis"
+title: "Questions and expectations"
 ---
+
+- [**Expectation 1—issue area**](/notebook/analysis-issue.qmd): Because they are seen as less of a threat, ONGOs working on less contentious issues should be registered in more provinces
+
+- [**Expectation 2—local connections**](/notebook/analysis-local.qmd): Because they are explicitly focused on local issues, ONGOs with local connections should be registered in fewer provinces
+
+- [**Expectation 3—registration timing**](/notebook/analysis-timing.qmd): Because formal registration can take a long time and can involve many bureaucratic hurdles, ONGOs that registered soon after the law took effect should be be (1) less of a threat and (2) a higher priority for processing, and so should be registered in more provinces

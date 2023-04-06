@@ -1,0 +1,65 @@
+---
+title: "Registration timing"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align = "center", fig.retina = 3,
+                      fig.width = 6, fig.height = (6 * 0.618),
+                      out.width = "80%", collapse = TRUE,
+                      dev = "png", dev.args = list(type = "cairo-png"))
+
+options(digits = 3, width = 120,
+        dplyr.summarise.inform = FALSE,
+        knitr.kable.NA = "")
+```
+
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(targets)
+library(brms)
+library(marginaleffects)
+library(tidybayes)
+library(ggdist)
+library(patchwork)
+library(scales)
+
+# Generated via random.org
+set.seed(196491)
+
+# Load targets
+tar_load(ongo)
+tar_load(m_full_ordbeta)
+invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
+
+prop_to_provinces <- function(x, lower = 1, upper = 32) {
+  (x * (upper - lower)) + lower
+}
+```
+
+```{r generate-preds}
+preds <- m_full_ordbeta |> 
+  predicted_draws(datagrid(model = m_full_ordbeta, years_since_law = 0:5), 
+                  ndraws = 1000)
+
+
+epreds <- m_full_ordbeta |> 
+  epred_draws(datagrid(model = m_full_ordbeta, years_since_law = 0:5), 
+              ndraws = 1000)
+```
+
+```{r plot-epred-timing}
+epreds |> 
+  mutate(years_since_law = factor(years_since_law)) |> 
+  ggplot(aes(x = .epred, y = years_since_law)) +
+  stat_halfeye(fill = clrs[7]) +
+  scale_x_continuous(labels = label_percent(),
+                     sec.axis = sec_axis(trans = ~ prop_to_provinces(.),
+                                         name = "Expected provinces",
+                                         breaks = seq(8, 32, 4))) +
+  guides(fill = "none") +
+  labs(x = "Expected proportion of provinces", y = "Years since law took effect in 2017") +
+  theme_ongo() +
+  theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
+```
+
+TODO: Prop of 1s, 32s, and in-betweens

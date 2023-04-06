@@ -63,13 +63,16 @@ website:
     
     - title: "Analysis"
       contents:
-        - notebook/analysis.qmd
         - section: "General details"
           contents:
-            - notebook/exploratory.qmd
-        - section: "Models"
-          contents:
+            - notebook/analysis.qmd
             - notebook/model-details.qmd
+        - section: "Results"
+          contents:
+            - notebook/exploratory.qmd
+            - notebook/analysis-issue.qmd
+            - notebook/analysis-local.qmd
+            - notebook/analysis-timing.qmd
     
     - title: "Empty space lol"
     

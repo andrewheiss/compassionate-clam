@@ -76,7 +76,7 @@ clean_map_data <- function(ongo) {
     summarise(ro_count = n())
   
   # Join ONGO count to map
-  mapdata <- sf_china |> 
+  mapdata <- sf_china |>  
     left_join(province_count, by = "province_cn") |> 
     mutate(ro_count = ifelse(is.na(ro_count), 0, ro_count))
   
@@ -102,7 +102,23 @@ clean_ongo_data <- function(manual, chinafile, province_name) {
                                      TRUE ~ 0),
            local_aim = ifelse(!is.na(local_aim), 1, 0),
            local_org_name = ifelse(!is.na(local_org_name), 1, 0),
-           local_connect = ifelse(cn_background + local_aim + local_org_name == 0, FALSE, TRUE))
+           local_connect = ifelse(cn_background + local_aim + local_org_name == 0, FALSE, TRUE)) |> 
+    # Create different versions of the outcome variable
+    mutate(province_count = geo_scope_num,
+           province_pct = province_count / 32,
+           province_cat = case_when(
+             province_count == 1 ~ "Single province",
+             province_count > 1 & province_count < 32 ~ "Multiple provinces",
+             province_count == 32 ~ "All provinces"
+           )) |> 
+    mutate(province_cat = factor(province_cat, 
+                                 levels = c("Single province", "Multiple provinces", "All provinces"),
+                                 ordered = TRUE)) %>% 
+    mutate(time_since_law_passed = interval(ymd("2017-01-01"), registration_date),
+           days_since_law = time_since_law_passed / days(1),
+           months_since_law = time_since_law_passed / months(1),
+           years_since_law = time_since_law_passed / years(1)) |> 
+    mutate(year_registered = year(registration_date))
   
   return(ongo)
 }

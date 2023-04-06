@@ -1,0 +1,16 @@
+{
+  "hash": "8f41b0306d243737d632b3d25429cb65",
+  "result": {
+    "markdown": "---\ntitle: \"Registration timing\"\n---\n\n\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nlibrary(tidyverse)\nlibrary(targets)\nlibrary(brms)\nlibrary(marginaleffects)\nlibrary(tidybayes)\nlibrary(ggdist)\nlibrary(patchwork)\nlibrary(scales)\n\n# Generated via random.org\nset.seed(196491)\n\n# Load targets\ntar_load(ongo)\ntar_load(m_full_ordbeta)\ninvisible(list2env(tar_read(graphic_functions), .GlobalEnv))\n\nprop_to_provinces <- function(x, lower = 1, upper = 32) {\n  (x * (upper - lower)) + lower\n}\n```\n:::\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\npreds <- m_full_ordbeta |> \n  predicted_draws(datagrid(model = m_full_ordbeta, years_since_law = 0:5), \n                  ndraws = 1000)\n\n\nepreds <- m_full_ordbeta |> \n  epred_draws(datagrid(model = m_full_ordbeta, years_since_law = 0:5), \n              ndraws = 1000)\n```\n:::\n\n::: {.cell layout-align=\"center\"}\n\n```{.r .cell-code}\nepreds |> \n  mutate(years_since_law = factor(years_since_law)) |> \n  ggplot(aes(x = .epred, y = years_since_law)) +\n  stat_halfeye(fill = clrs[7]) +\n  scale_x_continuous(labels = label_percent(),\n                     sec.axis = sec_axis(trans = ~ prop_to_provinces(.),\n                                         name = \"Expected provinces\",\n                                         breaks = seq(8, 32, 4))) +\n  guides(fill = \"none\") +\n  labs(x = \"Expected proportion of provinces\", y = \"Years since law took effect in 2017\") +\n  theme_ongo() +\n  theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = \"grey50\"))\n```\n\n::: {.cell-output-display}\n![](analysis-timing_files/figure-html/plot-epred-timing-1.png){fig-align='center' width=80%}\n:::\n:::\n\n\nTODO: Prop of 1s, 32s, and in-betweens\n",
+    "supporting": [
+      "analysis-timing_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

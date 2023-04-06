@@ -2,13 +2,13 @@
 title: EDA
 ---
 
-# Map!
 
 ```{r load-packages-data, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(targets)
 library(here)
 library(sf)
+library(ggrepel)
 
 # Point to the _targets folder location since this qmd is in a subfolder
 tar_config_set(store = here::here('_targets'),
@@ -16,18 +16,37 @@ tar_config_set(store = here::here('_targets'),
 
 # Load targets
 mapdata <- tar_read(ongo_mapdata)
+invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
+set_annotation_fonts()
 ```
 
-```{r ongo-map, fig.height=6, fig.width=8, message=FALSE, warning=FALSE}
+# Timeline of registration
+
+TODO
+
+
+# Distribution of outcome
+
+TODO
+
+
+# Map of provinces and counts
+
+```{r ongo-map, fig.height=5, fig.width=7, message=FALSE, warning=FALSE}
+# Use aes(geometry) and stat = "sf_coordinates" to make geom_label_repel() work
+# with geom_sf(): https://github.com/slowkow/ggrepel/issues/111#issuecomment-416853013
 labeldata <- mapdata |> 
   filter(ro_count > 0)
 
 plot_map <- ggplot() +
   geom_sf(data = mapdata,
           aes(fill = ro_count), color = "white") +
-  scale_fill_viridis_c(option = "mako", begin = 0.1, end = 0.9, direction = -1) +
-  geom_sf_label(data = labeldata, aes(label = ro_count), 
-                nudge_y = -0.8 , nudge_x = -0.1, size = 3, alpha = 0.7) +
+  scale_fill_viridis_c(option = "mako", begin = 0.1, end = 0.9, direction = -1,
+                       guide = "none") +
+  geom_label_repel(data = labeldata, 
+                   aes(label = ro_count, geometry = geometry),
+                   stat = "sf_coordinates",
+                   size = 3) +
   theme_void()
 plot_map
 ```

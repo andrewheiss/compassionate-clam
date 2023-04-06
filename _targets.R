@@ -8,6 +8,12 @@ suppressPackageStartupMessages(library(dplyr))
 options(tidyverse.quiet = TRUE,
         dplyr.summarise.inform = FALSE)
 
+# Bayes stuff
+suppressPackageStartupMessages(library(brms))
+options(mc.cores = 4,
+        brms.backend = "cmdstanr",
+        brms.threads = 2)
+
 set.seed(58214)  # From random.org
 
 
@@ -39,6 +45,9 @@ list(
              here_rel("data", "manual_data", "ongo-manual-clean.csv"),
              format = "file"),
   
+  ## Graphics ----
+  tar_target(graphic_functions, lst(theme_ongo, set_annotation_fonts, clrs)),
+
   ## Process and clean data ----
   tar_target(chinafile_clean, load_clean_chinafile()),
   tar_target(province_name, province_cn_to_en()),
@@ -46,6 +55,13 @@ list(
              clean_ongo_data(ongo_manual_file, chinafile_clean, province_name)),
   tar_target(ongo_mapdata,
              clean_map_data(ongo)),
+  
+  ## Models ----
+  tar_target(m_basic_zoib, f_basic_zoib(ongo)),
+  tar_target(m_basic_ologit, f_basic_ologit(ongo)),
+  
+  tar_target(m_full_zoib, f_full_zoib(ongo)),
+  tar_target(m_full_ordbeta, f_full_ordbeta(ongo)),
   
   ## Analysis notebook ----
   tar_quarto(website, path = ".", quiet = FALSE)

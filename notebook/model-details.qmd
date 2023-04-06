@@ -1,3 +1,9 @@
 ---
 title: Model details
 ---
+
+TODO: Formal definition and justification for ordered beta instead of ZOIB
+
+TODO: MCMC diagnostics
+
+TODO: Timing
