@@ -347,7 +347,7 @@ summary(model_simple)
 ```
 
 ```{r}
-model_control <- lm(geo_scope_num ~ work_field_code1 + local_connect + psu_level + province_code, data = ongo)
+model_control <- lm(geo_scope_num ~ work_field_code1 + local_connect + local_aim + psu_level + province_code, data = ongo)
 summary(model_control)
 ```
 

@@ -63,4 +63,27 @@ epreds |>
   theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
 ```
 
-TODO: Prop of 1s, 32s, and in-betweens
+```{r plot-pred-discrete-continuous-local, message=FALSE}
+preds_local_plot <- preds %>% 
+  ungroup() %>% 
+  mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
+  mutate(outcome = case_when(
+    .prediction == 0 ~ "1 province",
+    .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
+    .prediction == 1 ~ "32 provinces"
+  )) %>% 
+  group_by(outcome, local_connect) %>% 
+  summarize(count = n()) |> 
+  group_by(local_connect) |> 
+  mutate(prop = count / sum(count))
+
+ggplot(preds_local_plot, aes(x = local_connect, y = prop)) +
+  geom_segment(aes(xend = local_connect, yend = 0), color = "grey50") +
+  geom_point(color = clrs[2], size = 2) +
+  expand_limits(y = 0) +
+  facet_wrap(vars(outcome)) +
+  scale_x_discrete(labels = label_wrap(10)) +
+  scale_y_continuous(labels = label_percent()) +
+  labs(x = NULL, y = "Proportion of predictions") +
+  theme_ongo()
+```
