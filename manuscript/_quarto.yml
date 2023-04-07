@@ -13,10 +13,19 @@ project:
 
 format:
   html:
+    toc: true
+    language: 
+      title-block-published: "Latest version"
     shift-heading-level-by: 1
     theme: 
       - zephyr
       - html/custom.scss
+    citeproc: false
+    filters: 
+      - "_extensions/andrewheiss/wordcount/citeproc.lua"
+      - "_extensions/andrewheiss/wordcount/wordcount.lua"
+    template-partials: 
+      - "html/title-metadata.html"
     knitr:
       opts_chunk:
         dev: "ragg_png"

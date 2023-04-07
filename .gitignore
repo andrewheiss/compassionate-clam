@@ -13,6 +13,8 @@ manuscript/output/
 *.html
 *.docx
 
+!manuscript/html/title-metadata.html
+
 # Targets stuff
 _targets
 _targets.yaml
