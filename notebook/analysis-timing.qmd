@@ -62,4 +62,41 @@ epreds |>
   theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
 ```
 
-TODO: Prop of 1s, 32s, and in-betweens
+```{r plot-epred-timing-lineribbon}
+epreds %>% 
+  ggplot(aes(x = years_since_law, y = .epred)) +
+  scale_x_reverse() +
+  scale_y_continuous(labels = label_percent(),
+                     sec.axis = sec_axis(trans = ~ prop_to_provinces(.),
+                                         name = "Expected provinces")) +
+  labs(x = "Years since law took effect (2017)", 
+       y = "Expected proportion of provinces") +
+  stat_lineribbon(alpha = 0.35, fill = clrs[7], color = clrs[7]) +
+  theme_ongo() +
+  theme(axis.title.y.right = element_text(hjust = 1, margin = margin(l = 10), angle = 90))
+```
+
+```{r plot-pred-discrete-continuous-timing, message=FALSE}
+preds_timing_plot <- preds %>% 
+  ungroup() %>% 
+  mutate(outcome = case_when(
+    .prediction == 0 ~ "1 province",
+    .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
+    .prediction == 1 ~ "32 provinces"
+  )) %>% 
+  group_by(outcome, years_since_law) %>% 
+  summarize(count = n()) |> 
+  group_by(years_since_law) |> 
+  mutate(prop = count / sum(count))
+
+ggplot(preds_timing_plot, aes(x = years_since_law, y = prop)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = clrs[7]) +
+  expand_limits(y = 0) +
+  facet_wrap(vars(outcome)) +
+  scale_x_reverse(breaks = c(0:5)) +
+  scale_y_continuous(labels = label_percent()) +
+  labs(x = "Years since law took effect (2017)", 
+       y = "Proportion of predictions") +
+  theme_ongo()
+```

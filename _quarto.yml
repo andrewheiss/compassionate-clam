@@ -36,7 +36,7 @@ website:
 
   navbar:
     pinned: true
-    background: primary
+    background: "#9f2d55"
     search: true
     left:
       - text: "Data"

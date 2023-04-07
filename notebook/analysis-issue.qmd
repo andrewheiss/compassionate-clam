@@ -39,7 +39,7 @@ prop_to_provinces <- function(x, lower = 1, upper = 32) {
 ```{r generate-preds}
 preds <- m_full_ordbeta |> 
   predicted_draws(datagrid(model = m_full_ordbeta, work_field_code1 = unique), 
-                  ndraws = 1000)
+                  ndraws = 4000)
 
 
 epreds <- m_full_ordbeta |> 
@@ -63,4 +63,26 @@ epreds |>
   theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
 ```
 
-TODO: Prop of 1s, 32s, and in-betweens
+```{r plot-pred-discrete-continuous-local, message=FALSE, fig.width=6, fig.height=6}
+preds_issue_plot <- preds %>% 
+  ungroup() %>% 
+  mutate(outcome = case_when(
+    .prediction == 0 ~ "1 province",
+    .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
+    .prediction == 1 ~ "32 provinces"
+  )) %>% 
+  group_by(outcome, work_field_code1) %>% 
+  summarize(count = n()) |> 
+  group_by(work_field_code1) |> 
+  mutate(prop = count / sum(count))
+
+ggplot(preds_issue_plot, aes(x = work_field_code1, y = prop)) +
+  geom_segment(aes(xend = work_field_code1, yend = 0), color = "grey50") +
+  geom_point(color = clrs[5], size = 2) +
+  expand_limits(y = 0) +
+  facet_wrap(vars(outcome), ncol = 1) +
+  scale_x_discrete(labels = label_wrap(10)) +
+  scale_y_continuous(labels = label_percent()) +
+  labs(x = NULL, y = "Proportion of predictions") +
+  theme_ongo()
+```
