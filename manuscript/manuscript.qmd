@@ -35,7 +35,7 @@ China’s 2017 Overseas NGO (ONGO) Law is part of a larger global trend of legal
 
 # Introduction
 
-In recent decades, there has been a global tend of “closing space” for civil society across jurisdictions such as Russia, India and Vietnam.(*to add citation*) The manifestation of such trend is rolling up laws that restrictive laws that regulate international NGOs (INGOs). [@ChaudhryHeiss:2022;DupuyPrakash:2020] China’s promulgation of the Law of the People’s Republic of China on Administration of Activities of Overseas Nongovernmental Organizations in the Mainland of China (the “ONGO Law”) on April 28, 2016 was considered part of a global wave of legal restrictions on INGOs. The purpose of this study is to empirically examine how the ONGO law has impacted INGO's presence as well as the operational space after the law took effect. By inquiring the de facto implementation of the law in addition to formal de jure regulations, we will be able to see a more comprehensive picture of the operational space for INGOs. It will also inform as the evolving theorization of the "closing space" and dual attitudes towards INGOs hold true for an Authoritarian jurisdiction such as China. 
+In recent decades, there has been a global tend of “closing space” for civil society across jurisdictions such as Russia, India and Vietnam.[@DupuyPrakash:2020;@ChaudhryHeiss:] (*to add citation*) The manifestation of such trend is rolling up laws that restrictive laws that regulate international NGOs (INGOs).[@DupuyPrakash:2020; @ChaudhryHeiss:2022] China’s promulgation of the Law of the People’s Republic of China on Administration of Activities of Overseas Nongovernmental Organizations in the Mainland of China (the “ONGO Law”) on April 28, 2016 was considered part of a global wave of legal restrictions on INGOs. The purpose of this study is to empirically examine how the ONGO law has impacted INGO's presence as well as the operational space after the law took effect. By inquiring the *de facto* implementation of the law in addition to formal *de jure* regulations, we will be able to see a more comprehensive picture of the operational space for INGOs. It will also inform as the evolving theorization of the "closing space" and dual attitudes towards INGOs hold true for an Authoritarian jurisdiction such as China. 
 
 
 ONGO law, what has it meant for ONGOs—how are they responding? [@ChaudhryHeiss:2022]
@@ -48,17 +48,17 @@ Following up with the actual implementation of law
 
 
 # Context of the ONGO law
-(to update citations)
 
-In recent decades, ONGOs came to China after the Reform and Opening-up policy was adopted by the authority and have been playing pivotal roles in providing funding, organizational and program management skills, as well as catalytic support for the emergence of China’s domestic nonprofit sector (Yin, 2009). Before the promulgation of the ONGO Law, most ONGOs in China operated outside formal legal rules (Schwartz, 2018). The only legal document relevant to ONGOs was a section of the Regulation on the Management of Foundations by the State Council that specifies the registration of representative offices (“ROs”) of foreign foundations with the Ministry of Civil Affairs, the regulator of Chinese domestic NGOs. However, the actual application of the regulation was very limited. Up until the ONGO Law took effect on January 1, 2017, there were fewer than 30 foreign foundation ROs registered at the Ministry of Civil Affairs according to the Regulation on the Management of Foundations, while some Chinese officials estimated in 2016 that there were roughly over 7000 ONGOs operating in China (Ye & Huang, 2018). 
+In recent decades, ONGOs came to China after the Reform and Opening-up policy was adopted by the authority and have been playing pivotal roles in providing funding, organizational and program management skills, as well as catalytic support for the emergence of China’s domestic nonprofit sector [@Yin:2009]. Before the promulgation of the ONGO Law, the regulation of ONGOs in China was obscure [Shieh:2018]. The only legal document relevant to ONGOs was a section of the Regulation on the Management of Foundations by the State Council that specifies the registration of representative offices (“ROs”) of foreign foundations with the Ministry of Civil Affairs, the regulator of Chinese domestic NGOs. However, the actual application of the regulation was very limited. Up until the ONGO Law took effect on January 1, 2017, there were fewer than 30 foreign foundation ROs registered at the Ministry of Civil Affairs according to the Regulation on the Management of Foundations, while some Chinese officials estimated in 2016 that there were roughly over 7000 ONGOs operating in China [@YeHuang:2018]. 
 
-Many ONGOs gained legal identity within mainland China using the vehicle of foreign-funded companies (Sidel, 2016), though there were no clear requirements for them to have a formal legal presence in China (Han, 2011). They choose to have a formal legal identity for the convenience such as signing labor contracts directly with employees. However, the legal form of foreign-funded company is not quite compatible with the nature of ONGOs. Under the Chinese legal system, enterprises should be for-profit entities and nonprofit organizations are required to choose other stand-alone legal forms for them — foundations, associations and social service organizations (Ye, 2020). As such ONGOs adopting the for-profit legal form of foreign-funded companies were not regulated for their non-profit nature, which can increase the risks of such issues as private benefits, mission drift and conflict of interest for the activities conducted within mainland China before the ONGO Law was passed. 
+Many ONGOs gained legal identity within mainland China using the vehicle of foreign-funded companies [@sidel:2016], though there were no clear requirements for them to have a formal legal presence in China[@Han:2011]. They choose to have a formal legal identity for the convenience such as signing labor contracts directly with employees. However, the legal form of foreign-funded company is not quite compatible with the nature of ONGOs. Under the Chinese legal system, enterprises should be for-profit entities and nonprofit organizations are required to choose other stand-alone legal forms for them — foundations, associations and social service organizations [@Ye:2021]. Thus, ONGOs obtaining legal identity in this way have to navigate through a legal framework designed for the for-profit institutional logic, e.g, focusing on project investers' right to investment return. 
 
-The legal framework governing ONGOs was overhauled by the Chinese ONGO Law. The new law applies to all Overseas (including Hong Kong, Macau and Taiwan) non-governmental organizations that conduct not-for-profit activities in the fields of Economic Development, Education, Science, Technology, Culture, Public Health, Sports, Environment Protection, Poverty Alleviation, and Disaster Relief etc. (Article 3). In other words, after the Overseas NGOs became effective, any nonprofit activities conducted by those ONGOs that cannot successfully obtaining proper legal authorization according to the law will be deemed illegal. Specifically, the ONGO law stipulates two ways to lawfully conduct nonprofit activities in China for ONGOs: registering ROs and filing information for documentation of temporary activities (TAs) with the Ministry of Public Security (“MPS”) and Provincial-level Public Security bureaus, which are the registering and regulatory authorities designated by the law. 
+The legal framework governing ONGOs was overhauled by the Chinese ONGO Law. The new law applies to all Overseas (including Hong Kong, Macau and Taiwan) non-governmental organizations that conduct not-for-profit activities in the fields of Economic Development, Education, Science, Technology, Culture, Public Health, Sports, Environment Protection, Poverty Alleviation, and Disaster Relief etc. (Article 3). In other words, after the Overseas NGOs became effective, any nonprofit activities conducted by those ONGOs that cannot successfully obtaining proper legal authorization according to the law will be deemed illegal. Specifically, the ONGO law stipulates two ways to lawfully conduct nonprofit activities in China for ONGOs: registering ROs or filing information for documentation of temporary activities with the Ministry of Public Security (“MPS”) and Provincial-level Public Security bureaus, which are the registering and regulatory authority for ONGOs designated by the law. Registering an RO would be lawful identity gaining channel for INGOs seeking for on-going presence in China while temporary activities are suitable for INGOs that need to coduct one-off programs that last no longer than one year. 
 
-Successfully registering ROs and filing TAs both require the support and participation by Chinese partners in the application process. In a sense, they are co-regulating and supervising the ONGOs with Public Security bureaus. And it turns out that obtaining the consent of a PSU to apply for registration became a key challenge for ONGOs, because potential PSUs do not have a legal obligation to assume such a demanding role (Jia, 2017; Shieh, 2018; Ye & Huang, 2018).  The filing of TAs also requires having a Chinese partner organization, which can be one of the four types of entities according to the law – governmental agencies, peoples’ groups (considered by many as GONGOs), public institutions (quasi-governmental entities providing public services including public hospitals and public schools) and social organizations (Chinese official name for nonprofits) (Article 16).  
+This paper will study the the empirical data of the registration of ROs in the years following the enactment of the ONGO Law to uncover the association between ONGO issue areas and the composition of successful RO registration and the operational space granted.
 
-The ONGO Law also sets out various rules for daily operation once the registration of ROs or the filing of TAs is completed. Among these regulatory provisions there are some boundaries that ROs and TAs are obliged to abide by. For one thing, the registration document of an RO would specify the field of work and mission for the RO and list the range of provinces that the RO is authorized to conduct nonprofit activities in (Article 18). Some ROs are authorized to operate across mainland China, which is 32 provincial administrative regions in total, but there are also many that are authorized to operate in one to multiple provinces but not all. To compensate such limitation, ONGOs are allowed to register multiple ROs within mainland China at the meantime. Moreover, ONGOs that file TAs are also required to comply with the purpose, location and duration of the TA stated in their filing (Article), and the ONGO Law limits the duration of a TA within one year (Article 17). To monitor the activities conducted by ONGOs, ROs are required to submit their annual plans by Dec. 31 in the previous year and their annual reports before Jan 31 of the following year, to PSU first for approval, and then to the Public Security Bureaus that they registered with. Also, the ONGOs that file TAs need to conduct the TA using the activity name which was filed with the Public Security Bureaus and are required to file a report with their Chinese partner organizations after the activity is completed (Article 30). ROs and TAs of ONGO are not allowed to fundraise within mainland China (Article 21) but can enjoy tax benefits according to relevant laws and regulations (Article 36). 
+Registering RO under the ONGO Law requiring the consent of a Chinese professional sponsoring unit (the "PSU"), which are governmental or quasi-governmental overseeing the INGO's issue area to co-supervise the INGOs with Public Security bureaus. And it turns out that obtaining the consent of a PSU to apply for registration became a key challenge for ONGOs, because potential PSUs do not have a legal obligation to assume such a demanding role [@Jia:2017; @Shieh:2018; @YeHuang:2018]. Therefore, the composition of the successfully registered RO inform us whether ROs working on different issue areas have varied level of difficulty in obtaining legal status. Moreover, We measure the later with a proxy of the number of provinces that the ROs are authorized to operate. Specifically, the registration document of an RO would specify the field of work and mission for the RO and list the range of provinces that the RO is authorized to conduct nonprofit activities in (Article 18). Some ROs are authorized to operate across mainland China, which is 32 provincial administrative regions in total, but there are also many that are authorized to operate in one to multiple provinces but not all. 
+
 
 
 
@@ -97,9 +97,87 @@ This aims to examin how the "closing space" hypothesis plays out in China. China
 
 # Data and methods
 
-The data used in this paper was collected from ONGOs' public registration documents disclosed by MPS’s Overseas NGO Office on the online service platform for ONGOs . We also use ChinaFile's China ONGO data for complementary purpose, we merge in the English organization name in ChinaFile for the sake of transparenty of our analysis to broader communities. 
+## Data
+
+The data used in this paper was collected from INGOs' public registration documents disclosed by MPS’s Overseas NGO Office on the online service platform for INGOs. We also use ChinaFile's China ONGO data for complementary purpose, we merge in the English organization name in ChinaFile for the sake of transparency of our analysis to broader communities. The data we collected spans from January 1, 2017, when the law took effect, to December 31, 2021, with data for 633 ROs in total. The filing document of ROs disclose the name, the registration date, the registration authority (which public security bureau regulates it), the PSU, the address and issue area or purposes of the RO and the specific provinces they can work in. We code the variables we use in the empirical analysis from the registration information. Most of the coding and data cleaning work is objective data wrangling process, such as parsing out the province each RO is in from the address, or calculating the total number provinces approved in the registration document. Meanwhile, the coding of issue areas are conducted by the authors based on the areas set out Article 3 (specified above) and clustering of the issue areas of the actually registered ROs.  (to cross-validate among authors).
 
 
+## Measurement 
+
+### Dependent Variables
+
+- `geo_scope_num`
+
+Count of the number of provinces each RO is authorized to operate in 
+
+
+### Independent Variables
+
+- `work_field` 
+
+`work_field` is the original mission statement in Chinese. The name "field" is chosen for the moment, because it seems "area" is more easily to be confused with the geographical scope. It is not called "mission" to differentiate from the mission of the mother organization which is not subject to approval of the authority. Also, the statement of the work field tends to be more concrete than missions. 
+
+`work_field_code1` is the main work field code
+
+## Work Field Coding notes
+
+
+**Decided by how the work fields of registered NGO ROs cluster**
+
+- **[Economy and trade]**
+
+- **[Environment]** (including animal protection)
+
+- **[Education]** (including youth development and international cultural exchange)
+
+- **[Charity and humanitarian]** poverty alleviation, disaster relief, etc., including rural development and social work
+  If rural development is researched at the macroeconomics level, coded as science and technology, eg. #375
+  
+- **[Science and technology]**
+
+- **[Industry association]**
+
+- **[Health]** public health and health care system support (professional training)
+
+- **[Arts and Culture]** including sports (noted as “sports” in `work_field_code2`) and international culture exchange
+
+- **[General]** usually grant-making organizations, Or working on general international communication, including among governments, Or working on multiple fields not overlapping
+
+
+- `time_elapsed`
+
+to add
+
+
+### Control Variables
+
+
+- `still_active`, `FALSE` for those have indeed de-register and `TRUE` otherwise.
+
+
+- `home`
+
+home county or region of the ONGO. Not using the name "country" to be flexible enough to denote, Hong Kong, Macau and Taiwan
+
+- `psu_level`
+
+Dummy variable indicating whether the official sponsoring unit (for registration and annual audit) is at the national or local level. 
+It is clearly correlated with `geo_scope_num`, but should be a mediating factor for the relationship we are examining. 
+
+- `ro_count`
+
+There are cases where ONGOs are not granted to operate across China, so they register multiple ROs to cover enough number of provinces where they need to work. 
+
+- `local_connect`
+There are cases where the aim/mission of the ONGO is attached to a locality, either having a county/city name in their RO name or purposes, or the INGO are actually set up by people in China and they RO to communicate between the "hometown" and the INGO
+
+
+
+
+
+
+
+*Notes to delete:*
 
 
 No control/pre-group - this is all descriptive about the "after" group of ONGOs that all selected themselves into the regulations
@@ -108,16 +186,27 @@ No control/pre-group - this is all descriptive about the "after" group of ONGOs 
 
 multiple_id - either treat it as a random organization effect for the parent org, or weight it, so if there are 8, we weight by 1/8
 cn_background = Chinese NGOs
+To compensate such limitation, ONGOs are allowed to register multiple ROs within mainland China at the meantime.
+
 
 
 Main assumption: We're interested in the potential to be in other provinces, even if an organization is small now, they want to someday spread out
 
+## Regression Model
+
+We use 
+
+
+
+
+
 
 # Results
 
+## Descriptive Results
 
-TODO: Oxfam and World Vision as short case studies?
 
+## Regression Results
 
 # Discussion
 
