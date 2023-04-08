@@ -28,7 +28,7 @@ set.seed(196491)
 
 # Load targets
 tar_load(ongo)
-tar_load(m_full_ordbeta)
+tar_load(c(m_full_ordbeta, preds_timing))
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
 
 prop_to_provinces <- function(x, lower = 1, upper = 32) {
@@ -36,18 +36,11 @@ prop_to_provinces <- function(x, lower = 1, upper = 32) {
 }
 ```
 
-```{r generate-preds}
-preds <- m_full_ordbeta |> 
-  predicted_draws(datagrid(model = m_full_ordbeta, years_since_law = 0:5), 
-                  ndraws = 1000)
-
-
+```{r plot-epred-timing}
 epreds <- m_full_ordbeta |> 
   epred_draws(datagrid(model = m_full_ordbeta, years_since_law = 0:5), 
               ndraws = 1000)
-```
 
-```{r plot-epred-timing}
 epreds |> 
   mutate(years_since_law = factor(years_since_law)) |> 
   ggplot(aes(x = .epred, y = years_since_law)) +
@@ -76,22 +69,21 @@ epreds %>%
   theme(axis.title.y.right = element_text(hjust = 1, margin = margin(l = 10), angle = 90))
 ```
 
-```{r plot-pred-discrete-continuous-timing, message=FALSE}
-preds_timing_plot <- preds %>% 
-  ungroup() %>% 
+```{r plot-pred-discrete-continuous-timing, message=FALSE, cache=TRUE}
+preds_timing_plot <- preds_timing |> 
+  unnest(preds) |> 
   mutate(outcome = case_when(
     .prediction == 0 ~ "1 province",
     .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
     .prediction == 1 ~ "32 provinces"
   )) %>% 
-  group_by(outcome, years_since_law) %>% 
+  group_by(outcome, years_since_law, draw) %>% 
   summarize(count = n()) |> 
   group_by(years_since_law) |> 
-  mutate(prop = count / sum(count))
+  mutate(prop = count / sum(count) * 100)
 
 ggplot(preds_timing_plot, aes(x = years_since_law, y = prop)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE, color = clrs[7]) +
+  stat_lineribbon(alpha = 0.35, fill = clrs[7], color = clrs[7]) +
   expand_limits(y = 0) +
   facet_wrap(vars(outcome)) +
   scale_x_reverse(breaks = c(0:5)) +
