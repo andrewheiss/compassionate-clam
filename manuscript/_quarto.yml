@@ -31,14 +31,14 @@ format:
         dev: "ragg_png"
         dpi: 300
 
-  pdf:
-    documentclass: article
-    include-in-header: 
-      text: |
-        \usepackage{mathtools}
-    knitr:
-      opts_chunk:
-        dev: "cairo_pdf"
+  # pdf:
+  #   documentclass: article
+  #   include-in-header:
+  #     text: |
+  #       \usepackage{mathtools}
+  #   knitr:
+  #     opts_chunk:
+  #       dev: "cairo_pdf"
   
   docx:
     knitr:
