@@ -13,6 +13,9 @@ manuscript/output/
 *.pdf
 *.html
 *.docx
+*.log
+*.aux
+manuscript/manuscript.tex
 
 !manuscript/html/title-metadata.html
 
