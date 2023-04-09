@@ -222,9 +222,7 @@ Main assumption: We're interested in the potential to be in other provinces, eve
 
 ## Regression Model
 
-Our data provides us with rich descriptive detail of the types of INGOs allowed to register in China following the advent of the ONGO law, and we explore patterns in this data below. In addition to presenting descriptive summary statistics, we create a multilevel Bayesian regression model to examine the complex effects that issue area, local connections, and registration timing have on organizational flexibility. This approach allows us to hold specific variables constant and generate predictions for hypothetical new, not-yet-registered INGOs, providing us with stronger empirical implications.
-
-We use multilevel Bayesian modeling to analyze the empirical data. 
+Our data provides us with rich descriptive detail of the types of INGOs allowed to register in China following the advent of the ONGO law, and we explore patterns in this data below. In addition to presenting descriptive summary statistics, we create a multilevel Bayesian regression model to examine the complex effects that issue area, local connections, and registration timing have on organizational flexibility. This approach allows us to hold specific variables constant and generate predictions for hypothetical new, not-yet-registered INGOs, providing us with stronger empirical implications. Additionally, Bayesian modeling allows us to calculate the posterior distribution of our different estimands. Rather than report a single value for the proportion of registered INGOs worked on specific issues, we can estimate posterior credible intervals that represent the probability that the true proportion falls within a specific range. We report posterior medians and 95% credible intervals throughout our analysis. Importantly, these intervals do not behave like more traditional frequentist confidence intervals. Instead, they can be interpreted as the probability that a reported estimate falls within the range, given the data and modeling choices.
 
 ```{r fig-province-count-collapsed, fig.width=6, fig.height=3}
 #| include: true
@@ -291,6 +289,21 @@ $$ {#eq-ordbeta}
 
 ## Regression Results
 
+### Issue area
+
+
+### Local connections
+
+In our second empirical expectation, we posit that since INGOs that seek out local connections and that are focused on more local China-specific issues, those organizations should be registered in fewer provinces. The results from our model confirm this expectation.
+
+TODO 12ish expected provinces for INGOs with no local connections; 21ish for INGOs with local connections
+
+TODO We can take advantage of the continuous + discrete features of ordered beta and see BLAH BLAH. After simulating 1,000 hypothetical new INGOs, organizations without local connections are predicted to work nationally in all provinces nearly 50% of the time (ASDF-ASDF credible interval), and are predicted to work in 2 or more provinces 35% of the time. These organizations with no local connections or local programmatic focus are only predicted to work in a single province 15ish% of the time. In contrast, INGOs *with* local connections are far more likely to only work in one province (35%), or only work in a handful of provinces. These locally-focused organizations are only predicted to work nationally 25% of the time. 
+
+TODO Graphs
+
+
+### Registration timing
 
 # Discussion
 
