@@ -266,7 +266,7 @@ Modeling the count of provinces each INGO is authorized to operate in presents a
 
 $$
 \begin{aligned}
-\text{Count of provinces}\ \sim&\ \operatorname{Ordered Beta}(\mu_{i_j}, \phi_y, k_{0_y}, k_{1_y}) & \text{Registered provinces for INGO $i$ in province $j$}\\[8pt]
+\text{Count of provinces}\ \sim&\ \operatorname{Ordered\ Beta}(\mu_{i_j}, \phi_y, k_{0_y}, k_{1_y}) & \text{Registered provinces for INGO $i$ in province $j$}\\[8pt]
 \mu_{i_j} =&\ (\beta_0 + b_{0_j}) + \beta_1\ \text{Issue area}\ + & \text{Average outcome}\\
 &\ \beta_2\ \text{Local connections}\ + \\
 &\ \beta_3\ \text{Years since law took effect} \\
