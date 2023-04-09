@@ -69,5 +69,13 @@ list(
   tar_target(preds_timing, f_preds_timing(m_full_ordbeta)),
   
   ## Analysis notebook ----
-  tar_quarto(website, path = ".", quiet = FALSE)
+  tar_quarto(website, path = ".", quiet = FALSE),
+  
+  tar_target(deploy_script, here_rel("deploy.sh"), format = "file"),
+  tar_target(deploy, {
+    # Force a dependency
+    website
+    # Run the deploy script, but only on Andrew's computer, which has SSH access to the server
+    if (Sys.getenv("UPLOAD_WEBSITES") == "TRUE") processx::run(paste0("./", deploy_script))
+  })
 )
