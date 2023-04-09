@@ -116,7 +116,7 @@ f_preds_local <- function(model, ndraws = 100) {
     mutate(preds = map(draw, ~{
       model |> 
         predicted_draws(datagrid(model = model, local_connect = unique), 
-                        ndraws = 1000)
+                        ndraws = 1000, seed = 58214)
     }))
 }
 
@@ -125,6 +125,27 @@ f_preds_timing <- function(model, ndraws = 100) {
     mutate(preds = map(draw, ~{
       model |> 
         predicted_draws(datagrid(model = model, years_since_law = 0:5), 
-                        ndraws = 1000)
+                        ndraws = 1000, seed = 58214)
     }))
+}
+
+f_epreds_issue <- function(model, ndraws = 1000) {
+  model |> 
+    epred_draws(datagrid(model = model, work_field_code1 = unique), 
+                ndraws = ndraws, seed = 58214) |> 
+    ungroup()
+}
+
+f_epreds_local <- function(model, ndraws = 1000) {
+  model |> 
+    epred_draws(datagrid(model = model, local_connect = unique), 
+                ndraws = ndraws, seed = 58214) |> 
+    ungroup()
+}
+
+f_epreds_timing <- function(model, ndraws = 1000) {
+  model |> 
+    epred_draws(datagrid(model = model, years_since_law = 0:5), 
+                ndraws = ndraws, seed = 58214) |> 
+    ungroup()
 }

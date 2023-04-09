@@ -68,6 +68,10 @@ list(
   tar_target(preds_local, f_preds_local(m_full_ordbeta)),
   tar_target(preds_timing, f_preds_timing(m_full_ordbeta)),
   
+  tar_target(epreds_issue, f_epreds_issue(m_full_ordbeta)),
+  tar_target(epreds_local, f_epreds_local(m_full_ordbeta)),
+  tar_target(epreds_timing, f_epreds_timing(m_full_ordbeta)),
+  
   ## Analysis notebook ----
   tar_quarto(manuscript_nice, path = "manuscript", quiet = FALSE),
   tar_quarto(website, path = ".", quiet = FALSE),
