@@ -6,6 +6,7 @@
 
 # Quarto stuff
 /.quarto/
+**/*_cache/*
 _site/
 manuscript/output/
 

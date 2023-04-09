@@ -28,7 +28,7 @@ set.seed(196491)
 
 # Load targets
 tar_load(ongo)
-tar_load(m_full_ordbeta)
+tar_load(c(m_full_ordbeta, preds_local))
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
 
 prop_to_provinces <- function(x, lower = 1, upper = 32) {
@@ -36,18 +36,11 @@ prop_to_provinces <- function(x, lower = 1, upper = 32) {
 }
 ```
 
-```{r generate-preds}
-preds <- m_full_ordbeta |> 
-  predicted_draws(datagrid(model = m_full_ordbeta, local_connect = unique), 
-                  ndraws = 1000)
-
-
+```{r plot-epred-local}
 epreds <- m_full_ordbeta |> 
   epred_draws(datagrid(model = m_full_ordbeta, local_connect = unique), 
               ndraws = 1000)
-```
 
-```{r plot-epred-local}
 epreds |> 
   ungroup() |> 
   mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
@@ -64,22 +57,21 @@ epreds |>
 ```
 
 ```{r plot-pred-discrete-continuous-local, message=FALSE}
-preds_local_plot <- preds %>% 
-  ungroup() %>% 
+preds_local_plot <- preds_local |> 
+  unnest(preds) |> 
   mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
   mutate(outcome = case_when(
     .prediction == 0 ~ "1 province",
     .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
     .prediction == 1 ~ "32 provinces"
   )) %>% 
-  group_by(outcome, local_connect) %>% 
+  group_by(outcome, local_connect, draw) %>% 
   summarize(count = n()) |> 
   group_by(local_connect) |> 
-  mutate(prop = count / sum(count))
+  mutate(prop = count / sum(count) * 100)
 
 ggplot(preds_local_plot, aes(x = local_connect, y = prop)) +
-  geom_segment(aes(xend = local_connect, yend = 0), color = "grey50") +
-  geom_point(color = clrs[2], size = 2) +
+  stat_pointinterval(color = clrs[2]) +
   expand_limits(y = 0) +
   facet_wrap(vars(outcome)) +
   scale_x_discrete(labels = label_wrap(10)) +

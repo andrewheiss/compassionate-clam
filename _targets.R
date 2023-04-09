@@ -63,6 +63,11 @@ list(
   tar_target(m_full_zoib, f_full_zoib(ongo)),
   tar_target(m_full_ordbeta, f_full_ordbeta(ongo)),
   
+  ## Posterior predictions ----
+  tar_target(preds_issue, f_preds_issue(m_full_ordbeta)),
+  tar_target(preds_local, f_preds_local(m_full_ordbeta)),
+  tar_target(preds_timing, f_preds_timing(m_full_ordbeta)),
+  
   ## Analysis notebook ----
   tar_quarto(website, path = ".", quiet = FALSE)
 )

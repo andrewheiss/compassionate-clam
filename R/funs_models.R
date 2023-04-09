@@ -1,3 +1,6 @@
+suppressPackageStartupMessages(library(tidybayes))
+library(marginaleffects)
+
 # Model definitions
 f_basic_zoib <- function(data) {
   BAYES_SEED <- 102819  # From random.org
@@ -83,4 +86,31 @@ f_full_ordbeta <- function(data) {
     seed = BAYES_SEED)
   
   return(model)
+}
+
+f_preds_issue <- function(model, ndraws = 500) {
+  tibble(draw = 1:ndraws) |> 
+    mutate(preds = map(draw, ~{
+      model |> 
+        predicted_draws(datagrid(model = model, work_field_code1 = unique), 
+                        ndraws = 1000)
+    }))
+}
+
+f_preds_local <- function(model, ndraws = 100) {
+  tibble(draw = 1:ndraws) |> 
+    mutate(preds = map(draw, ~{
+      model |> 
+        predicted_draws(datagrid(model = model, local_connect = unique), 
+                        ndraws = 1000)
+    }))
+}
+
+f_preds_timing <- function(model, ndraws = 100) {
+  tibble(draw = 1:ndraws) |> 
+    mutate(preds = map(draw, ~{
+      model |> 
+        predicted_draws(datagrid(model = model, years_since_law = unique), 
+                        ndraws = 1000)
+    }))
 }
