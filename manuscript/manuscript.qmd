@@ -60,9 +60,15 @@ set.seed(8511)
 # Load targets 
 tar_load(ongo)
 tar_load(ongo_mapdata)
+tar_load(c(preds_issue, preds_local, preds_timing,
+           epreds_issue, epreds_local, epreds_timing))
 
 # Plotting and modelsummary functions
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
+
+prop_to_provinces <- function(x, lower = 1, upper = 32) {
+  (x * (upper - lower)) + lower
+}
 ```
 
 
@@ -218,17 +224,123 @@ $$ {#eq-ordbeta}
 
 ### Issue area
 
+Following our first empirical expectation, we predict that INGOs working on less contentious issues should be registered in more provinces and have more geographic flexibility in operating throughout the country. To explore this, we can take advantage of the simultaneous continuous and discrete features of ordered Beta regression and see how often an INGO in each issue area is predicted to work in a single province, across all provinces, or some number in between. @fig-issue-preds-1 presents a summary of predicted posterior outcomes for 1,000 hypothetical INGOs, varying each possible issue area and holding all other variables at their mean or modal values. Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelming the most likely kind of organization to work nationally—arts and culture organizations are predicted to work in all 32 provinces 80% of the time (with a credible interval of 78–83%) and are only predicted to work in a single province a rare 3–5% of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only 32–38% of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing 24–29% of the time—at least 10 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly the patterns in predictions: the most common outcome is for organizations to work nationally (50–60% of the time), followed by working in at least 2 provinces (25–40% of the time), followed by working in a single province (10–20% of the time). @fig-issue-preds-2 shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend—arts and culture INGOs are predicted to work in 28–30 provinces on average, while education INGOs are only predicted to work in 12–20. All other issues range between 20–28 provinces.
+
+::: {#fig-issue-preds layout-ncol=1}
+
+```{r fig-issue-preds-1, fig.width=6, fig.height=4.5}
+#| include: true
+#| echo: false
+#| fig-subcap: "Proportions of posterior predictions of INGOs working in 1 province, all 32 provinces, or somewhere in between. Distinct x-axis categories sum to 100% across the panels."
+preds_issue_plot <- preds_issue |> 
+  unnest(preds) |> 
+  mutate(outcome = case_when(
+    .prediction == 0 ~ "1 province",
+    .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
+    .prediction == 1 ~ "32 provinces"
+  )) %>% 
+  group_by(outcome, work_field_code1, draw) %>% 
+  summarize(count = n()) |> 
+  group_by(work_field_code1, draw) |> 
+  mutate(prop = count / sum(count)) |> 
+  ungroup() |> 
+  mutate(work_field_code1 = fct_reorder(work_field_code1, prop))
+
+# preds_issue_plot |> 
+#   group_by(outcome, work_field_code1) |>
+#   median_qi(prop)
+
+ggplot(preds_issue_plot, aes(x = work_field_code1, y = prop)) +
+  stat_pointinterval(color = clrs[5], .width = 0.95, fatten_point = 1) +
+  facet_wrap(vars(outcome), ncol = 1, scales = "free_y") +
+  scale_x_discrete(labels = label_wrap(10)) +
+  scale_y_continuous(labels = label_percent()) +
+  labs(x = NULL, y = "Proportion of predictions",
+       caption = "Point shows posterior median; lines show 95% credible interval") +
+  theme_ongo()
+```
+
+```{r fig-issue-preds-2}
+#| include: true
+#| echo: false
+#| fig-subcap: "Distribution of the expectation of posterior predictions. These distributions take into account single-province and nationwide predictions and represent the overall conditional average geographic range for INGOs."
+epreds_issue |> 
+  mutate(work_field_code1 = fct_reorder(work_field_code1, .epred)) |> 
+  ggplot(aes(x = .epred, y = work_field_code1)) +
+  stat_halfeye(fill = clrs[5], .width = c(0.8, 0.95)) +
+  scale_x_continuous(labels = label_percent(),
+                     sec.axis = sec_axis(trans = ~ prop_to_provinces(.),
+                                         name = "Expected provinces",
+                                         breaks = seq(8, 32, 4))) +
+  guides(fill = "none") +
+  labs(x = "Expected proportion of provinces", y = NULL,
+       caption = "Point shows posterior median; lines show 80% and 95% credible intervals") +
+  theme_ongo() +
+  theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
+```
+
+Posterior predictions from ordered Beta regression model, conditional on organization issue area.
+
+:::
 
 ### Local connections
 
-In our second empirical expectation, we posit that since INGOs that seek out local connections and that are focused on more local China-specific issues, those organizations should be registered in fewer provinces. The results from our model confirm this expectation.
+In our second empirical expectation, we posit that since INGOs that seek out local connections and that are focused on more local China-specific issues, those organizations should be registered in fewer provinces. The results from our model confirm this expectation. @fig-local-preds-1 shows the distribution of predicted posterior outcomes for 1,000 hypothetical INGOs. Organizations without local connections are predicted to work nationally across all provinces nearly half of the time (with a 95% credible interval of 46–51%), and are predicted to work in two or more provinces 32–37% of the time. These organizations with no local connections or local programmatic focus are only predicted to work in a single province 15–19% of the time. In contrast, INGOs *with* local connections are far more likely to only work in one province (32–38%), or only work in a handful of provinces (36–41%). For these locally-focused organizations, the least common prediction is to work nationally, with only a 23–29% probability. @fig-local-preds-2 shows the posterior distribution of the average number of provinces INGOs are expected to be registered in, conditional on their local connections. The same relationship holds—an INGO without local connections is predicted to work in 19–24 provinces on average, while an organization with local connections is only predicted to work in 8–17. 
 
-TODO 12ish expected provinces for INGOs with no local connections; 21ish for INGOs with local connections
+```{r fig-local-preds, fig.width=6, fig.height=2.5}
+#| include: true
+#| echo: false
+#| fig-cap: "Posterior predictions from ordered Beta regression model, conditional on having local connections."
+#| fig-subcap: 
+#|   - "Proportions of posterior predictions of INGOs working in 1 province, all 32 provinces, or somewhere in between. Distinct x-axis categories sum to 100% across the panels."
+#|   - "Distribution of the expectation of posterior predictions. These distributions take into account single-province and nationwide predictions and represent the overall conditional average geographic range for INGOs."
+preds_local_plot <- preds_local |> 
+  unnest(preds) |> 
+  mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
+  mutate(outcome = case_when(
+    .prediction == 0 ~ "1 province",
+    .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
+    .prediction == 1 ~ "32 provinces"
+  )) %>% 
+  group_by(outcome, local_connect, draw) %>% 
+  summarize(count = n()) |> 
+  group_by(local_connect, draw) |> 
+  mutate(prop = count / sum(count))
 
-TODO We can take advantage of the continuous + discrete features of ordered beta and see BLAH BLAH. After simulating 1,000 hypothetical new INGOs, organizations without local connections are predicted to work nationally in all provinces nearly 50% of the time (ASDF-ASDF credible interval), and are predicted to work in 2 or more provinces 35% of the time. These organizations with no local connections or local programmatic focus are only predicted to work in a single province 15ish% of the time. In contrast, INGOs *with* local connections are far more likely to only work in one province (35%), or only work in a handful of provinces. These locally-focused organizations are only predicted to work nationally 25% of the time. 
+# preds_local_plot |>
+#   group_by(outcome, local_connect) |>
+#   median_qi(prop)
+#
+# epreds_local |>
+#   mutate(.epred = prop_to_provinces(.epred)) |> 
+#   group_by(local_connect) |>
+#   median_qi(.epred)
 
-TODO Graphs
+ggplot(preds_local_plot, aes(x = local_connect, y = prop)) +
+  stat_pointinterval(color = clrs[2], .width = c(0.95), fatten_point = 1) +
+  facet_wrap(vars(outcome)) +
+  scale_x_discrete(labels = label_wrap(10)) +
+  scale_y_continuous(labels = label_percent()) +
+  labs(x = NULL, y = "Proportion of predictions",
+       caption = "Point shows posterior median; lines show 95% credible interval") +
+  theme_ongo()
 
+epreds_local |> 
+  mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
+  ggplot(aes(x = .epred, y = local_connect)) +
+  stat_halfeye(fill = clrs[2], .width = c(0.8, 0.95)) +
+  scale_x_continuous(labels = label_percent(),
+                     sec.axis = sec_axis(trans = ~ prop_to_provinces(.),
+                                         name = "Expected provinces",
+                                         breaks = seq(8, 32, 4))) +
+  guides(fill = "none") +
+  labs(x = "Expected proportion of provinces", y = NULL,
+       caption = "Point shows posterior median; lines show 80% and 95% credible intervals") +
+  theme_ongo() +
+  theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
+```
+
+INGOs with locally focused missions and connections with local provincial officials are thus far more likely to purposely limit their activities to specific provinces, while organizations with broader non-local missions have a larger geographic reach. While we cannot precisely tell which direction the causal story works with this phenomenon, we can make some reasonable speculations. It is likely that locally-oriented INGOs purposely network and seek out connections with local PSUs before formally registering, thus fostering better relationships with government officials and furthering the organization's mission within its limited provinces. It is also likely, given the high probability of national reach, that organizations without local connections purposely do not spend the time and effort to cultivate those relationships, as it is not necessary to operate across many provinces. A rival explanation that having local connections reduces an organization's flexibility does not seem warranted. Although INGOs with local connections do have a more limited geographic scope, INGOs appear to purposely limit the number of provinces they work in in order to focus more on their local work.
 
 ### Registration timing
 
