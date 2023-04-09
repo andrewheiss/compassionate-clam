@@ -21,6 +21,50 @@ bibliography: references.bib
 link-citations: true
 ---
 
+```{r setup, include=FALSE}
+if (is.null(knitr::pandoc_to())) {
+  fmt_out <- "interactive"
+} else {
+  fmt_out <- knitr::pandoc_to()
+}
+
+knitr::opts_chunk$set(echo = FALSE, include = FALSE, 
+                      warning = FALSE, message = FALSE)
+
+knitr::opts_chunk$set(fig.align = "center", fig.retina = 3,
+                      fig.width = 6, fig.height = (6 * 0.618),
+                      out.width = "80%", collapse = TRUE)
+
+options(digits = 3, width = 120,
+        dplyr.summarise.inform = FALSE,
+        knitr.kable.NA = "")
+```
+
+```{r libraries-data}
+library(tidyverse)
+library(scales)
+library(lubridate)
+library(tidybayes)
+library(marginaleffects)
+library(patchwork)
+library(kableExtra)
+library(gt)
+library(targets)
+
+tar_config_set(store = here::here('_targets'),
+               script = here::here('_targets.R'))
+
+# Generated via random.org
+set.seed(8511)
+
+# Load targets 
+tar_load(ongo)
+tar_load(ongo_mapdata)
+
+# Plotting and modelsummary functions
+invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
+```
+
 In recent decades, there has been a global tend of “closing space” for civil society across jurisdictions such as Russia, India and Vietnam.[@DupuyPrakash:2020;@ChaudhryHeiss:2020] (*to add citation*) The manifestation of such trend is rolling out restrictive laws that regulate international NGOs (INGOs).[@DupuyPrakash:2020; @ChaudhryHeiss:2022] China’s promulgation of the Law of the People’s Republic of China on Administration of Activities of Overseas Nongovernmental Organizations in the Mainland of China (the “ONGO Law”) on April 28, 2016 was considered part of a global wave of legal restrictions on INGOs. The purpose of this study is to empirically examine how the ONGO law has impacted INGO's presence as well as the operational space after the law took effect. By inquiring the *de facto* implementation of the law in addition to formal *de jure* regulations, we will be able to see a more comprehensive picture of the operational space for INGOs. It will also inform as the evolving theorization of the "closing space" and dual attitudes towards INGOs hold true for an Authoritarian jurisdiction such as China. 
 
 
@@ -178,17 +222,71 @@ Main assumption: We're interested in the potential to be in other provinces, eve
 
 ## Regression Model
 
+Our data provides us with rich descriptive detail of the types of INGOs allowed to register in China following the advent of the ONGO law, and we explore patterns in this data below. In addition to presenting descriptive summary statistics, we create a multilevel Bayesian regression model to examine the complex effects that issue area, local connections, and registration timing have on organizational flexibility. This approach allows us to hold specific variables constant and generate predictions for hypothetical new, not-yet-registered INGOs, providing us with stronger empirical implications.
+
 We use multilevel Bayesian modeling to analyze the empirical data. 
 
+```{r fig-province-count-collapsed, fig.width=6, fig.height=3}
+#| include: true
+#| echo: false
+#| fig-cap: "Count of the number of provinces each INGO is authorized to operate in. The left panel shows the full distribution of INGOs registered in 2–31 provinces; the right panel collapses these in-between counts to a single category."
+provinces_collapsed <- ongo |> 
+  drop_na(province_count) |> 
+  mutate(province_count = case_when(
+    province_count == 1 ~ "1",
+    province_count > 1 & province_count < 32 ~ "2–31",
+    province_count == 32 ~ "32"
+  ))
 
+p1 <- ggplot(ongo, aes(x = province_count)) +
+  geom_histogram(binwidth = 1, size = 0.1, boundary = 0,
+                 fill = clrs[6], color = "white") +
+  scale_y_continuous(breaks = seq(0, 250, 50)) +
+  labs(x = "Provinces INGOs are authorized to work in", y = "Count") +
+  theme_ongo()
 
+p2 <- ggplot(provinces_collapsed, aes(x = province_count)) + 
+  geom_bar(fill = clrs[6]) +
+  scale_x_discrete(labels = label_wrap(10)) +
+  scale_y_continuous(sec.axis = sec_axis(trans = ~ . / nrow(provinces_collapsed),
+                                         labels = label_percent()),
+                     breaks = seq(0, 250, 50)) +
+  labs(x = NULL, y = NULL) +
+  theme_ongo()
 
+(p1 | p2) + 
+  plot_layout(nrow = 1, widths = c(0.7, 0.3))
+```
 
+Modeling the count of provinces each INGO is authorized to operate in presents a unique statistical challenge. As seen in @fig-province-count-collapsed, roughly 30% of INGOs are registered in only one province, 40% are registered nationwide, while the remaining 30% are registered in 2–31 provinces. Our main variable of interest is thus a mix of continuous outcomes (i.e. a range of provinces) bounded between two discrete outcomes (i.e. one province and all provinces). Standard modeling approaches like ordinary least squares regression (OLS) cannot accurately capture the unique features of the data and will generate predictions that fall outside allowable bounds (i.e. negative counts of provinces or more than 32 provinces). If we transform the count of provinces to a percentage, Beta regression would work well, as it is naturally limited outcomes within a 0–1 range. However, Beta regression cannot handle values that are exactly 0 or 1, making it inappropriate for our data with its inflated counts at 0 (1)  and 100% (32). To account for values at the bounds, we rely on ordered Beta regression [@Kubinec:2022], and extension of zero-and-one-inflated Beta regression that allows us to simultaneously model the continuous range of provinces (2–31) and the discrete outcomes (1 province and 32 provinces) without relying on percentages. We can thus explore the dynamics of each of our independent variables of interest in multiple ways—we can see (1) how each variable predicts that an organizations works in one province, nationwide, or somewhere in between, and (2) how each variable predicts the overall expected count of provinces.
+
+@eq-ordbeta provides a formal definition of our modeling choices. Since we are primarily interested in how an INGO's issue area, its local connections, and the timing of its registration after January 2017, we include these as explanatory variables. We also include province-specific random offsets for each intercept to account for between-region differences in how INGOs are regulated. We use weakly informative priors for all model parameters.
+
+::: {.column-page-inset-right}
+
+$$
+\begin{aligned}
+\text{Count of provinces}\ \sim&\ \operatorname{Ordered Beta}(\mu_{i_j}, \phi_y, k_{0_y}, k_{1_y}) & \text{Registered provinces for INGO $i$ in province $j$}\\[8pt]
+\mu_{i_j} =&\ (\beta_0 + b_{0_j}) + \beta_1\ \text{Issue area}\ + & \text{Average outcome}\\
+&\ \beta_2\ \text{Local connections}\ + \\
+&\ \beta_3\ \text{Years since law took effect} \\
+b_{0_j} =&\ \mathcal{N}(0, \sigma_0) & \text{Random province offsets} \\[8pt]
+\beta_0\ \sim&\ \operatorname{Student\,t}(\nu = 3, \mu = 0, \sigma = 2.5) & \text{Prior for global intercept} \\
+\beta_{1..3}\ \sim&\ \mathcal{N}(0, 5) & \text{Prior for global coefficients} \\
+\sigma_0\ \sim&\ \operatorname{Student\,t}(3, 0, 2.5) & \text{Prior for between-province variability} \\
+\phi_y\ \sim&\ \operatorname{Exponential}(1 / 100) & \text{Prior for within-province variability} \\
+k_{0_y}, k_{1_y}\ \sim&\ \operatorname{Dirichlet}(1, 1, 1) & \text{Prior for 0–continuous and continuous–1 cutpoints} \\
+\end{aligned}
+$$ {#eq-ordbeta}
+
+:::
 
 # Results
 
 
 ## Descriptive Results
+
+
 
 
 ## Regression Results
