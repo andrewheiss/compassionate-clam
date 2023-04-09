@@ -19,6 +19,7 @@ library(targets)
 library(here)
 library(sf)
 library(ggrepel)
+library(scales)
 
 # Point to the _targets folder location since this qmd is in a subfolder
 tar_config_set(store = here::here('_targets'),
@@ -48,9 +49,27 @@ ggplot(ongo, aes(x = registration_date)) +
 ggplot(ongo, aes(x = province_count)) +
   geom_histogram(binwidth = 1, size = 0.1, boundary = 0,
                  fill = clrs[6], color = "white") +
-  labs(x = "Number of provinces ONGOs are registered in", y = "Count") +
+  labs(x = "Number of provinces INGOs are authorized to work in", y = "Count") +
   theme_ongo()
 ```
+
+```{r province-count-collapsed}
+provinces_collapsed <- ongo |> 
+  drop_na(province_count) |> 
+  mutate(province_count = case_when(
+    province_count == 1 ~ "1 province",
+    province_count > 1 & province_count < 32 ~ "2–31 provinces",
+    province_count == 32 ~ "32 provinces"
+  )) 
+
+ggplot(provinces_collapsed, aes(x = province_count)) + 
+  geom_bar(fill = clrs[6]) +
+  scale_y_continuous(sec.axis = sec_axis(trans = ~ . / nrow(provinces_collapsed),
+                                         labels = label_percent())) +
+  labs(x = "Number of provinces INGOs are authorized to work in", y = "Count") +
+  theme_ongo()
+```
+
 
 # Issue areas
 
