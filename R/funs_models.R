@@ -88,6 +88,20 @@ f_full_ordbeta <- function(data) {
   return(model)
 }
 
+# f_lotsa_preds <- function(model, column_name, ndraws = 100) {
+#   # This dynamically generates the grid, essentially building this command:
+#   #   datagrid(model = model, local_connect = unique)
+#   # but with any variable in place of "local_connect"
+#   args <- list(model = model)
+#   args[[column_name]] <- unique
+#   grid <- exec(datagrid, !!!args)
+#   # Or with do.call():
+#   #   grid <- do.call(datagrid, args)
+#   
+#   tibble(draw = 1:ndraws) |> 
+#     mutate(preds = map(draw, ~predicted_draws(model, grid, ndraws = 1000)))
+# }
+
 f_preds_issue <- function(model, ndraws = 500) {
   tibble(draw = 1:ndraws) |> 
     mutate(preds = map(draw, ~{
@@ -110,7 +124,7 @@ f_preds_timing <- function(model, ndraws = 100) {
   tibble(draw = 1:ndraws) |> 
     mutate(preds = map(draw, ~{
       model |> 
-        predicted_draws(datagrid(model = model, years_since_law = unique), 
+        predicted_draws(datagrid(model = model, years_since_law = 0:5), 
                         ndraws = 1000)
     }))
 }
