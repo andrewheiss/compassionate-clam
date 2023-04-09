@@ -69,7 +69,7 @@ epreds %>%
   theme(axis.title.y.right = element_text(hjust = 1, margin = margin(l = 10), angle = 90))
 ```
 
-```{r plot-pred-discrete-continuous-timing, message=FALSE, cache=TRUE}
+```{r plot-pred-discrete-continuous-timing, message=FALSE}
 preds_timing_plot <- preds_timing |> 
   unnest(preds) |> 
   mutate(outcome = case_when(
