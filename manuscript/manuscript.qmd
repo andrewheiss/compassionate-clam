@@ -228,7 +228,7 @@ Following our first empirical expectation, we predict that INGOs working on less
 
 ::: {#fig-issue-preds layout-ncol=1}
 
-```{r fig-issue-preds-1, fig.width=6, fig.height=4.5}
+```{r fig-issue-preds-1, fig.width=6, fig.height=4.5, cache=TRUE}
 #| include: true
 #| echo: false
 #| fig-subcap: "Proportions of posterior predictions of INGOs working in 1 province, all 32 provinces, or somewhere in between. Distinct x-axis categories sum to 100% across the panels."
@@ -238,8 +238,8 @@ preds_issue_plot <- preds_issue |>
     .prediction == 0 ~ "1 province",
     .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
     .prediction == 1 ~ "32 provinces"
-  )) %>% 
-  group_by(outcome, work_field_code1, draw) %>% 
+  )) |> 
+  group_by(outcome, work_field_code1, draw) |> 
   summarize(count = n()) |> 
   group_by(work_field_code1, draw) |> 
   mutate(prop = count / sum(count)) |> 
@@ -283,9 +283,11 @@ Posterior predictions from ordered Beta regression model, conditional on organiz
 
 :::
 
+As explained previously, we expect that the contentiousness of an NGO's issue area should influence its geographic reach and overall flexibility. No INGOs engaged in contentious issues like human rights advocacy have successfully registered in China, but there is some slight variation in the level of contention even among organizations working on less contentious issues like humanitarian assistance, health, and the environment. Education is particularly notable as the least flexible and most geographically restricted subsector. While education is typically considered a low-contention issue, in China fears of Western influence through educational institutions were an original impetus for the ONGO law. In 2006, an article in a CCP-owned newspaper warned that the growing presence of international NGOs would "undermine national security," "destroy political stability," "foster corruption," "propagate foreign practices," and "spy on and gather information on China's military, political, and economic information" [@Yin:2009, 534]. The idea that INGOs would "propagate foreign practices" had especially powerful salience, since increased exposure to the West through international NGOs had the potential to "lead to adoption of Western ideas of liberty, further endangering government control over the populace" [@HsiaWhite:2002, 337]. Educational NGOs were one particular avenue for the West to exert influence in the country—the directors and presidents of dozens of China's largest domestic NGOs have received doctoral degrees from and hold visiting appointments at Cornell, Duke, UNC-Chapel Hill, Harvard, Yale, and other prominent US universities [@Wang:2012, 108–9], and their training and connections abroad have influenced their programming and advocacy at home. In 2006, one Chinese NGO leader candidly explained that "foreign influence is definitely great. There is conceptual influence. Foreign NGOs' working methods also affect Chinese NGOs" [@Wang:2012, 110]. Education can thus be seen as one of the more contentious issues allowed under the ONGO law, and thus more closely regulated and restricted.
+
 ### Local connections
 
-In our second empirical expectation, we posit that since INGOs that seek out local connections and that are focused on more local China-specific issues, those organizations should be registered in fewer provinces. The results from our model confirm this expectation. @fig-local-preds-1 shows the distribution of predicted posterior outcomes for 1,000 hypothetical INGOs. Organizations without local connections are predicted to work nationally across all provinces nearly half of the time (with a 95% credible interval of 46–51%), and are predicted to work in two or more provinces 32–37% of the time. These organizations with no local connections or local programmatic focus are only predicted to work in a single province 15–19% of the time. In contrast, INGOs *with* local connections are far more likely to only work in one province (32–38%), or only work in a handful of provinces (36–41%). For these locally-focused organizations, the least common prediction is to work nationally, with only a 23–29% probability. @fig-local-preds-2 shows the posterior distribution of the average number of provinces INGOs are expected to be registered in, conditional on their local connections. The same relationship holds—an INGO without local connections is predicted to work in 19–24 provinces on average, while an organization with local connections is only predicted to work in 8–17. 
+In our second empirical expectation, we posit that since INGOs that seek out local connections and that are focused on more local China-specific issues, those organizations should be registered in fewer provinces. The results from our model confirm this expectation. @fig-local-preds-1 shows the distribution of predicted posterior outcomes for 1,000 hypothetical INGOs. Organizations without local connections are predicted to work nationally across all provinces nearly half of the time (with a 95% credible interval of 46–51%), and are predicted to work in two or more provinces 32–37% of the time. These organizations with no local connections or local programmatic focus are only predicted to work in a single province 15–19% of the time. In contrast, INGOs *with* local connections are far more likely to only work in one province (32–38%), or only work in a handful of provinces (36–41%). For these locally-focused organizations, the least common prediction is to work nationally, with only a 23–29% probability. @fig-local-preds-2 shows the posterior distribution of the average number of provinces INGOs are expected to be registered in, conditional on their local connections. The same relationship holds—an INGO without local connections is predicted to work in 19–24 provinces on average, while an organization with local connections is only predicted to work in 8–17.
 
 ```{r fig-local-preds, fig.width=6, fig.height=2.5}
 #| include: true
@@ -301,8 +303,8 @@ preds_local_plot <- preds_local |>
     .prediction == 0 ~ "1 province",
     .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
     .prediction == 1 ~ "32 provinces"
-  )) %>% 
-  group_by(outcome, local_connect, draw) %>% 
+  )) |> 
+  group_by(outcome, local_connect, draw) |> 
   summarize(count = n()) |> 
   group_by(local_connect, draw) |> 
   mutate(prop = count / sum(count))
@@ -340,7 +342,7 @@ epreds_local |>
   theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
 ```
 
-INGOs with locally focused missions and connections with local provincial officials are thus far more likely to purposely limit their activities to specific provinces, while organizations with broader non-local missions have a larger geographic reach. While we cannot precisely tell which direction the causal story works with this phenomenon, we can make some reasonable speculations. It is likely that locally-oriented INGOs purposely network and seek out connections with local PSUs before formally registering, thus fostering better relationships with government officials and furthering the organization's mission within its limited provinces. It is also likely, given the high probability of national reach, that organizations without local connections purposely do not spend the time and effort to cultivate those relationships, as it is not necessary to operate across many provinces. A rival explanation that having local connections reduces an organization's flexibility does not seem warranted. Although INGOs with local connections do have a more limited geographic scope, INGOs appear to purposely limit the number of provinces they work in in order to focus more on their local work.
+International NGOs with locally focused missions and connections with local provincial officials are thus far more likely to purposely limit their activities to specific provinces, while organizations with broader non-local missions have a larger geographic reach. While we cannot precisely tell which direction the causal story works with this phenomenon, we can make some reasonable speculations. It is likely that locally-oriented INGOs purposely network and seek out connections with local PSUs before formally registering, thus fostering better relationships with government officials and furthering the organization's mission within its limited provinces. It is also likely, given the high probability of national reach, that organizations without local connections purposely do not spend the time and effort to cultivate those relationships, as it is not necessary to operate across many provinces. A rival explanation that having local connections reduces an organization's flexibility does not seem warranted. Although INGOs with local connections do have a more limited geographic scope, INGOs appear to purposely limit the number of provinces they work in in order to focus more on their local work.
 
 ### Registration timing
 

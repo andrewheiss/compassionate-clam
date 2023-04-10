@@ -10,6 +10,7 @@ project:
 
   render: 
     - "*.qmd"
+    - "!submissions/*.qmd"
 
 format:
   html:
@@ -40,8 +41,8 @@ format:
   #     opts_chunk:
   #       dev: "cairo_pdf"
   
-  docx:
-    knitr:
-      opts_chunk:
-        dev: "ragg_png"
-        dpi: 300
+  # docx:
+  #   knitr:
+  #     opts_chunk:
+  #       dev: "ragg_png"
+  #       dpi: 300
