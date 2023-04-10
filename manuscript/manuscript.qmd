@@ -1,5 +1,6 @@
 ---
 title: "The Implementation of China’s Overseas NGO Law and the Operating Space for International Civil Society"
+short-title: "China's ONGO Law and International Civil Society"
 date: "2023-04-09"
 author:
 - name: Meng Ye
@@ -17,6 +18,7 @@ keywords:
   - civil society
   - authoritarianism
   - Chinese ONGO law
+code-repo: "Access the code, data, and analysis at <https://github.com/andrewheiss/compassionate-clam>"
 bibliography: references.bib
 link-citations: true
 ---
@@ -94,7 +96,7 @@ In this paper, we first explore existing theories of closing civic space, author
 Apologies! This section is still *incredibly* drafty!
 :::
 
-China's 2017 ONGO Law has been discussed by scholars mostly as a part of a global trend of restricting and cracking down on international NGOs [@ChaudhryHeiss:2022; @Carothers:2016].  Studies on the law has been focused on discussing the historical and political impetus of passing the law [@Shieh:2018] or analyzing the regulatory regimes it that has established and potential implications for INGOs operating in China [@Feng:2017; @TeetsHsu:2016). However, little work has been done to examine the actual implementation situation of this law, and how the dynamics of ONGOs’ operations and projects have been affected by the law after successfully gaining legal registration and documentation. A few studies [@Jia:2017; @YeHuang:2018)] have reflected on the implementation of the ONGO Law after its first year, including the initial phase of drafting and refining implementing regulations and promotion, as well as training sessions conducted by Public Security Bureaus in different locations. However, a more up-to-date and comprehensive understanding of the effects of the ONGO law is still lacking. 
+China's 2017 ONGO Law has been discussed by scholars mostly as a part of a global trend of restricting and cracking down on international NGOs [@ChaudhryHeiss:2022; @Carothers:2016].  Studies on the law has been focused on discussing the historical and political impetus of passing the law [@Shieh:2018] or analyzing the regulatory regimes it that has established and potential implications for INGOs operating in China [@Feng:2017; @TeetsHsu:2016]. However, little work has been done to examine the actual implementation situation of this law, and how the dynamics of ONGOs’ operations and projects have been affected by the law after successfully gaining legal registration and documentation. A few studies [@Jia:2017; @YeHuang:2018] have reflected on the implementation of the ONGO Law after its first year, including the initial phase of drafting and refining implementing regulations and promotion, as well as training sessions conducted by Public Security Bureaus in different locations. However, a more up-to-date and comprehensive understanding of the effects of the ONGO law is still lacking. 
 
 This paper aims to fill these gaps by empirically examining how the "closing space" hypothesis applies to China in the years after the ONGO Law took effect. China provides an excellent setting for testing these theories because China's promulgation of restrictive INGO law as an authoritarian jurisdiction fits the observed global trends in recent years, thus can serve as an representative case to deepen scholarly understanding around these themes. Also, the level of ambiguity of the legal framework gives ample room for arbitrary discretion and conflicting attitudes by authorities, enabling us to analyze rules in form (*de jure*) as well as rules in use (*de facto*). 
 
@@ -296,7 +298,7 @@ Next we explore our data in more depth by generating and analyzing posterior pre
 
 Following our first empirical expectation, we predict that INGOs working on less contentious issues should be registered in more provinces and have more geographic flexibility in operating throughout the country. To explore this, we can take advantage of the simultaneous continuous and discrete features of ordered Beta regression and see how often an INGO in each issue area is predicted to work in a single province, across all provinces, or some number in between. @fig-issue-preds-1 presents a summary of predicted posterior outcomes for 1,000 hypothetical INGOs, varying each possible issue area and holding all other variables at their mean or modal values. Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelming the most likely kind of organization to work nationally—arts and culture organizations are predicted to work in all 32 provinces 80% of the time (with a credible interval of 78–83%) and are only predicted to work in a single province a rare 3–5% of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only 32–38% of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing 24–29% of the time—at least 10 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly the patterns in predictions: the most common outcome is for organizations to work nationally (50–60% of the time), followed by working in at least 2 provinces (25–40% of the time), followed by working in a single province (10–20% of the time). @fig-issue-preds-2 shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend—arts and culture INGOs are predicted to work in 28–30 provinces on average, while education INGOs are only predicted to work in 12–20. All other issues range between 20–28 provinces.
 
-```{r fig-issue-preds, fig.width=6, fig.height=4.5, cache=TRUE}
+```{r fig-issue-preds, fig.width=6, fig.height=4.5}
 #| include: true
 #| echo: false
 #| layout-ncol: 1

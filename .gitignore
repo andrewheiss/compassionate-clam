@@ -13,6 +13,7 @@ manuscript/output/
 *.pdf
 *.html
 *.docx
+*.odt
 *.log
 *.aux
 manuscript/manuscript.tex

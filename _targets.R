@@ -75,7 +75,8 @@ list(
   tar_target(epreds_timing_local, f_epreds_timing_local(m_full_ordbeta)),
   
   ## Analysis notebook ----
-  tar_quarto(manuscript_nice, path = "manuscript", quiet = FALSE),
+  tar_quarto(manuscript_nice, path = "manuscript", quiet = FALSE, profile = "nice"),
+  tar_quarto(manuscript_manuscripty, path = "manuscript", quiet = FALSE, profile = "ms"),
   tar_quarto(website, path = ".", quiet = FALSE),
   
   tar_target(deploy_script, here_rel("deploy.sh"), format = "file"),

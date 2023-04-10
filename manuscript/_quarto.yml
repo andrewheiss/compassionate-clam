@@ -1,55 +1,9 @@
 project:
   title: "Manuscript"
-  output-dir: output
-
-  preview: 
-    port: 2222
-    browser: true
-    watch-inputs: false
-    navigate: true
 
   render: 
     - "*.qmd"
     - "!submissions/*.qmd"
 
-format:
-  html:
-    toc: true
-    language: 
-      title-block-published: "Latest version"
-    shift-heading-level-by: 1
-    theme: 
-      - zephyr
-      - html/custom.scss
-    citeproc: false
-    filters: 
-      - "_extensions/andrewheiss/wordcount/citeproc.lua"
-      - "_extensions/andrewheiss/wordcount/wordcount.lua"
-    template-partials: 
-      - "html/title-metadata.html"
-    knitr:
-      opts_chunk:
-        dev: "ragg_png"
-        dpi: 300
-
-  # Nice PDF output
-  hikmah-pdf: 
-    # Custom fonts
-    mainfont: "Linux Libertine O"
-    mainfontoptions: 
-      - "Numbers=Proportional"
-      - "Numbers=OldStyle"
-    sansfont: "IBM Plex Sans"
-    mathfont: "Libertinus Math"
-    cite-method: citeproc
-    # linestretch: 1.05
-    
-    include-in-header: 
-      # The \everydisplay thing makes all math blocks use \small font
-      text: |
-        \usepackage{mathtools}
-        \everydisplay\expandafter{\the\everydisplay\small }
-    
-    knitr:
-      opts_chunk:
-        dev: "cairo_pdf"
+profile: 
+  default: nice
