@@ -88,6 +88,22 @@ f_full_ordbeta <- function(data) {
   return(model)
 }
 
+f_full_interaction_ordbeta <- function(data) {
+  library(ordbetareg)
+  
+  BAYES_SEED <- 860215  # From random.org
+  
+  model <- ordbetareg(
+    bf(
+      province_count ~ work_field_code1 + local_connect * years_since_law + (1 | province_code)
+    ), 
+    data = data,
+    true_bounds = c(1, 32),
+    seed = BAYES_SEED)
+  
+  return(model)
+}
+
 # f_lotsa_preds <- function(model, column_name, ndraws = 100) {
 #   # This dynamically generates the grid, essentially building this command:
 #   #   datagrid(model = model, local_connect = unique)
@@ -146,6 +162,14 @@ f_epreds_local <- function(model, ndraws = 1000) {
 f_epreds_timing <- function(model, ndraws = 1000) {
   model |> 
     epred_draws(datagrid(model = model, years_since_law = 0:5), 
+                ndraws = ndraws, seed = 58214) |> 
+    ungroup()
+}
+
+f_epreds_timing_local <- function(model, ndraws = 1000) {
+  model |> 
+    epred_draws(datagrid(model = model, 
+                         local_connect = unique, years_since_law = 0:5), 
                 ndraws = ndraws, seed = 58214) |> 
     ungroup()
 }

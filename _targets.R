@@ -62,6 +62,7 @@ list(
   
   tar_target(m_full_zoib, f_full_zoib(ongo)),
   tar_target(m_full_ordbeta, f_full_ordbeta(ongo)),
+  tar_target(m_full_interaction_ordbeta, f_full_interaction_ordbeta(ongo)),
   
   ## Posterior predictions ----
   tar_target(preds_issue, f_preds_issue(m_full_ordbeta)),
@@ -71,6 +72,7 @@ list(
   tar_target(epreds_issue, f_epreds_issue(m_full_ordbeta)),
   tar_target(epreds_local, f_epreds_local(m_full_ordbeta)),
   tar_target(epreds_timing, f_epreds_timing(m_full_ordbeta)),
+  tar_target(epreds_timing_local, f_epreds_timing_local(m_full_ordbeta)),
   
   ## Analysis notebook ----
   tar_quarto(manuscript_nice, path = "manuscript", quiet = FALSE),
