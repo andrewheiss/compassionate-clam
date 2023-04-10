@@ -45,6 +45,8 @@ library(tidyverse)
 library(scales)
 library(lubridate)
 library(tidybayes)
+library(sf)
+library(ggrepel)
 library(marginaleffects)
 library(patchwork)
 library(kableExtra)
@@ -58,8 +60,7 @@ tar_config_set(store = here::here('_targets'),
 set.seed(8511)
 
 # Load targets 
-tar_load(ongo)
-tar_load(ongo_mapdata)
+tar_load(c(ongo, ongo_mapdata))
 tar_load(c(preds_issue, preds_local, preds_timing,
            epreds_issue, epreds_local, epreds_timing,
            epreds_timing_local))
@@ -215,10 +216,70 @@ $$ {#eq-ordbeta}
 
 # Results
 
-## Descriptive findings
+## Descriptive overview of data
+
+Before examining the posterior results of the statistical, we first describe some of the general trends in INGO registration during the first 5 years of the ONGO law. We use our data to explore (1) when INGOs registered, (2) what kinds of issues registered INGOs work on, and (3) how large of a geographic reach INGOs have.
+
+First, @fig-registration-timeline shows the distribution of the count of new INGO registrations since January 1, 2017. A couple dozen organizations were able to register immediately after the law took effect during the first quarter of 2017, while hundreds more registered during the rest of that year. Nearly half of all currently-registered INGOs in China—48%—registered in 2017. After the initial first-year wave, the count of new registrations has declined slowly since 2018.
+
+```{r fig-registration-timeline, fig.width=6, fig.height=3}
+#| include: true
+#| echo: false
+#| fig-cap: "Count of international NGO registrations until the 2017 ONGO Law, divided by quarters"
+ggplot(ongo, aes(x = registration_date)) +
+  geom_histogram(binwidth = 365.25/4, boundary = ymd("2017-01-01"), 
+                 fill = clrs[6], color = "white") +
+  scale_x_date(date_breaks = "years", date_labels = "%Y") +
+  labs(x = NULL, y = "Count of new INGO registrations") +
+  theme_ongo()
+```
+
+Next, @fig-issue-props shows the distribution of issue areas that registered INGOs focus on. The two most common issues are economic, trade, and industry associations, representing 50% of all INGOs. Many of these organizations are bilateral chambers of commerce or other multilateral trade organizations such as the Japan-China Economic Association, the Silk Road Chamber of International Commerce, and the Canada China Business Council, and most are not more stereotypical international humanitarian organizations. Charitable, humanitarian, education, and health INGOs are far less common than their trade and industry counterparts. For instance, charity and humanitarian organizations like World Vision, Save the Children, and the Salvation Army comprise only 12% (73) of all INGOs.
+
+```{r fig-issue-props, fig.width=6, fig.height=3}
+#| include: true
+#| echo: false
+#| fig-cap: "Count of international NGO registrations, divided by issue area"
+issue_count <- ongo |> 
+  drop_na(work_field_code1) |> 
+  group_by(work_field_code1) |>
+  summarize(n = n()) |> 
+  mutate(work_field_code1 = fct_reorder(work_field_code1, n))
+
+ggplot(issue_count, aes(y = work_field_code1, x = n)) +
+  geom_col(fill = clrs[5]) +
+  scale_x_continuous(sec.axis = sec_axis(trans = ~ . / sum(issue_count$n),
+                                         labels = label_percent())) +
+  labs(x = "Count of INGOs", y = NULL) +
+  theme_ongo() +
+  theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
+```
+
+Finally, there are clear geographic trends in INGO registration. As seen in @fig-home-office-map, the majority of INGOs are headquartered in Beijing (166), Shanghai (137), and Guangdong Province (46). INGOs must select a home office for their Chinese operations, but they are not necessarily limited to work within their home provinces. As described earlier, each INGO is authorized to work in a list of approved provinces, and the count provinces follows a unique three-level distribution, seen previously in @fig-province-count-collapsed, with 30% of INGOs authorized to work in just one province, 40% authorized to work nationally, and 30% authorized to work in a multiple provinces, but not in the whole country.
+
+```{r fig-home-office-map}
+#| include: true
+#| echo: false
+#| fig-cap: "Count of international NGO registrations, divided by issue area"
+# Use aes(geometry) and stat = "sf_coordinates" to make geom_label_repel() work
+# with geom_sf(): https://github.com/slowkow/ggrepel/issues/111#issuecomment-416853013
+ggplot() +
+  geom_sf(data = ongo_mapdata, aes(fill = ro_count), 
+          linewidth = 0.3, color = "white") +
+  scale_fill_distiller(palette = "Reds", direction = 1, guide = "none") +
+  geom_label_repel(data = filter(ongo_mapdata, ro_count > 0), 
+                   aes(label = ro_count, geometry = geometry),
+                   stat = "sf_coordinates", seed = 1234, label.size = 0.1, size = 3,
+                   segment.color = "black", segment.size = 0.5, min.segment.length = 0) +
+  coord_sf(crs = st_crs("EPSG:4480")) +  # China Geodetic Coordinate System 2000
+  theme_void()
+```
+
 
 
 ## Posterior predictions
+
+Next we explore our data in more depth by generating and analyzing posterior predictions from our ordered Beta regression model, varying specific variables of interest while holding all others constant.
 
 ### Issue area
 
