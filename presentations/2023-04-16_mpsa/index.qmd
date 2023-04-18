@@ -6,12 +6,15 @@ abstract: |
   Annual conference of the Midwest Political Science Association (MPSA); Chicago
 abstract-title: "Location"
 published-title: "Presented"
+image: first-slide.png
 page-layout: full
 ---
 
 ## Presentation
 
-Slides will be embedded here.
+<div class="ratio ratio-16x9">
+<iframe class="slide-deck" src="https://docs.google.com/presentation/d/1kCvKXx68-dG8cdpS9k6rCyNVBNMzxOU5ZwH0BaEF4Nc/embed?start=false&loop=false&delayms=3000" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+</div>
 
 
 ## Proposal
