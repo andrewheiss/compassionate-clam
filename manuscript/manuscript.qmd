@@ -224,7 +224,7 @@ b_{0_j} =&\ \mathcal{N}(0, \sigma_0) & \text{Random province offsets} \\[8pt]
 \phi_y\ \sim&\ \operatorname{Exponential}(1 / 100) & \text{Prior for within-province variability} \\
 k_{0_y}, k_{1_y}\ \sim&\ \operatorname{Dirichlet}(1, 1, 1) & \text{Prior for 0–continuous and continuous–1 cutpoints} \\
 \end{aligned}
-$$ {#eq-ordbeta}
+$${#eq-ordbeta}
 
 :::
 
