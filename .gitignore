@@ -9,6 +9,7 @@
 **/*_cache/*
 _site/
 manuscript/output/
+.luarc.json
 
 *.pdf
 *.html
