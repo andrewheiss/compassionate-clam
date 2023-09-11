@@ -9,7 +9,6 @@
 **/*_cache/*
 _site/
 manuscript/output/
-.luarc.json
 
 *.pdf
 *.html
@@ -29,3 +28,5 @@ _targets.yaml
 data/raw_data/
 data/manual_data/
 data/derived_data/
+
+/.luarc.json
