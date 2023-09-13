@@ -9,7 +9,12 @@ f_full_ordbeta <- function(data) {
   
   model <- ordbetareg(
     bf(
-      province_count ~ work_field_code1 + local_connect + years_since_law + (1 | province_code)
+      province_count ~ 
+        issue_arts_and_culture + issue_education +
+        issue_industry_association + issue_economy_and_trade + 
+        issue_charity_and_humanitarian + issue_general + issue_health +
+        issue_environment + issue_science_and_technology +
+        local_connect + years_since_law + year_registered_cat
     ), 
     data = data,
     true_bounds = c(1, 32),
@@ -25,7 +30,12 @@ f_full_interaction_ordbeta <- function(data) {
   
   model <- ordbetareg(
     bf(
-      province_count ~ work_field_code1 + local_connect * years_since_law + (1 | province_code)
+      province_count ~ 
+        issue_arts_and_culture + issue_education +
+        issue_industry_association + issue_economy_and_trade + 
+        issue_charity_and_humanitarian + issue_general + issue_health +
+        issue_environment + issue_science_and_technology +
+        (local_connect * years_since_law) + year_registered_cat
     ), 
     data = data,
     true_bounds = c(1, 32),
@@ -48,13 +58,25 @@ f_full_interaction_ordbeta <- function(data) {
 #     mutate(preds = map(draw, ~predicted_draws(model, grid, ndraws = 1000)))
 # }
 
-f_preds_issue <- function(model, ndraws = 500) {
+f_preds_issue <- function(model, lookup, ndraws = 500) {
+  issue_matrix <- matrix(FALSE, nrow = nrow(lookup), ncol = nrow(lookup))
+  diag(issue_matrix) <- TRUE
+  colnames(issue_matrix) <- lookup$issue_area
+  
+  newdata <- datagrid(model = model) |> 
+    select(-starts_with("issue")) |> 
+    cross_join(as_tibble(issue_matrix))
+  
   tibble(draw = 1:ndraws) |> 
     mutate(preds = map(draw, ~{
       model |> 
-        predicted_draws(datagrid(model = model, work_field_code1 = unique), 
-                        ndraws = 1000)
-    }))
+        predicted_draws(newdata, ndraws = 1000)
+    })) |> 
+    unnest(preds) |> 
+    ungroup() |> 
+    pivot_longer(cols = starts_with("issue_"), names_to = "issue_area") |> 
+    filter(value == TRUE) |> 
+    select(-value)
 }
 
 f_preds_local <- function(model, ndraws = 100) {
@@ -75,11 +97,21 @@ f_preds_timing <- function(model, ndraws = 100) {
     }))
 }
 
-f_epreds_issue <- function(model, ndraws = 1000) {
+f_epreds_issue <- function(model, lookup, ndraws = 1000) {
+  issue_matrix <- matrix(FALSE, nrow = nrow(lookup), ncol = nrow(lookup))
+  diag(issue_matrix) <- TRUE
+  colnames(issue_matrix) <- lookup$issue_area
+  
+  newdata <- datagrid(model = model) |> 
+    select(-starts_with("issue")) |> 
+    cross_join(as_tibble(issue_matrix))
+  
   model |> 
-    epred_draws(datagrid(model = model, work_field_code1 = unique), 
-                ndraws = ndraws, seed = 58214) |> 
-    ungroup()
+    epred_draws(newdata, ndraws = ndraws, seed = 58214) |> 
+    ungroup() |> 
+    pivot_longer(cols = starts_with("issue_"), names_to = "issue_area") |> 
+    filter(value == TRUE) |> 
+    select(-value)
 }
 
 f_epreds_local <- function(model, ndraws = 1000) {

@@ -28,7 +28,7 @@ set.seed(196491)
 
 # Load targets
 tar_load(ongo)
-tar_load(c(m_full_ordbeta, preds_issue, epreds_issue))
+tar_load(c(m_full_ordbeta, preds_issue, epreds_issue, issue_indicator_lookup))
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
 
 prop_to_provinces <- function(x, lower = 1, upper = 32) {
@@ -38,8 +38,9 @@ prop_to_provinces <- function(x, lower = 1, upper = 32) {
 
 ```{r plot-epred-issue}
 epreds_issue |> 
-  mutate(work_field_code1 = fct_reorder(work_field_code1, .epred)) |> 
-  ggplot(aes(x = .epred, y = work_field_code1)) +
+  left_join(issue_indicator_lookup, by = join_by(issue_area)) |> 
+  mutate(issue_area_nice = fct_reorder(issue_area_nice, .epred)) |> 
+  ggplot(aes(x = .epred, y = issue_area_nice)) +
   stat_halfeye(fill = clrs[5]) +
   scale_x_continuous(labels = label_percent(),
                      sec.axis = sec_axis(trans = ~ prop_to_provinces(.),
@@ -53,18 +54,18 @@ epreds_issue |>
 
 ```{r plot-pred-discrete-continuous-local, message=FALSE, fig.width=6, fig.height=6}
 preds_issue_plot <- preds_issue |> 
-  unnest(preds) |> 
+  left_join(issue_indicator_lookup, by = join_by(issue_area)) |> 
   mutate(outcome = case_when(
     .prediction == 0 ~ "1 province",
     .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
     .prediction == 1 ~ "32 provinces"
   )) |> 
-  group_by(outcome, work_field_code1, draw) |> 
+  group_by(outcome, issue_area_nice, draw) |> 
   summarize(count = n()) |> 
-  group_by(work_field_code1, draw) |> 
+  group_by(issue_area_nice, draw) |> 
   mutate(prop = count / sum(count))
 
-ggplot(preds_issue_plot, aes(x = work_field_code1, y = prop)) +
+ggplot(preds_issue_plot, aes(x = issue_area_nice, y = prop)) +
   stat_pointinterval(color = clrs[5], fatten_point = 1) +
   expand_limits(y = 0) +
   facet_wrap(vars(outcome), ncol = 1) +

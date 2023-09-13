@@ -52,21 +52,24 @@ list(
   ## Process and clean data ----
   tar_target(chinafile_clean, load_clean_chinafile()),
   tar_target(province_name, province_cn_to_en()),
-  tar_target(ongo,
-             clean_ongo_data(ongo_manual_file, chinafile_clean, province_name)),
-  tar_target(ongo_mapdata,
-             clean_map_data(ongo)),
+  tar_target(
+    ongo,
+    clean_ongo_data(ongo_manual_file, chinafile_clean, province_name)
+  ),
+  tar_target(ongo_wide, widen_data(ongo)),
+  tar_target(ongo_mapdata, clean_map_data(ongo)),
+  tar_target(issue_indicator_lookup, make_issue_indicator_lookup(ongo)),
   
   ## Models ----
-  tar_target(m_full_ordbeta, f_full_ordbeta(ongo)),
+  tar_target(m_full_ordbeta, f_full_ordbeta(ongo_wide)),
   tar_target(m_full_interaction_ordbeta, f_full_interaction_ordbeta(ongo)),
   
   ## Posterior predictions ----
-  tar_target(preds_issue, f_preds_issue(m_full_ordbeta)),
+  tar_target(preds_issue, f_preds_issue(m_full_ordbeta, issue_indicator_lookup)),
   tar_target(preds_local, f_preds_local(m_full_ordbeta)),
   tar_target(preds_timing, f_preds_timing(m_full_ordbeta)),
   
-  tar_target(epreds_issue, f_epreds_issue(m_full_ordbeta)),
+  tar_target(epreds_issue, f_epreds_issue(m_full_ordbeta, issue_indicator_lookup)),
   tar_target(epreds_local, f_epreds_local(m_full_ordbeta)),
   tar_target(epreds_timing, f_epreds_timing(m_full_ordbeta)),
   tar_target(epreds_timing_local, f_epreds_timing_local(m_full_ordbeta)),

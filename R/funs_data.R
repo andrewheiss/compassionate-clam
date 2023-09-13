@@ -103,6 +103,10 @@ clean_ongo_data <- function(manual, chinafile, province_name) {
            local_aim = ifelse(!is.na(local_aim), 1, 0),
            local_org_name = ifelse(!is.na(local_org_name), 1, 0),
            local_connect = ifelse(cn_background + local_aim + local_org_name == 0, FALSE, TRUE)) |> 
+    # Remove "Chinese background" from work_field_code2
+    mutate(work_field_code2 = case_match(work_field_code2, 
+                                         "Chinese background" ~ NA, 
+                                         .default = work_field_code2)) |> 
     # Create different versions of the outcome variable
     mutate(province_count = geo_scope_num,
            province_pct = province_count / 32,
@@ -118,8 +122,58 @@ clean_ongo_data <- function(manual, chinafile, province_name) {
            days_since_law = time_since_law_passed / days(1),
            months_since_law = time_since_law_passed / months(1),
            years_since_law = time_since_law_passed / years(1)) |> 
-    mutate(year_registered = year(registration_date))
+    mutate(
+      year_registered = year(registration_date),
+      year_registered_cat = factor(year_registered)
+    ) |> 
+    filter(!is.na(work_field))
   
   return(ongo)
 }
 
+widen_data <- function(dat) {
+  dat_long <- dat |>
+    # Make the data long
+    pivot_longer(
+      cols = c(work_field_code1, work_field_code2),
+      names_to = "work_field_code_column",
+      values_to = "issue_area",
+      values_drop_na = TRUE
+    ) |>
+    # Remove tiny categories for now
+    filter(!(issue_area %in% c("Sports", "Equality and advocacy"))) |> 
+    # Add an "issue_" prefix to all the values
+    mutate(issue_area = paste0(
+      "issue_",
+      janitor::make_clean_names(issue_area, allow_dupes = TRUE)
+    ))
+  
+  dat_indicators <- dat_long |> 
+    # Make the data wide with a column per issue, with each column being true if
+    # the organization works on that issue and false otherwise
+    pivot_wider(
+      names_from = issue_area, values_from = issue_area, 
+      values_fn = \(x) !is.na(x), values_fill = FALSE, 
+      id_cols = "ro_id"
+    )
+  
+  dat_combined <- dat |> 
+    left_join(dat_indicators, by = join_by(ro_id))
+
+  return(dat_combined)
+}
+
+make_issue_indicator_lookup <- function(dat) {
+  dat |> 
+    select(work_field_code1, work_field_code2) |> 
+    pivot_longer(
+      cols = everything(), values_to = "issue_area_nice", values_drop_na = TRUE
+    ) |> 
+    distinct(issue_area_nice) |> 
+    # Remove tiny categories for now
+    filter(!(issue_area_nice %in% c("Sports", "Equality and advocacy"))) |> 
+    mutate(issue_area = paste0(
+      "issue_",
+      janitor::make_clean_names(issue_area_nice)
+    ))
+}
