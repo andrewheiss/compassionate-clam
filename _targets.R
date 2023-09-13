@@ -42,7 +42,7 @@ tar_source()
 list(
   ## Raw data files ----
   tar_target(ongo_manual_file,
-             here_rel("data", "manual_data", "ongo-manual-clean.csv"),
+             here_rel("data", "manual_data", "ongo-manual-20230912.csv"),
              format = "file"),
   
   ## Graphics ----
