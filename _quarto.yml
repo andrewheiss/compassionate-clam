@@ -67,7 +67,11 @@ website:
         - section: "General details"
           contents:
             - notebook/analysis.qmd
+        - section: "Model details"
+          contents:
+            - notebook/model-definitions.qmd
             - notebook/model-details.qmd
+            - notebook/model-diagnostics.qmd
         - section: "Results"
           contents:
             - notebook/exploratory.qmd

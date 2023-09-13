@@ -22,14 +22,18 @@ library(tidybayes)
 library(ggdist)
 library(patchwork)
 library(scales)
+library(glue)
+library(gt)
+library(gtExtras)
 
 # Generated via random.org
 set.seed(196491)
 
 # Load targets
 tar_load(ongo)
-tar_load(m_full_ordbeta)
+tar_load(c(m_full_ordbeta, m_full_interaction_ordbeta))
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
+invisible(list2env(tar_read(table_functions), .GlobalEnv))
 
 prop_to_provinces <- function(x, lower = 1, upper = 32) {
   (x * (upper - lower)) + lower
@@ -110,3 +114,55 @@ plot_categories / arrow_part / plot_continuous +
 TODO: MCMC diagnostics
 
 TODO: Timing
+
+```{r calculate-model-times}
+models <- tribble(
+  ~model_name, ~model,
+  "Full model", m_full_ordbeta,
+  "Full model with `local_connect * years_since_law` interaction", m_full_interaction_ordbeta,
+) |> 
+  mutate(duration = map(model, ~{
+    .$fit |> 
+      rstan::get_elapsed_time() |> 
+      as_tibble() |> 
+      summarize(total = as.duration(max(warmup + sample)))
+  })) |> 
+  select(-model) |> 
+  unnest(duration)
+
+dur <- as.period(as.duration(sum(models$total)))
+
+total_run_time <- glue(
+  "{hours} hours, {minutes} minutes, and {seconds} seconds",
+  hours = hour(dur), minutes = minute(dur), seconds = round(second(dur), 0)
+)
+```
+
+We ran these models on a 2021 M1 MacBook Pro with 32 GB of RAM, with 4 MCMC chains spread across 8 cores, with two CPU threads per chain, using Stan through brms through cmdstanr. 
+
+In total, it took `r total_run_time` to run everything.
+
+```{r mcmc-duration-table}
+models |> 
+  gt() |> 
+  tab_footnote(
+    footnote = "Duration of the longest-running MCMC chain",
+    locations = cells_column_labels(columns = total)
+  ) |> 
+  cols_label(
+    model_name = "Model",
+    total = "Total time"
+  ) |> 
+  cols_align(
+    align = "left",
+    columns = everything()
+  ) |>
+  fmt_markdown(columns = model_name) |> 
+  grand_summary_rows(
+    columns = c(total),
+    fns = list(`Overall total` = ~as.duration(sum(.)))
+  ) |> 
+  opt_footnote_marks(marks = "standard") |> 
+  opt_horizontal_padding(3) |> 
+  opts_theme()
+```

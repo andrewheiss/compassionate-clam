@@ -45,8 +45,9 @@ list(
              here_rel("data", "manual_data", "ongo-manual-20230912.csv"),
              format = "file"),
   
-  ## Graphics ----
+  ## Graphics and tables ----
   tar_target(graphic_functions, lst(theme_ongo, set_annotation_fonts, clrs)),
+  tar_target(table_functions, lst(opts_int, opts_theme)),
 
   ## Process and clean data ----
   tar_target(chinafile_clean, load_clean_chinafile()),
