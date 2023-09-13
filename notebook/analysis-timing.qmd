@@ -56,7 +56,7 @@ epreds |>
 ```
 
 ```{r plot-epred-timing-lineribbon}
-epreds %>% 
+epreds |> 
   ggplot(aes(x = years_since_law, y = .epred)) +
   scale_x_reverse() +
   scale_y_continuous(labels = label_percent(),
@@ -76,8 +76,8 @@ preds_timing_plot <- preds_timing |>
     .prediction == 0 ~ "1 province",
     .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
     .prediction == 1 ~ "32 provinces"
-  )) %>% 
-  group_by(outcome, years_since_law, draw) %>% 
+  )) |> 
+  group_by(outcome, years_since_law, draw) |>
   summarize(count = n()) |> 
   group_by(years_since_law) |> 
   mutate(prop = count / sum(count) * 100)

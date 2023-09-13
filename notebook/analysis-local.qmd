@@ -64,8 +64,8 @@ preds_local_plot <- preds_local |>
     .prediction == 0 ~ "1 province",
     .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
     .prediction == 1 ~ "32 provinces"
-  )) %>% 
-  group_by(outcome, local_connect, draw) %>% 
+  )) |> 
+  group_by(outcome, local_connect, draw) |> 
   summarize(count = n()) |> 
   group_by(local_connect) |> 
   mutate(prop = count / sum(count) * 100)

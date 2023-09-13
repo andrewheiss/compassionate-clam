@@ -113,7 +113,7 @@ clean_ongo_data <- function(manual, chinafile, province_name) {
            )) |> 
     mutate(province_cat = factor(province_cat, 
                                  levels = c("Single province", "Multiple provinces", "All provinces"),
-                                 ordered = TRUE)) %>% 
+                                 ordered = TRUE)) |> 
     mutate(time_since_law_passed = interval(ymd("2017-01-01"), registration_date),
            days_since_law = time_since_law_passed / days(1),
            months_since_law = time_since_law_passed / months(1),

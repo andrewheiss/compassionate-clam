@@ -43,15 +43,15 @@ full_posterior <- predicted_draws(m_full_ordbeta,
                                   newdata = m_full_ordbeta$data, 
                                   ndraws = 100)
 
-posterior_categories <- full_posterior %>% 
-  ungroup() %>% 
+posterior_categories <- full_posterior |> 
+  ungroup() |> 
   mutate(outcome = case_when(
     .prediction == 0 ~ "1",
     .prediction > 0 & .prediction < 1 ~ "1–32",
     .prediction == 1 ~ "32"
-  )) %>% 
-  group_by(outcome, .draw) %>% 
-  summarize(count = n()) %>% 
+  )) |> 
+  group_by(outcome, .draw) |> 
+  summarize(count = n()) |> 
   ungroup()
 
 actual_counts <- m_full_ordbeta$data |> 
@@ -63,7 +63,7 @@ actual_counts <- m_full_ordbeta$data |>
   group_by(outcome) |> 
   summarize(count = n())
 
-plot_categories <- posterior_categories %>% 
+plot_categories <- posterior_categories |> 
   ggplot(aes(x = outcome, y = count)) +
   geom_col(data = actual_counts, fill = "grey70") +
   stat_pointinterval() +
