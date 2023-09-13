@@ -62,7 +62,7 @@ list(
   
   ## Models ----
   tar_target(m_full_ordbeta, f_full_ordbeta(ongo_wide)),
-  tar_target(m_full_interaction_ordbeta, f_full_interaction_ordbeta(ongo)),
+  tar_target(m_full_interaction_ordbeta, f_full_interaction_ordbeta(ongo_wide)),
   
   ## Posterior predictions ----
   tar_target(preds_issue, f_preds_issue(m_full_ordbeta, issue_indicator_lookup)),

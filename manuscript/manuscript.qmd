@@ -65,7 +65,7 @@ set.seed(8511)
 tar_load(c(ongo, ongo_mapdata))
 tar_load(c(preds_issue, preds_local, preds_timing,
            epreds_issue, epreds_local, epreds_timing,
-           epreds_timing_local))
+           epreds_timing_local, issue_indicator_lookup))
 
 # Plotting and modelsummary functions
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
@@ -254,6 +254,7 @@ Next, @fig-issue-props shows the distribution of issue areas that registered ING
 #| include: true
 #| echo: false
 #| fig-cap: "Count of international NGO registrations, divided by issue area"
+# TODO: Use issue_area instead of work_field_code
 issue_count <- ongo |> 
   drop_na(work_field_code1) |> 
   group_by(work_field_code1) |>
@@ -308,24 +309,24 @@ Following our first empirical expectation, we predict that INGOs working on less
 #|   - "Proportions of posterior predictions of INGOs working in 1 province, all 32 provinces, or somewhere in between. Distinct x-axis categories sum to 100% across the panels."
 #|   - "Distribution of the expectation of posterior predictions. These distributions take into account single-province and nationwide predictions and represent the overall conditional average geographic range for INGOs."
 preds_issue_plot <- preds_issue |> 
-  unnest(preds) |> 
+  left_join(issue_indicator_lookup, by = join_by(issue_area)) |> 
   mutate(outcome = case_when(
     .prediction == 0 ~ "1 province",
     .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
     .prediction == 1 ~ "32 provinces"
   )) |> 
-  group_by(outcome, work_field_code1, draw) |> 
+  group_by(outcome, issue_area_nice, draw) |> 
   summarize(count = n()) |> 
-  group_by(work_field_code1, draw) |> 
+  group_by(issue_area_nice, draw) |> 
   mutate(prop = count / sum(count)) |> 
   ungroup() |> 
-  mutate(work_field_code1 = fct_reorder(work_field_code1, prop))
+  mutate(issue_area_nice = fct_reorder(issue_area_nice, prop))
 
-# preds_issue_plot |> 
-#   group_by(outcome, work_field_code1) |>
+# preds_issue_plot |>
+#   group_by(outcome, issue_area_nice) |>
 #   median_qi(prop)
 
-ggplot(preds_issue_plot, aes(x = work_field_code1, y = prop)) +
+ggplot(preds_issue_plot, aes(x = issue_area_nice, y = prop)) +
   stat_pointinterval(color = clrs[5], .width = 0.95, fatten_point = 1) +
   facet_wrap(vars(outcome), ncol = 1, scales = "free_y") +
   scale_x_discrete(labels = label_wrap(10)) +
@@ -335,8 +336,9 @@ ggplot(preds_issue_plot, aes(x = work_field_code1, y = prop)) +
   theme_ongo()
 
 epreds_issue |> 
-  mutate(work_field_code1 = fct_reorder(work_field_code1, .epred)) |> 
-  ggplot(aes(x = .epred, y = work_field_code1)) +
+  left_join(issue_indicator_lookup, by = join_by(issue_area)) |> 
+  mutate(issue_area_nice = fct_reorder(issue_area_nice, .epred)) |> 
+  ggplot(aes(x = .epred, y = issue_area_nice)) +
   stat_halfeye(fill = clrs[5], .width = c(0.8, 0.95)) +
   scale_x_continuous(labels = label_percent(),
                      sec.axis = sec_axis(trans = ~ prop_to_provinces(.),
