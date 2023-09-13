@@ -57,10 +57,6 @@ list(
              clean_map_data(ongo)),
   
   ## Models ----
-  tar_target(m_basic_zoib, f_basic_zoib(ongo)),
-  tar_target(m_basic_ologit, f_basic_ologit(ongo)),
-  
-  tar_target(m_full_zoib, f_full_zoib(ongo)),
   tar_target(m_full_ordbeta, f_full_ordbeta(ongo)),
   tar_target(m_full_interaction_ordbeta, f_full_interaction_ordbeta(ongo)),
   
