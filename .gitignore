@@ -8,6 +8,7 @@
 /.quarto/
 **/*_cache/*
 _site/
+_freeze/
 manuscript/output/
 
 *.pdf
