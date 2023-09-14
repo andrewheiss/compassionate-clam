@@ -53,7 +53,7 @@ epreds_issue |>
   theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
 ```
 
-```{r plot-pred-discrete-continuous-local-bars, fig.width=8, fig.height=3}
+```{r plot-pred-discrete-continuous-local-bars, fig.width=8, fig.height=3, out.width="100%"}
 preds_issue_plot <- preds_issue |> 
   left_join(issue_indicator_lookup, by = join_by(issue_area)) |> 
   mutate(outcome = case_when(
@@ -76,11 +76,17 @@ preds_issue_plot_order <- preds_issue_plot |>
 
 preds_issue_text <- preds_issue_plot |> 
   group_by(outcome, issue_area_nice) |> 
-  summarize(median_prop = median(prop)) |> 
+  summarize(median_prop = median_qi(prop)) |> 
+  unnest(median_prop) |> 
   group_by(issue_area_nice) |> 
-  mutate(y = (median_prop / 2) + lag(cumsum(median_prop), default = 0)) |> 
-  mutate(y = 1 - y) |> 
-  mutate(prop_nice = label_percent(accuracy = 1)(median_prop)) |> 
+  mutate(y_plot = (y / 2) + lag(cumsum(y), default = 0)) |> 
+  mutate(y_plot = 1 - y_plot) |> 
+  mutate(prop_nice = label_percent(accuracy = 1)(y)) |>
+  mutate(prop_ci_nice = glue::glue(
+    "{ymin}–{ymax}",
+    ymin = label_number(accuracy = 1, scale = 100)(ymin),
+    ymax = label_percent(accuracy = 1)(ymax)
+  )) |> 
   mutate(issue_area_nice = factor(
     issue_area_nice, 
     levels = preds_issue_plot_order$issue_area_nice,
@@ -97,7 +103,7 @@ preds_issue_plot |>
   geom_col(aes(fill = outcome), position = "stack", linewidth = 0, width = 1) +
   geom_text(
     data = preds_issue_text,
-    aes(x = 250, y = y, label = prop_nice),
+    aes(x = 250, y = y_plot, label = prop_ci_nice),
     size = 3, fontface = "bold", color = "white"
   ) +
   scale_x_continuous(breaks = NULL, expand = c(0, 0)) +
