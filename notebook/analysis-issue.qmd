@@ -30,6 +30,7 @@ set.seed(196491)
 tar_load(ongo)
 tar_load(c(m_full_ordbeta, preds_issue, epreds_issue, issue_indicator_lookup))
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
+set_annotation_fonts()
 
 prop_to_provinces <- function(x, lower = 1, upper = 32) {
   (x * (upper - lower)) + lower
@@ -52,7 +53,7 @@ epreds_issue |>
   theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
 ```
 
-```{r plot-pred-discrete-continuous-local, message=FALSE, fig.width=6, fig.height=6}
+```{r plot-pred-discrete-continuous-local-bars, fig.width=8, fig.height=3}
 preds_issue_plot <- preds_issue |> 
   left_join(issue_indicator_lookup, by = join_by(issue_area)) |> 
   mutate(outcome = case_when(
@@ -65,12 +66,51 @@ preds_issue_plot <- preds_issue |>
   group_by(issue_area_nice, draw) |> 
   mutate(prop = count / sum(count))
 
-ggplot(preds_issue_plot, aes(x = issue_area_nice, y = prop)) +
-  stat_pointinterval(color = clrs[5], fatten_point = 1) +
-  expand_limits(y = 0) +
-  facet_wrap(vars(outcome), ncol = 1) +
-  scale_x_discrete(labels = label_wrap(10)) +
-  scale_y_continuous(labels = label_percent()) +
-  labs(x = NULL, y = "Proportion of predictions") +
-  theme_ongo()
+preds_issue_plot_order <- preds_issue_plot |> 
+  filter(outcome == "32 provinces") |>
+  group_by(issue_area_nice) |> 
+  summarize(median_prop = median(prop)) |> 
+  arrange(median_prop) |> 
+  mutate(issue_area_nice_labels = str_wrap(issue_area_nice, 15)) |> 
+  mutate(issue_area_nice = fct_inorder(issue_area_nice))
+
+preds_issue_text <- preds_issue_plot |> 
+  group_by(outcome, issue_area_nice) |> 
+  summarize(median_prop = median(prop)) |> 
+  group_by(issue_area_nice) |> 
+  mutate(y = (median_prop / 2) + lag(cumsum(median_prop), default = 0)) |> 
+  mutate(y = 1 - y) |> 
+  mutate(prop_nice = label_percent(accuracy = 1)(median_prop)) |> 
+  mutate(issue_area_nice = factor(
+    issue_area_nice, 
+    levels = preds_issue_plot_order$issue_area_nice,
+    labels = preds_issue_plot_order$issue_area_nice_labels
+  ))
+
+preds_issue_plot |> 
+  mutate(issue_area_nice = factor(
+    issue_area_nice, 
+    levels = preds_issue_plot_order$issue_area_nice,
+    labels = preds_issue_plot_order$issue_area_nice_labels
+  )) |> 
+  ggplot(aes(x = draw, y = prop)) +
+  geom_col(aes(fill = outcome), position = "stack", linewidth = 0, width = 1) +
+  geom_text(
+    data = preds_issue_text,
+    aes(x = 250, y = y, label = prop_nice),
+    size = 3, fontface = "bold", color = "white"
+  ) +
+  scale_x_continuous(breaks = NULL, expand = c(0, 0)) +
+  scale_y_continuous(labels = label_percent(), expand = c(0, 0)) +
+  scale_fill_manual(values = clrs[c(3, 5, 7)]) +
+  facet_wrap(vars(issue_area_nice), strip.position = "bottom", nrow = 1) +
+  labs(x = NULL, y = "Proportion of predictions", fill = NULL) +
+  theme_ongo() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.border = element_blank(),
+    panel.spacing = unit(5, "pt"),
+    strip.text = element_text(vjust = 1, hjust = 0.5, size = rel(0.8), face = "plain")
+  )
 ```
+
