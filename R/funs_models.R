@@ -92,7 +92,7 @@ f_preds_timing <- function(model, ndraws = 100) {
   tibble(draw = 1:ndraws) |> 
     mutate(preds = map(draw, ~{
       model |> 
-        predicted_draws(datagrid(model = model, years_since_law = 0:5), 
+        predicted_draws(datagrid(model = model, years_since_law = seq(0, 5, by = 0.1)), 
                         ndraws = 1000, seed = 58214)
     }))
 }
