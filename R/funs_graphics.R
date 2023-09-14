@@ -1,8 +1,8 @@
 clrs <- MetBrewer::met.brewer("Tam")
 
 set_annotation_fonts <- function() {
-  ggplot2::update_geom_defaults("label", list(family = "IBM Plex Sans Condensed", face = "plain"))
-  ggplot2::update_geom_defaults("text", list(family = "IBM Plex Sans Condensed", face = "plain"))
+  ggplot2::update_geom_defaults("label", list(family = "IBM Plex Sans Condensed", fontface = "plain"))
+  ggplot2::update_geom_defaults("text", list(family = "IBM Plex Sans Condensed", fontface = "plain"))
 }
 
 theme_ongo <- function(base_size = 11, base_family = "IBM Plex Sans Condensed", prior = FALSE) {
