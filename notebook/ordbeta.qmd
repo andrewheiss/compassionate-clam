@@ -35,7 +35,7 @@ invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
 theme_set(theme_ongo())
 ```
 
-The distribution of our outcome here—the number of provinces an INGO is authorized to work in—posts a unique statistical challenge. It's a mix of three different processes. 30ish% of INGOs are registered only in one province, 40% are registered in all provinces, and the remaining 30ish% are registered in 2–31 provinces.
+The distribution of our outcome here—the number of provinces an INGO is authorized to work in—poses a unique statistical challenge. It's a mix of three different processes. 30ish% of INGOs are registered only in one province, 40% are registered in all provinces, and the remaining 30ish% are registered in 2–31 provinces.
 
 ```{r plot-province-count-collapsed, fig.width=6, fig.height=3}
 provinces_collapsed <- ongo |> 
@@ -116,7 +116,7 @@ ongo |>
   mutate(outcome_type = case_when(
     is_zero ~ "1 province (0%)",
     is_one ~ "32 provinces (100%)",
-    .default = "2–32 provinces"
+    .default = "2–31 provinces"
   )) |> 
   ggplot(aes(x = province_prop)) +
   geom_histogram(
@@ -131,6 +131,7 @@ ongo |>
     y = "Count", fill = NULL) +
   theme_ongo()
 ```
+
 
 # Zero-one-inflated Beta (ZOIB) regression
 
