@@ -59,12 +59,11 @@ preds_issue_plot <- preds_issue |>
   mutate(outcome = case_when(
     .prediction == 0 ~ "Only 1 province",
     .prediction > 0 & .prediction < 1 ~ "Between 1–32 provinces",
-    .prediction == 1 ~ "All 32 provinces"
+    .prediction == 1 ~ "All 32 provinces",
+    .ptype = factor(
+      levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"), 
+      ordered = TRUE)
   )) |> 
-  mutate(outcome = factor(
-    outcome, 
-    levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"))
-  ) |> 
   group_by(outcome, issue_area_nice, draw) |> 
   summarize(count = n()) |> 
   group_by(issue_area_nice, draw) |> 

@@ -76,12 +76,11 @@ preds_timing_plot <- preds_timing |>
   mutate(outcome = case_when(
     .prediction == 0 ~ "Only 1 province",
     .prediction > 0 & .prediction < 1 ~ "Between 1–32 provinces",
-    .prediction == 1 ~ "All 32 provinces"
+    .prediction == 1 ~ "All 32 provinces",
+    .ptype = factor(
+      levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"), 
+      ordered = TRUE)
   )) |> 
-  mutate(outcome = factor(
-    outcome, 
-    levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"))
-  ) |> 
   mutate(years_since_law = 2017 + years_since_law) |> 
   group_by(outcome, years_since_law, draw) |>
   summarize(count = n()) |> 

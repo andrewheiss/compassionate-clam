@@ -95,9 +95,12 @@ full_posterior <- predicted_draws(m_full_ordbeta,
 posterior_categories <- full_posterior |> 
   ungroup() |> 
   mutate(outcome = case_when(
-    .prediction == 0 ~ "1",
-    .prediction > 0 & .prediction < 1 ~ "1–32",
-    .prediction == 1 ~ "32"
+    .prediction == 0 ~ "Only 1 province",
+    .prediction > 0 & .prediction < 1 ~ "Between 1–32 provinces",
+    .prediction == 1 ~ "All 32 provinces",
+    .ptype = factor(
+      levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"), 
+      ordered = TRUE)
   )) |> 
   group_by(outcome, .draw) |> 
   summarize(count = n()) |> 
@@ -105,9 +108,12 @@ posterior_categories <- full_posterior |>
 
 actual_counts <- m_full_ordbeta$data |> 
   mutate(outcome = case_when(
-    province_count == 0 ~ "1",
-    province_count > 0 & province_count < 1 ~ "1–32",
-    province_count == 1 ~ "32"
+    province_count == 0 ~ "Only 1 province",
+    province_count > 0 & province_count < 1 ~ "Between 1–32 provinces",
+    province_count == 1 ~ "All 32 provinces",
+    .ptype = factor(
+      levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"), 
+      ordered = TRUE)
   )) |> 
   group_by(outcome) |> 
   summarize(count = n())
