@@ -43,10 +43,6 @@ prop_to_provinces <- function(x, lower = 1, upper = 32) {
 }
 ```
 
-```{r}
-get_variables(m_full_ordbeta)
-```
-
 ### Traceplots
 
 These should look like hairy caterpillars. 
@@ -55,7 +51,7 @@ They do.
 
 ```{r mcmc-trace}
 params_to_show <- c(
-  "b_Intercept", "b_work_field_code1Health",
+  "b_Intercept", "b_issue_healthTRUE",
   "phi", "cutzero"
 )
 
