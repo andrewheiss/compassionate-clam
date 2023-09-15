@@ -1,7 +1,7 @@
 ---
 title: "The Implementation of China’s Overseas NGO Law and the Operating Space for International Civil Society"
 short-title: "China's ONGO Law and International Civil Society"
-date: "2023-04-09"
+date: "2023-08-22"
 author:
 - name: Meng Ye
   affiliation: Georgia State University
