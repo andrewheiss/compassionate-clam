@@ -69,7 +69,7 @@ website:
             - notebook/analysis.qmd
         - section: "Model details"
           contents:
-            - notebook/model-definitions.qmd
+            - notebook/ordbeta.qmd
             - notebook/model-details.qmd
             - notebook/model-diagnostics.qmd
         - section: "Results"

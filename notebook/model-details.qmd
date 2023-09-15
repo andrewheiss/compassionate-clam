@@ -1,5 +1,5 @@
 ---
-title: Model details
+title: Model details and results
 ---
 
 ```{r setup, include=FALSE}
@@ -16,31 +16,30 @@ options(digits = 3, width = 120,
 ```{r load-libraries, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(targets)
-library(brms)
-library(marginaleffects)
-library(tidybayes)
-library(ggdist)
-library(patchwork)
 library(scales)
 library(glue)
 library(gt)
 library(gtExtras)
+library(modelsummary)
 
 # Generated via random.org
 set.seed(196491)
 
 # Load targets
 tar_load(ongo)
-tar_load(c(m_full_ordbeta, m_full_interaction_ordbeta))
+tar_load(c(m_full_ordbeta))
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
 invisible(list2env(tar_read(table_functions), .GlobalEnv))
+
+theme_set(theme_ongo())
 ```
+
+# Model run times
 
 ```{r calculate-model-times}
 models <- tribble(
   ~model_name, ~model,
   "Full model", m_full_ordbeta,
-  "Full model with `local_connect * years_since_law` interaction", m_full_interaction_ordbeta,
 ) |> 
   mutate(duration = map(model, ~{
     .$fit |> 
@@ -85,5 +84,20 @@ models |>
   ) |> 
   opt_footnote_marks(marks = "standard") |> 
   opt_horizontal_padding(3) |> 
+  opts_theme()
+```
+
+# Model results
+
+Raw coefficients aren't super useful for interpreting things, but here's a table of them for fun.
+
+```{r results-table}
+modelsummary(
+  m_full_ordbeta,
+  statistic = "[{conf.low}, {conf.high}]",
+  ci_method = "hdi",
+  metrics = c("R2"),
+  output = "gt"
+) |> 
   opts_theme()
 ```

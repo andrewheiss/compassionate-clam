@@ -23,22 +23,37 @@ f_full_ordbeta <- function(data) {
   return(model)
 }
 
-f_full_interaction_ordbeta <- function(data) {
-  library(ordbetareg)
+f_full_zoib <- function(data) {
+  BAYES_SEED <- 102819  # From random.org
   
-  BAYES_SEED <- 860215  # From random.org
+  zoib_priors <- c(prior(student_t(1, 0, 3), class = Intercept),
+    prior(student_t(1, 0, 3), class = b),
+    prior(student_t(1, 0, 3), class = b, dpar = zoi),
+    prior(student_t(1, 0, 3), class = b, dpar = coi))
   
-  model <- ordbetareg(
+  model <- brm(
     bf(
-      province_count ~ 
-        issue_arts_and_culture + issue_education +
+      # mu: mean of the 0-1 values; logit scale
+      province_pct ~ issue_arts_and_culture + issue_education +
         issue_industry_association + issue_economy_and_trade + 
         issue_charity_and_humanitarian + issue_general + issue_health +
         issue_environment + issue_science_and_technology +
-        (local_connect * years_since_law) + year_registered_cat
-    ), 
+        local_connect + years_since_law + year_registered_cat,
+      # zoi: zero-or-one-inflated part; logit scale
+      zoi ~ issue_arts_and_culture + issue_education +
+        issue_industry_association + issue_economy_and_trade + 
+        issue_charity_and_humanitarian + issue_general + issue_health +
+        issue_environment + issue_science_and_technology +
+        local_connect + years_since_law + year_registered_cat,
+      # coi: one-inflated part, conditional on the 0s; logit scale
+      coi ~ issue_arts_and_culture + issue_education +
+        issue_industry_association + issue_economy_and_trade + 
+        issue_charity_and_humanitarian + issue_general + issue_health +
+        issue_environment + issue_science_and_technology +
+        local_connect + years_since_law + year_registered_cat), 
     data = data,
-    true_bounds = c(1, 32),
+    family = zero_one_inflated_beta(), 
+    prior = zoib_priors,
     seed = BAYES_SEED)
   
   return(model)

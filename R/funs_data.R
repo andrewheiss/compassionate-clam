@@ -2,6 +2,16 @@ library(glue)
 library(rvest)
 suppressPackageStartupMessages(library(lubridate))
 
+# Helper functions for switching between province counts and proportions
+provinces_to_prop <- function(x, lower = 1, upper = 32) {
+  (x - lower) / (upper - lower)
+}
+
+prop_to_provinces <- function(x, lower = 1, upper = 32) {
+  (x * (upper - lower)) + lower
+}
+
+
 load_clean_chinafile <- function() {
   chinafile <- read_html(glue("https://web.archive.org/web/20220922181643/",
                               "https://jessicachinafile.github.io/index_RO_table.html")) |> 
@@ -109,7 +119,7 @@ clean_ongo_data <- function(manual, chinafile, province_name) {
                                          .default = work_field_code2)) |> 
     # Create different versions of the outcome variable
     mutate(province_count = geo_scope_num,
-           province_pct = province_count / 32,
+           province_pct = provinces_to_prop(province_count),
            province_cat = case_when(
              province_count == 1 ~ "Single province",
              province_count > 1 & province_count < 32 ~ "Multiple provinces",

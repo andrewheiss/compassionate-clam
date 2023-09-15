@@ -43,7 +43,7 @@ prop_to_provinces <- function(x, lower = 1, upper = 32) {
 }
 ```
 
-### Traceplots
+# Traceplots
 
 These should look like hairy caterpillars. 
 
@@ -64,7 +64,7 @@ m_full_ordbeta |>
   facet_wrap(vars(.variable), scales = "free_y")
 ```
 
-### Trace rank plots (trank plots)
+# Trace rank plots (trank plots)
 
 These are histograms of the ranks of the parameter draws across the four chains. If the chains are exploring the same space efficiently, the histograms should be similar and overlapping and no one chain should have a specific rank for a long time [@McElreath:2020, 284].
 
@@ -83,7 +83,7 @@ m_full_ordbeta |>
 ```
 
 
-## Posterior predictions
+# Posterior predictions
 
 The model should generate predictions that align with the observed outcomes. It does.
 
