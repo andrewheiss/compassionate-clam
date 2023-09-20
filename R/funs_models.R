@@ -18,6 +18,9 @@ f_full_ordbeta <- function(data) {
     ), 
     data = data,
     true_bounds = c(1, 32),
+    coef_prior_mean = 0,
+    coef_prior_SD = 2.5,
+    phi_prior = 1/100,
     seed = BAYES_SEED)
   
   return(model)
