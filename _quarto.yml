@@ -101,6 +101,7 @@ format:
     code-fold: true
     code-tools: true
     highlight-style: monokai
+    lightbox: auto
 
 language: 
   title-block-published: "Date"
