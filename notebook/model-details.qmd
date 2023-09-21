@@ -44,7 +44,7 @@ set_annotation_fonts()
 $$
 \begin{align}
 &\ \textbf{Registered provinces for INGO } i \\
-\text{Count of provinces}\ \sim&\ \operatorname{Ordered\,Beta}(\mu_{i_j}, \phi_y, k_{1_y}, k_{2_y}) \\[8pt]
+\text{Count of provinces}\ \sim&\ \operatorname{Ordered\,Beta}(\mu_i, \phi_y, k_{1_y}, k_{2_y}) \\[8pt]
 &\ \textbf{Model of outcome average} \\
 % Put the huge equation in a nested \begin{aligned}[t] environment so that 
 % \mathrlap{} can go around it so that the annotations in the priors can be 
@@ -71,7 +71,7 @@ $$
 
 These are all pretty standard. I'd like to use a Student t for the coefficients in addition to the intercept, but the prior distributional families are baked into `ordbetareg()` and the only way to change them is to create a custom {brms} family based on the code in `ordbetareg()` and that's a lot of hassle. So we'll live with a normal distribution for the coefficients.
 
-The only new-to-me distribution here is the Dirichlet prior for the cutpoints, so I wrote a whole blog post about it here. This is a little confusing, though. `ordbetareg()` requires a three-element Dirichlet distribution that contains three columns of probabilities, one per submodel: the only-zero part, the between-zero-and-one part, and the only-one part. However, it doesn't use these three probabilities directly. Instead, it uses an [*induced* Dirichlet distribution](https://betanalpha.github.io/assets/case_studies/ordinal_regression.html) [@Kubinec:2022, p. 524], meaning that it works with the *boundaries between the categories* and not the Dirichlet columns themselves ([see here for more about that, plus some neat visualizations of the cutpoints](https://www.andrewheiss.com/blog/2023/09/18/understanding-dirichlet-beta-intuition/#bonus-later-addition-boundaries-between-categories)).
+The only new-to-me distribution here is the Dirichlet prior for the cutpoints, so [I wrote a whole blog post about it here](https://www.andrewheiss.com/blog/2023/09/18/understanding-dirichlet-beta-intuition/). This is a little confusing, though. `ordbetareg()` requires a three-element Dirichlet distribution that contains three columns of probabilities, one per submodel: the only-zero part, the between-zero-and-one part, and the only-one part. However, it doesn't use these three probabilities directly. Instead, it uses an [*induced* Dirichlet distribution](https://betanalpha.github.io/assets/case_studies/ordinal_regression.html) [@Kubinec:2022, p. 524], meaning that it works with the *boundaries between the categories* and not the Dirichlet columns themselves ([see here for more about that, plus some neat visualizations of the cutpoints](https://www.andrewheiss.com/blog/2023/09/18/understanding-dirichlet-beta-intuition/#bonus-later-addition-boundaries-between-categories)).
 
 $\operatorname{Dirichlet}(1, 1, 1)$ represents a uniform distribution of three related columns in a matrix, each with a probability of 33%, since the sum of the three probabilities must be 100%. 
 
