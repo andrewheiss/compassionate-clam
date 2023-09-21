@@ -37,10 +37,6 @@ invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
 invisible(list2env(tar_read(table_functions), .GlobalEnv))
 
 theme_set(theme_ongo())
-
-prop_to_provinces <- function(x, lower = 1, upper = 32) {
-  (x * (upper - lower)) + lower
-}
 ```
 
 # Traceplots

@@ -31,10 +31,6 @@ tar_load(ongo)
 tar_load(c(m_full_ordbeta, preds_issue, epreds_issue, issue_indicator_lookup))
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
 set_annotation_fonts()
-
-prop_to_provinces <- function(x, lower = 1, upper = 32) {
-  (x * (upper - lower)) + lower
-}
 ```
 
 ```{r plot-epred-issue}

@@ -46,7 +46,10 @@ list(
              format = "file"),
   
   ## Graphics and tables ----
-  tar_target(graphic_functions, lst(theme_ongo, set_annotation_fonts, clrs)),
+  tar_target(graphic_functions, lst(
+    theme_ongo, set_annotation_fonts, clrs, 
+    prop_to_provinces, provinces_to_prop)
+  ),
   tar_target(table_functions, lst(opts_int, opts_theme)),
   tar_target(count_prop_functions, lst(provinces_to_prop, prop_to_provinces)),
 
