@@ -97,7 +97,7 @@ f_preds_issue <- function(model, lookup, ndraws = 500) {
     select(-value)
 }
 
-f_preds_local <- function(model, ndraws = 100) {
+f_preds_local <- function(model, ndraws = 500) {
   tibble(draw = 1:ndraws) |> 
     mutate(preds = map(draw, ~{
       model |> 

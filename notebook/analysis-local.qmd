@@ -28,8 +28,9 @@ set.seed(196491)
 
 # Load targets
 tar_load(ongo)
-tar_load(c(m_full_ordbeta, preds_local))
+tar_load(c(m_full_ordbeta, preds_local, epreds_local))
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
+set_annotation_fonts()
 
 prop_to_provinces <- function(x, lower = 1, upper = 32) {
   (x * (upper - lower)) + lower
@@ -37,45 +38,70 @@ prop_to_provinces <- function(x, lower = 1, upper = 32) {
 ```
 
 ```{r plot-epred-local}
-epreds <- m_full_ordbeta |> 
-  epred_draws(datagrid(model = m_full_ordbeta, local_connect = unique), 
-              ndraws = 1000)
-
-epreds |> 
-  ungroup() |> 
+epreds_local |> 
   mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
   ggplot(aes(x = .epred, y = local_connect)) +
   stat_halfeye(fill = clrs[2]) +
   scale_x_continuous(labels = label_percent(),
                      sec.axis = sec_axis(trans = ~ prop_to_provinces(.),
                                          name = "Expected provinces",
-                                         breaks = seq(8, 32, 4))) +
+                                         breaks = seq(0, 32, 4))) +
   guides(fill = "none") +
   labs(x = "Expected proportion of provinces", y = NULL) +
+  coord_cartesian(xlim = c(0, 1)) +
   theme_ongo() +
   theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
 ```
 
-```{r plot-pred-discrete-continuous-local, message=FALSE}
+```{r plot-pred-discrete-continuous-local-bars, message=FALSE, fig.width=4.5, fig.height=3.5, out.width="60%"}
 preds_local_plot <- preds_local |> 
   unnest(preds) |> 
   mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
   mutate(outcome = case_when(
-    .prediction == 0 ~ "1 province",
-    .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
-    .prediction == 1 ~ "32 provinces"
+    .prediction == 0 ~ "Only 1 province",
+    .prediction > 0 & .prediction < 1 ~ "Between 1–32 provinces",
+    .prediction == 1 ~ "All 32 provinces",
+    .ptype = factor(
+      levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"), 
+      ordered = TRUE)
   )) |> 
   group_by(outcome, local_connect, draw) |> 
   summarize(count = n()) |> 
-  group_by(local_connect) |> 
-  mutate(prop = count / sum(count) * 100)
+  group_by(local_connect, draw) |> 
+  mutate(prop = count / sum(count))
 
-ggplot(preds_local_plot, aes(x = local_connect, y = prop)) +
-  stat_pointinterval(color = clrs[2]) +
-  expand_limits(y = 0) +
-  facet_wrap(vars(outcome)) +
-  scale_x_discrete(labels = label_wrap(10)) +
-  scale_y_continuous(labels = label_percent()) +
-  labs(x = NULL, y = "Proportion of predictions") +
-  theme_ongo()
+preds_local_text <- preds_local_plot |> 
+  group_by(outcome, local_connect) |> 
+  summarize(median_prop = median_qi(prop)) |> 
+  unnest(median_prop) |> 
+  group_by(local_connect) |> 
+  mutate(y_plot = (y / 2) + lag(cumsum(y), default = 0)) |> 
+  mutate(y_plot = 1 - y_plot) |> 
+  mutate(prop_nice = label_percent(accuracy = 1)(y)) |>
+  mutate(prop_ci_nice = glue::glue(
+    "{ymin}–{ymax}",
+    ymin = label_number(accuracy = 1, scale = 100)(ymin),
+    ymax = label_percent(accuracy = 1)(ymax)
+  ))
+
+preds_local_plot |> 
+  ggplot(aes(x = draw, y = prop)) +
+  geom_col(aes(fill = outcome), position = position_stack(), linewidth = 0, width = 1) +
+  geom_text(
+    data = preds_local_text,
+    aes(x = 250, y = y_plot, label = prop_ci_nice),
+    size = 3, fontface = "bold", color = "white"
+  ) +
+  scale_x_continuous(breaks = NULL, expand = c(0, 0)) +
+  scale_y_continuous(labels = label_percent(), expand = c(0, 0)) +
+  scale_fill_manual(values = clrs[c(3, 5, 7)]) +
+  facet_wrap(vars(local_connect), strip.position = "bottom", nrow = 1) +
+  labs(x = NULL, y = "Proportion of predictions", fill = NULL) +
+  theme_ongo() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.border = element_blank(),
+    panel.spacing = unit(5, "pt"),
+    strip.text = element_text(vjust = 1, hjust = 0.5, size = rel(0.8), face = "plain")
+  )
 ```
