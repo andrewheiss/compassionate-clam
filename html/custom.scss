@@ -45,6 +45,9 @@ $font-family-serif:           IBM Plex Sans, sans-serif !default;  /* Not actual
 $font-size-base:              1rem !default;
 $headings-font-weight:        700 !default;
 
+$breadcrumb-padding-x:        0 !default;
+$breadcrumb-padding-y:        0 !default;
+
 
 /*-- scss:rules --*/
 
@@ -57,14 +60,18 @@ pre.sourceCode {
   font-size: 0.675em;
 }
 
-
-// Sidebar stuff
-.sidebar-navigation .sidebar-section .sidebar-item,
-.sidebar-navigation .sidebar-item {
-  line-height: 1.2;
-  padding-bottom: 0.4rem;
+.quarto-title-breadcrumbs {
+  .breadcrumb {
+    border: 0;
+    margin-bottom: 2rem;
+    box-shadow: none;
+    border-bottom: $gray-300 1px solid;
+    
+    .breadcrumb-item {
+      padding-top: 0;
+    }
+  }
 }
-
 
 // Footer stuff
 .nav-footer-left {
