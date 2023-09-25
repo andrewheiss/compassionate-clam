@@ -1,7 +1,7 @@
 ---
 title: "The Implementation of China’s Overseas NGO Law and the Operating Space for International Civil Society"
 short-title: "China's ONGO Law and International Civil Society"
-date: "2023-08-22"
+date: "2023-09-25"
 author:
 - name: Meng Ye
   affiliation: Georgia State University
@@ -71,6 +71,8 @@ tar_load(c(preds_issue, preds_local, preds_timing,
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
 ```
 
+# Introduction
+
 In the past decade, nearly 100 countries have proposed or enacted legal measures designed to restrict civil society [@ICNL:2021], and only 21% of countries have open and unrestricted civic space [@ChaudhryHeiss:2022a; @Civicus:2023]. This global trend of closing or shrinking civic space [@Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyPrakash:2020; @DupuyRonPrakash:2016] has affected countries of all regime types, including both autocracies and democracies such as Morocco and Palestine [@AtiaHerrold:2018], India [@press-trust-india:2019], Vietnam [@Sidel:2023], Canada [@CIVICUS:2013], and the United States [@Cramer:2020]. On April 28, 2016, China passed its own set of legal restrictions on civil society with its Law of the People's Republic of China on Administration of Activities of Overseas Nongovernmental Organizations in the Mainland of China, or "ONGO Law," which formally took effect on January 1, 2017. As an authoritarian state with a growing nonprofit sector, the Chinese model of implementing restrictive laws for international NGOs (INGOs) has important implications for understanding the dynamics of how civil society laws can be used as policy tools to harness INGOs.
 
 The purpose of this study is to empirically examine how the ONGO Law has influenced the population of INGOs that have successfully registered in China since 2017, and in particular how the ONGO Law has shaped the operational space allowed for INGO operations in the country. By examining the *de facto* implementation of the law in addition to its formal *de jure* regulations, we provide a more comprehensive and data-based picture of the operational space for INGOs. By relying on representative empirical data from mainland China, our study also contributes to a growing body of research on the effects of closing civic space on INGO behavior and strategies.
@@ -85,7 +87,17 @@ This paper explores the characteristics of all registered INGOs in China in the 
 
 In this paper, we first explore existing theories of closing civic space, authoritarian regulation of civil society, and differential regulation of international vs. domestic NGOs. We then propose a set of empirical expectations for INGOs registering in China following the 2017 ONGO Law. We describe our data, which includes registration and organization-level details for all 633 INGOs registered between January 1, 2017 and December 31, 2021, and our descriptive and empirical approach to analyzing the data. We then present the findings from our data, exploring each of our empirical expectations, and conclude with a discussion of how these results connect to larger themes of the global closure of civic space.
 
+
+# Legal background
+
+TODO: Andrew/Meng - overview of ONGO law and multiple pathways - TAs vs. ROs - take lots of the stuff from the introduction and move it here
+
+TODO: Andrew - image of TA/RO pathways
+
+
 # Theoretical background and expectations
+
+TODO: Andrew: This 2017 law fits with a broader global phenomenon of closing civic space… General crackdown stuff + China crackdown stuff + our addition
 
 ::: callout-warning
 Apologies! This section is still *incredibly* drafty!
@@ -111,7 +123,20 @@ Main idea: organizations that work on more contentious issues like human rights 
 Also, [@Plantan:2022] finds "that I find" evidence of selective implementation that reveals which groups are seen as threatening or beneficial."
 :::
 
+
+## Closing space in China
+
+TODO: Meng - China crackdown lit
+
+
 ## Empirical expectations
+
+Main structure for these expectations + our analysis:
+
+- Stats + case study: **Flexibility**
+- Stats + case study: **Contentiousness**
+- Case study: **Relationship with PSU and government** (stats/descriptive bc lots of chambers of commerce
+
 
 Based on extant literature and theoretical understanding, we argue that the operation space INGOs are granted is associated with the level of contentiousness their missions, i.e., the issue areas they work in. Since the level of contentiousness is also manifested by the level of difficulty they face while seeking lawful registration.
 
@@ -159,7 +184,7 @@ Our second independent variable is a dichotomous indicator of whether the INGO e
 
 Our final independent variable measures how much time elapsed between the January 1, 2017 (when the law took effect) and the organization's official registration date. There is great variance in the timing of registering an RO among INGOs, since there has been a *de facto* grace period for INGOs to seek legal presence after the law took effect[@Shieh:2018]. This is largely because both INGOs and the regulators needed some transitional time to explore the specific implementation of the law as large ambiguity was left when the law was passed. We use this temporal variable as a proxy for the motivation or eagerness of INGOs to register an RO, for some INGOs are inclined to avoid the cumbersome registration procedures at the early stage if there is no real consequences for continuing operations without registration, while others took the time to talk with multiple potential PSUs to find a more suitable superior or regulatory dynamic. (to find a citation for this, probably Spires, if there is one.)
 
-## Multilevel Bayesian model
+## Modeling approach
 
 Our data provides us with rich descriptive detail of the types of INGOs allowed to register in China following the advent of the ONGO law, and we explore patterns in this data below. In addition to presenting descriptive summary statistics, we create a multilevel Bayesian regression model to examine the complex effects that issue area, local connections, and registration timing have on organizational flexibility. This approach allows us to hold specific variables constant and generate predictions for hypothetical new, not-yet-registered INGOs, providing us with stronger empirical implications. Additionally, Bayesian modeling allows us to calculate the posterior distribution of our different estimands. Rather than report a single value for the proportion of registered INGOs worked on specific issues, we can estimate posterior credible intervals that represent the probability that the true proportion falls within a specific range. We report posterior medians and 95% credible intervals throughout our analysis. Importantly, these intervals do not behave like more traditional frequentist confidence intervals. Instead, they can be interpreted as the probability that a reported estimate falls within the range, given the data and modeling choices.
 
@@ -482,7 +507,14 @@ epreds_timing_local |>
         axis.ticks.y.right = element_line(linewidth = 0.25, color = "grey50"))
 ```
 
+# Flexibility, contentiousness, and government relationships: The cases of Greenpeace and The Nature Conservancy
+
+TODO: Meng - TA vs. RO, exploring main mechanisms of flexibility, contentiousness, and relationships
+
+
 # Discussion and conclusion
+
+TODO: Andrew: Not fully exploring the TA thing here - that's in another paper
 
 ::: callout-warning
 **Still TODO!**
