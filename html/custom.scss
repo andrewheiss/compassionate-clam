@@ -83,6 +83,12 @@ pre.sourceCode {
 .table {
   box-shadow: none;
 }
+
+// Create a temporary no-stripe class for gt tables 
+.no-stripe .gt_table tr.odd {
+  --bs-table-striped-bg: transparent;
+}
+
 // Footer stuff
 .nav-footer-left {
   text-align: left;

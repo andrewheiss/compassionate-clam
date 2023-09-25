@@ -167,6 +167,7 @@ We ran these models on a 2021 M1 MacBook Pro with 32 GB of RAM, with 4 MCMC chai
 In total, it took `r total_run_time` to run everything.
 
 ```{r mcmc-duration-table}
+#| classes: no-stripe
 models |> 
   gt() |> 
   tab_footnote(
@@ -196,6 +197,7 @@ models |>
 Raw coefficients aren't super useful for interpreting things, but here's a table of them for fun.
 
 ```{r results-table}
+#| classes: no-stripe
 modelsummary(
   m_full_ordbeta,
   statistic = "[{conf.low}, {conf.high}]",
