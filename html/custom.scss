@@ -47,6 +47,8 @@ $headings-font-weight:        700 !default;
 
 $breadcrumb-padding-x:        0 !default;
 $breadcrumb-padding-y:        0 !default;
+$breadcrumb-divider:          quote(" /");
+
 
 
 /*-- scss:rules --*/
@@ -69,6 +71,11 @@ pre.sourceCode {
     
     .breadcrumb-item {
       padding-top: 0;
+      padding-right: 0.75em;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+      padding-right: 0.75em;
     }
   }
 }
