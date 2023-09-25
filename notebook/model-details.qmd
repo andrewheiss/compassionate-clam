@@ -56,7 +56,7 @@ $$
   & \beta_5\ \text{Issue[Charity and humanitarian]} + \beta_6\ \text{Issue[General]}\ + \\
   & \beta_7\ \text{Issue[Health]} + \beta_8\ \text{Issue[Environment]}\ + \\
   & \beta_9\ \text{Issue[Science and technology]} + \beta_{10}\ \text{Local connections}\ + \\
-  & \beta_{11}\ \text{Time since Januay 2017} + \beta_{12}\ \text{Year registered}
+  & \beta_{11}\ \text{Time since January 2017} + \beta_{12}\ \text{Year registered}
   \end{aligned}}\\[8pt]
 &\ \textbf{Priors} \\
 \beta_0\ \sim&\ \operatorname{Student\,t}(\nu = 3, \mu = 0, \sigma = 2.5) && \text{Intercept} \\
