@@ -326,15 +326,16 @@ Following our first empirical expectation, we predict that INGOs working on less
 #| include: true
 #| echo: false
 #| column: body-outset
-#| fig-cap: "**Top**: Posterior predictions from ordered Beta regression model,
+#| fig-cap: "*Top*: Posterior predictions from ordered Beta regression model,
 #|   conditional on organization issue area, showing the predicted proportion of
 #|   INGOs working in 1 province, all 32 provinces, or somewhere in between. The
 #|   vertical slices of the bars depict 500 posterior samples; the fuzziness
 #|   represents the uncertainty in category boundaries. 95% credible intervals 
-#|   are shown as ranges in each category **Bottom**: Expectation (or average) of
+#|   are shown as ranges in each category. *Bottom*: Expectation (or average) of
 #|   posterior predictive distributions. These distributions take into account 
 #|   single-province and nationwide predictions and represent the *overall*
-#|   conditional average geographic range for INGOs."
+#|   conditional average geographic range for INGOs. Points show posterior 
+#|   median; lines show 80% and 95% credible intervals."
 preds_issue_plot <- preds_issue |> 
   left_join(issue_indicator_lookup, by = join_by(issue_area)) |> 
   mutate(outcome = case_when(
@@ -396,7 +397,7 @@ p1 <- preds_issue_plot |>
   facet_wrap(vars(issue_area_nice), strip.position = "bottom", nrow = 1) +
   labs(
     x = NULL, y = "Proportion of predictions", fill = NULL,
-    title = "Overall expected proportion of type of geographic reach across issue area",
+    title = "Expected proportion of type of geographic reach across issue area",
     subtitle = "Posterior predictions of outcome categories"
   ) +
   theme_ongo() +
@@ -430,9 +431,10 @@ p2 <- epreds_issue |>
   guides(fill = "none") +
   labs(
     x = NULL, y = "Expected provinces",
-    title = "Overall expected count of provinces",
+    title = "Expected count of provinces",
     subtitle = "Expectation of posterior predictions"
   ) +
+  coord_cartesian(ylim = c(1, 32)) +
   theme_ongo() +
   theme(
     panel.grid.major.x = element_blank(),
@@ -451,58 +453,106 @@ As explained previously, we expect that the contentiousness of an NGO's issue ar
 
 In our second empirical expectation, we posit that since INGOs that seek out local connections and that are focused on more local China-specific issues, those organizations should be registered in fewer provinces. The results from our model confirm this expectation. @fig-local-preds-1 shows the distribution of predicted posterior outcomes for 1,000 hypothetical INGOs. Organizations without local connections are predicted to work nationally across all provinces nearly half of the time (with a 95% credible interval of 46--51%), and are predicted to work in two or more provinces 32--37% of the time. These organizations with no local connections or local programmatic focus are only predicted to work in a single province 15--19% of the time. In contrast, INGOs *with* local connections are far more likely to only work in one province (32--38%), or only work in a handful of provinces (36--41%). For these locally-focused organizations, the least common prediction is to work nationally, with only a 23--29% probability. @fig-local-preds-2 shows the posterior distribution of the average number of provinces INGOs are expected to be registered in, conditional on their local connections. The same relationship holds---an INGO without local connections is predicted to work in 19--24 provinces on average, while an organization with local connections is only predicted to work in 8--17.
 
-```{r fig-local-preds, fig.width=6, fig.height=2.5}
+```{r fig-local-preds, fig.width=8, fig.height=4}
 #| include: true
 #| echo: false
-#| layout-ncol: 1
-#| fig-cap: "Posterior predictions from ordered Beta regression model, conditional on having local connections."
-#| fig-subcap: 
-#|   - "Proportions of posterior predictions of INGOs working in 1 province, all 32 provinces, or somewhere in between. Distinct x-axis categories sum to 100% across the panels."
-#|   - "Distribution of the expectation of posterior predictions. These distributions take into account single-province and nationwide predictions and represent the overall conditional average geographic range for INGOs."
+#| fig-cap: "Posterior predictions from ordered Beta regression model, 
+#|   conditional on having local connections. *Top*: Predicted proportion of 
+#|   INGOs working in 1 province, all 32 provinces, or somewhere in between. 
+#|   The vertical slices of the bars depict 500 posterior samples; the fuzziness 
+#|   represents the uncertainty in category boundaries. 95% credible intervals 
+#|   are shown as ranges in each category. *Bottom*: Expectation (or average) of 
+#|   posterior predictive distributions. These distributions take into account 
+#|   single-province and nationwide predictions and represent the *overall* 
+#|   conditional average geographic range for INGOs. Points show posterior 
+#|   median; lines show 80% and 95% credible intervals."
 preds_local_plot <- preds_local |> 
   unnest(preds) |> 
   mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
   mutate(outcome = case_when(
-    .prediction == 0 ~ "1 province",
-    .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
-    .prediction == 1 ~ "32 provinces"
+    .prediction == 0 ~ "Only 1 province",
+    .prediction > 0 & .prediction < 1 ~ "Between 1–32 provinces",
+    .prediction == 1 ~ "All 32 provinces",
+    .ptype = factor(
+      levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"), 
+      ordered = TRUE)
   )) |> 
   group_by(outcome, local_connect, draw) |> 
   summarize(count = n()) |> 
   group_by(local_connect, draw) |> 
   mutate(prop = count / sum(count))
 
-# preds_local_plot |>
-#   group_by(outcome, local_connect) |>
-#   median_qi(prop)
-#
-# epreds_local |>
-#   mutate(.epred = prop_to_provinces(.epred)) |> 
-#   group_by(local_connect) |>
-#   median_qi(.epred)
+preds_local_text <- preds_local_plot |> 
+  group_by(outcome, local_connect) |> 
+  summarize(median_prop = median_qi(prop)) |> 
+  unnest(median_prop) |> 
+  group_by(local_connect) |> 
+  mutate(y_plot = (y / 2) + lag(cumsum(y), default = 0)) |> 
+  mutate(y_plot = 1 - y_plot) |> 
+  mutate(prop_nice = label_percent(accuracy = 1)(y)) |>
+  mutate(prop_ci_nice = glue::glue(
+    "{ymin}–{ymax}",
+    ymin = label_number(accuracy = 1, scale = 100)(ymin),
+    ymax = label_percent(accuracy = 1)(ymax)
+  ))
 
-ggplot(preds_local_plot, aes(x = local_connect, y = prop)) +
-  stat_pointinterval(color = clrs[2], .width = c(0.95), fatten_point = 1) +
-  facet_wrap(vars(outcome)) +
-  scale_x_discrete(labels = label_wrap(10)) +
-  scale_y_continuous(labels = label_percent()) +
-  labs(x = NULL, y = "Proportion of predictions",
-       caption = "Point shows posterior median; lines show 95% credible interval") +
-  theme_ongo()
-
-epreds_local |> 
-  mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
-  ggplot(aes(x = .epred, y = local_connect)) +
-  stat_halfeye(fill = clrs[2], .width = c(0.8, 0.95)) +
-  scale_x_continuous(labels = label_percent(),
-                     sec.axis = sec_axis(trans = ~ prop_to_provinces(.),
-                                         name = "Expected provinces",
-                                         breaks = seq(8, 32, 4))) +
-  guides(fill = "none") +
-  labs(x = "Expected proportion of provinces", y = NULL,
-       caption = "Point shows posterior median; lines show 80% and 95% credible intervals") +
+p1 <- preds_local_plot |> 
+  ggplot(aes(x = draw, y = prop)) +
+  geom_col(aes(fill = outcome), position = position_stack(), linewidth = 0, width = 1) +
+  geom_text(
+    data = preds_local_text,
+    aes(x = 250, y = y_plot, label = prop_ci_nice),
+    size = 3, fontface = "bold", color = "white"
+  ) +
+  scale_x_continuous(breaks = NULL, expand = c(0, 0)) +
+  scale_y_continuous(labels = label_percent(), expand = c(0, 0)) +
+  scale_fill_manual(values = clrs[c(3, 5, 7)]) +
+  facet_wrap(vars(local_connect), strip.position = "bottom", nrow = 1) +
+  labs(
+    x = NULL, y = "Proportion of predictions", fill = NULL,
+    title = "Expected proportion of type of geographic\nreach across local connections",
+    subtitle = "Posterior predictions of outcome categories"
+  ) +
   theme_ongo() +
-  theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
+  theme(
+    panel.grid.major = element_blank(),
+    panel.border = element_blank(),
+    panel.spacing = unit(5, "pt"),
+    strip.text = element_text(vjust = 1, hjust = 0.5, size = rel(0.8), face = "plain")
+  )
+
+p2 <- epreds_local |>
+  mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |>
+  ggplot(aes(x = local_connect, y = prop_to_provinces(.epred))) +
+  stat_halfeye(fill = clrs[6], color = clrs[8]) +
+  scale_x_discrete(labels = NULL) +
+  scale_y_continuous(
+    breaks = seq(0, 32, 8),
+    sec.axis = sec_axis(
+      trans = ~ provinces_to_prop(.),
+      name = "Proportion of provinces",
+      breaks = seq(0, 1, 0.25),
+      labels = label_percent()
+    )
+  ) +
+  facet_wrap(vars(local_connect), strip.position = "bottom", nrow = 1, scales = "free_x") +
+  guides(fill = "none") +
+  labs(
+    x = NULL, y = "Expected provinces",
+    title = "Expected count of provinces",
+    subtitle = "Expectation of posterior predictions"
+  ) +
+  coord_cartesian(ylim = c(1, 32)) +
+  theme_ongo() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.border = element_blank(),
+    panel.spacing = unit(5, "pt"),
+    strip.text = element_text(vjust = 1, hjust = 0.5, size = rel(0.8), face = "plain")
+  )
+
+(p1 | p2) +
+  plot_layout(widths = c(0.6, 0.4))
 ```
 
 International NGOs with locally focused missions and connections with local provincial officials are thus far more likely to purposely limit their activities to specific provinces, while organizations with broader non-local missions have a larger geographic reach. While we cannot precisely tell which direction the causal story works with this phenomenon, we can make some reasonable speculations. It is likely that locally-oriented INGOs purposely network and seek out connections with local PSUs before formally registering, thus fostering better relationships with government officials and furthering the organization's mission within its limited provinces. It is also likely, given the high probability of national reach, that organizations without local connections purposely do not spend the time and effort to cultivate those relationships, as it is not necessary to operate across many provinces. A rival explanation that having local connections reduces an organization's flexibility does not seem warranted. Although INGOs with local connections do have a more limited geographic scope, INGOs appear to purposely limit the number of provinces they work in in order to focus more on their local work.
