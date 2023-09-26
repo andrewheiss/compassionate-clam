@@ -27,7 +27,7 @@ format:
   hikmah-manuscript-odt:
     output-file: "manuscript-ms.odt"
     prefer-html: true
-    
+
     knitr:
       opts_chunk:
         dev: "ragg_png"
