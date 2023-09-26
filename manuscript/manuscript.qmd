@@ -322,55 +322,128 @@ Next we explore our data in more depth by generating and analyzing posterior pre
 
 Following our first empirical expectation, we predict that INGOs working on less contentious issues should be registered in more provinces and have more geographic flexibility in operating throughout the country. To explore this, we can take advantage of the simultaneous continuous and discrete features of ordered Beta regression and see how often an INGO in each issue area is predicted to work in a single province, across all provinces, or some number in between. @fig-issue-preds-1 presents a summary of predicted posterior outcomes for 1,000 hypothetical INGOs, varying each possible issue area and holding all other variables at their mean or modal values. Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelming the most likely kind of organization to work nationally---arts and culture organizations are predicted to work in all 32 provinces 80% of the time (with a credible interval of 78--83%) and are only predicted to work in a single province a rare 3--5% of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only 32--38% of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing 24--29% of the time---at least 10 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly the patterns in predictions: the most common outcome is for organizations to work nationally (50--60% of the time), followed by working in at least 2 provinces (25--40% of the time), followed by working in a single province (10--20% of the time). @fig-issue-preds-2 shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend---arts and culture INGOs are predicted to work in 28--30 provinces on average, while education INGOs are only predicted to work in 12--20. All other issues range between 20--28 provinces.
 
-```{r fig-issue-preds, fig.width=6, fig.height=4.5}
+```{r fig-issue-preds, fig.width=8, fig.height=6}
 #| include: true
 #| echo: false
-#| layout-ncol: 1
-#| fig-cap: "Posterior predictions from ordered Beta regression model, conditional on organization issue area."
-#| fig-subcap: 
-#|   - "Proportions of posterior predictions of INGOs working in 1 province, all 32 provinces, or somewhere in between. Distinct x-axis categories sum to 100% across the panels."
-#|   - "Distribution of the expectation of posterior predictions. These distributions take into account single-province and nationwide predictions and represent the overall conditional average geographic range for INGOs."
+#| column: body-outset
+#| fig-cap: "**Top**: Posterior predictions from ordered Beta regression model,
+#|   conditional on organization issue area, showing the predicted proportion of
+#|   INGOs working in 1 province, all 32 provinces, or somewhere in between. The
+#|   vertical slices of the bars depict 500 posterior samples; the fuzziness
+#|   represents the uncertainty in category boundaries. 95% credible intervals 
+#|   are shown as ranges in each category **Bottom**: Expectation (or average) of
+#|   posterior predictive distributions. These distributions take into account 
+#|   single-province and nationwide predictions and represent the *overall*
+#|   conditional average geographic range for INGOs."
 preds_issue_plot <- preds_issue |> 
   left_join(issue_indicator_lookup, by = join_by(issue_area)) |> 
   mutate(outcome = case_when(
-    .prediction == 0 ~ "1 province",
-    .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
-    .prediction == 1 ~ "32 provinces"
+    .prediction == 0 ~ "Only 1 province",
+    .prediction > 0 & .prediction < 1 ~ "Between 1–32 provinces",
+    .prediction == 1 ~ "All 32 provinces",
+    .ptype = factor(
+      levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"), 
+      ordered = TRUE)
   )) |> 
   group_by(outcome, issue_area_nice, draw) |> 
   summarize(count = n()) |> 
   group_by(issue_area_nice, draw) |> 
-  mutate(prop = count / sum(count)) |> 
-  ungroup() |> 
-  mutate(issue_area_nice = fct_reorder(issue_area_nice, prop))
+  mutate(prop = count / sum(count))
 
-# preds_issue_plot |>
-#   group_by(outcome, issue_area_nice) |>
-#   median_qi(prop)
+preds_issue_plot_order <- preds_issue_plot |> 
+  filter(outcome == "All 32 provinces") |>
+  group_by(issue_area_nice) |> 
+  summarize(median_prop = median(prop)) |> 
+  arrange(median_prop) |> 
+  mutate(issue_area_nice_labels = str_wrap(issue_area_nice, 15)) |> 
+  mutate(issue_area_nice = fct_inorder(issue_area_nice))
 
-ggplot(preds_issue_plot, aes(x = issue_area_nice, y = prop)) +
-  stat_pointinterval(color = clrs[5], .width = 0.95, fatten_point = 1) +
-  facet_wrap(vars(outcome), ncol = 1, scales = "free_y") +
-  scale_x_discrete(labels = label_wrap(10)) +
-  scale_y_continuous(labels = label_percent()) +
-  labs(x = NULL, y = "Proportion of predictions",
-       caption = "Point shows posterior median; lines show 95% credible interval") +
-  theme_ongo()
+preds_issue_text <- preds_issue_plot |> 
+  group_by(outcome, issue_area_nice) |> 
+  summarize(median_prop = median_qi(prop)) |> 
+  unnest(median_prop) |> 
+  group_by(issue_area_nice) |> 
+  mutate(y_plot = (y / 2) + lag(cumsum(y), default = 0)) |> 
+  mutate(y_plot = 1 - y_plot) |> 
+  mutate(prop_nice = label_percent(accuracy = 1)(y)) |>
+  mutate(prop_ci_nice = glue::glue(
+    "{ymin}–{ymax}",
+    ymin = label_number(accuracy = 1, scale = 100)(ymin),
+    ymax = label_percent(accuracy = 1)(ymax)
+  )) |> 
+  mutate(issue_area_nice = factor(
+    issue_area_nice, 
+    levels = preds_issue_plot_order$issue_area_nice,
+    labels = preds_issue_plot_order$issue_area_nice_labels
+  ))
 
-epreds_issue |> 
-  left_join(issue_indicator_lookup, by = join_by(issue_area)) |> 
-  mutate(issue_area_nice = fct_reorder(issue_area_nice, .epred)) |> 
-  ggplot(aes(x = .epred, y = issue_area_nice)) +
-  stat_halfeye(fill = clrs[5], .width = c(0.8, 0.95)) +
-  scale_x_continuous(labels = label_percent(),
-                     sec.axis = sec_axis(trans = ~ prop_to_provinces(.),
-                                         name = "Expected provinces",
-                                         breaks = seq(8, 32, 4))) +
-  guides(fill = "none") +
-  labs(x = "Expected proportion of provinces", y = NULL,
-       caption = "Point shows posterior median; lines show 80% and 95% credible intervals") +
+p1 <- preds_issue_plot |> 
+  mutate(issue_area_nice = factor(
+    issue_area_nice, 
+    levels = preds_issue_plot_order$issue_area_nice,
+    labels = preds_issue_plot_order$issue_area_nice_labels
+  )) |> 
+  ggplot(aes(x = draw, y = prop)) +
+  geom_col(aes(fill = outcome), position = "stack", linewidth = 0, width = 1) +
+  geom_text(
+    data = preds_issue_text,
+    aes(x = 250, y = y_plot, label = prop_ci_nice),
+    size = 3, fontface = "bold", color = "white"
+  ) +
+  scale_x_continuous(breaks = NULL, expand = c(0, 0)) +
+  scale_y_continuous(labels = label_percent(), expand = c(0, 0)) +
+  scale_fill_manual(values = clrs[c(3, 5, 7)]) +
+  facet_wrap(vars(issue_area_nice), strip.position = "bottom", nrow = 1) +
+  labs(
+    x = NULL, y = "Proportion of predictions", fill = NULL,
+    title = "Overall expected proportion of type of geographic reach across issue area",
+    subtitle = "Posterior predictions of outcome categories"
+  ) +
   theme_ongo() +
-  theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
+  theme(
+    panel.grid.major = element_blank(),
+    panel.border = element_blank(),
+    panel.spacing = unit(5, "pt"),
+    strip.text = element_text(vjust = 1, hjust = 0.5, size = rel(0.8), face = "plain")
+  )
+
+p2 <- epreds_issue |>
+  left_join(issue_indicator_lookup, by = join_by(issue_area)) |>
+  mutate(issue_area_nice = factor(
+    issue_area_nice,
+    levels = preds_issue_plot_order$issue_area_nice,
+    labels = preds_issue_plot_order$issue_area_nice_labels
+  )) |>
+  ggplot(aes(x = issue_area_nice, y = .epred)) +
+  stat_halfeye(fill = clrs[6], color = clrs[8]) +
+  scale_x_discrete(labels = NULL) +
+  scale_y_continuous(
+    labels = label_percent(),
+    sec.axis = sec_axis(
+      trans = ~ prop_to_provinces(.),
+      name = "Expected provinces",
+      breaks = seq(2, 32, 6)
+    )
+  ) +
+  facet_wrap(vars(issue_area_nice), strip.position = "bottom", nrow = 1, scales = "free_x") +
+  guides(fill = "none") +
+  labs(
+    x = NULL, y = "Proportion of provinces",
+    title = "Overall expected proportion of provinces",
+    subtitle = "Expectation of posterior predictions"
+  ) +
+  theme_ongo() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    axis.ticks.y.right = element_line(linewidth = 0.25, color = "grey50"),
+    axis.title.y.right = element_text(hjust = 0),
+    panel.border = element_blank(),
+    panel.spacing = unit(5, "pt"),
+    strip.text = element_text(vjust = 1, hjust = 0.5, size = rel(0.8), face = "plain")
+  )
+
+(p1 / plot_spacer() / p2) +
+  plot_layout(heights = c(0.65, 0.02, 0.33))
 ```
 
 As explained previously, we expect that the contentiousness of an NGO's issue area should influence its geographic reach and overall flexibility. No INGOs engaged in contentious issues like human rights advocacy have successfully registered in China, but there is some slight variation in the level of contention even among organizations working on less contentious issues like humanitarian assistance, health, and the environment. Education is particularly notable as the least flexible and most geographically restricted subsector. While education is typically considered a low-contention issue, in China fears of Western influence through educational institutions were an original impetus for the ONGO law. In 2006, an article in a CCP-owned newspaper warned that the growing presence of international NGOs would "undermine national security," "destroy political stability," "foster corruption," "propagate foreign practices," and "spy on and gather information on China's military, political, and economic information" [@Yin:2009, 534]. The idea that INGOs would "propagate foreign practices" had especially powerful salience, since increased exposure to the West through international NGOs had the potential to "lead to adoption of Western ideas of liberty, further endangering government control over the populace" [@HsiaWhite:2002, 337]. Educational NGOs were one particular avenue for the West to exert influence in the country---the directors and presidents of dozens of China's largest domestic NGOs have received doctoral degrees from and hold visiting appointments at Cornell, Duke, UNC-Chapel Hill, Harvard, Yale, and other prominent US universities [@Wang:2012, 108--9], and their training and connections abroad have influenced their programming and advocacy at home. In 2006, one Chinese NGO leader candidly explained that "foreign influence is definitely great. There is conceptual influence. Foreign NGOs' working methods also affect Chinese NGOs" [@Wang:2012, 110]. Education can thus be seen as one of the more contentious issues allowed under the ONGO law, and thus more closely regulated and restricted.
