@@ -414,29 +414,28 @@ p2 <- epreds_issue |>
     levels = preds_issue_plot_order$issue_area_nice,
     labels = preds_issue_plot_order$issue_area_nice_labels
   )) |>
-  ggplot(aes(x = issue_area_nice, y = .epred)) +
+  ggplot(aes(x = issue_area_nice, y = prop_to_provinces(.epred))) +
   stat_halfeye(fill = clrs[6], color = clrs[8]) +
   scale_x_discrete(labels = NULL) +
   scale_y_continuous(
-    labels = label_percent(),
+    breaks = seq(0, 32, 8),
     sec.axis = sec_axis(
-      trans = ~ prop_to_provinces(.),
-      name = "Expected provinces",
-      breaks = seq(2, 32, 6)
+      trans = ~ provinces_to_prop(.),
+      name = "Proportion of provinces",
+      breaks = seq(0, 1, 0.25),
+      labels = label_percent()
     )
   ) +
   facet_wrap(vars(issue_area_nice), strip.position = "bottom", nrow = 1, scales = "free_x") +
   guides(fill = "none") +
   labs(
-    x = NULL, y = "Proportion of provinces",
-    title = "Overall expected proportion of provinces",
+    x = NULL, y = "Expected provinces",
+    title = "Overall expected count of provinces",
     subtitle = "Expectation of posterior predictions"
   ) +
   theme_ongo() +
   theme(
     panel.grid.major.x = element_blank(),
-    axis.ticks.y.right = element_line(linewidth = 0.25, color = "grey50"),
-    axis.title.y.right = element_text(hjust = 0),
     panel.border = element_blank(),
     panel.spacing = unit(5, "pt"),
     strip.text = element_text(vjust = 1, hjust = 0.5, size = rel(0.8), face = "plain")
