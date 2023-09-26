@@ -42,7 +42,7 @@ set_annotation_fonts()
 # Model definition
 
 $$
-\begin{align}
+\begin{aligned}
 &\ \textbf{Registered provinces for INGO } i \\
 \text{Count of provinces}\ \sim&\ \operatorname{Ordered\,Beta}(\mu_i, \phi_y, k_{1_y}, k_{2_y}) \\[8pt]
 &\ \textbf{Model of outcome average} \\
@@ -64,7 +64,7 @@ $$
 \phi_y\ \sim&\ \operatorname{Exponential}(1 / 100) && \text{Variability in province count} \\
 k_{1_y}, k_{2_y}\ \sim&\ \operatorname{Induced\,Dirichlet}(1, 1, 1), && \text{0–continuous and continuous–1 cutpoints} \\
 &\ \quad \text{or } \bigl[P(\alpha_1), P(\alpha_1 + \alpha_2)\bigr] && \quad\text{(boundaries between 3 Dirichlet columns)}
-\end{align}
+\end{aligned}
 $$
 
 # Model priors
