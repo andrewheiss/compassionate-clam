@@ -50,6 +50,8 @@ library(tidybayes)
 library(sf)
 library(ggrepel)
 library(marginaleffects)
+library(tidygraph)
+library(ggraph)
 library(patchwork)
 library(kableExtra)
 library(gt)
@@ -103,9 +105,6 @@ TODO: Andrew - image of TA/RO pathways @fig-ro-ta-pathways
 #| fig-cap: "Two possible pathways for international NGOs to legally work in 
 #|   China, either as formal Registered Organizations (ROs) or by undertaking 
 #|   specific Temporary Activities (TAs)"
-library(tidygraph)
-library(ggraph)
-
 ro_nodes <- tibble(
   step = c(
     "Find a professional supervisory unit (PSU)",
@@ -197,6 +196,58 @@ TODO: Meng - China crackdown lit
 
 
 ## Empirical expectations
+
+See @fig-theory
+
+```{r fig-theory, fig.width=6, fig.height=2}
+#| echo: false
+#| include: true
+#| warning: false
+#| message: false
+#| fig-cap: "Diagram of our theoretical framework showing three possible determinants of INGO operational flexibility: the contentiousness of the INGO's issue area, the inherent geographic scope of the INGO's operations, and the government's interest in and relationship with the INGO."
+theory_nodes <- tribble(
+  ~id, ~name, ~x, ~y, ~highlight,
+  1,   "Issue contentiousness", 1, 0, FALSE,
+  2,   "Operational flexibility", 3, 0, TRUE,
+  3,   "Local focus", 2, 1, FALSE,
+  4,   "Government relationship and interest", 2, -1, FALSE
+)
+
+theory_edges <- tribble(
+  ~from, ~to,
+  1, 2,
+  3, 1,
+  3, 2,
+  1, 4,
+  4, 2
+)
+
+theory_graph <- tbl_graph(nodes = theory_nodes, edges = theory_edges)
+
+ggraph(theory_graph, x = x, y = y) + 
+  geom_edge_link(
+    aes(
+      end_cap = label_rect(node2.name, padding = margin(10, 5, 10, 5, "pt"))
+    ),
+    arrow = arrow(angle = 30, length = unit(6, "pt"), type = "closed"),
+    edge_linewidth = 0.25
+  ) +
+  geom_node_label(
+    aes(x = x, y = y, label = name, fill = highlight), 
+    size = 3, label.r = unit(0, units = "pt"), fontface = "bold"
+  ) +
+  scale_x_continuous(expand = expansion(add = 0.3)) +
+  scale_y_continuous(expand = expansion(add = 0.2)) +
+  scale_fill_manual(values = c("white", clrs[1]), guide = "none") +
+  labs(x = NULL, y = NULL) +
+  theme_ongo() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.border = element_blank(),
+    axis.text = element_blank(),
+  )
+```
+
 
 Main structure for these expectations + our analysis:
 
