@@ -69,6 +69,7 @@ tar_load(c(preds_issue, preds_local, preds_timing,
 
 # Plotting and modelsummary functions
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
+set_annotation_fonts()
 ```
 
 # Introduction
@@ -92,7 +93,73 @@ In this paper, we first explore existing theories of closing civic space, author
 
 TODO: Andrew/Meng - overview of ONGO law and multiple pathways - TAs vs. ROs - take lots of the stuff from the introduction and move it here
 
-TODO: Andrew - image of TA/RO pathways
+TODO: Andrew - image of TA/RO pathways @fig-ro-ta-pathways
+
+```{r fig-ro-ta-pathways, fig.width=6, fig.height=3}
+#| echo: false
+#| include: true
+#| warning: false
+#| message: false
+#| fig-cap: "Two possible pathways for international NGOs to legally work in 
+#|   China, either as formal Registered Organizations (ROs) or by undertaking 
+#|   specific Temporary Activities (TAs)"
+library(tidygraph)
+library(ggraph)
+
+ro_nodes <- tibble(
+  step = c(
+    "Find a professional supervisory unit (PSU)",
+    "Obtain PSU approval",
+    "Open organization bank accounts",
+    "Keep programming withing approved scope",
+    "Submit annual work plans (×2)",
+    "Submit annual reports (×2)"
+  ),
+  type = "Registered organization (RO)"
+)
+ro_edges <- tibble(from = 1:5, to = 2:6)
+ro_graph <- tbl_graph(nodes = ro_nodes, edges = ro_edges)
+
+ta_nodes <- tibble(
+  step = c(
+    "Find an eligible Chinese partner to file paperwork",
+    "Obtain PSU approval",
+    "Channel money through partner’s bank",
+    "Keep programming withing approved scope",
+    "Finish work within a year",
+    "Submit final project report"
+  ),
+  type = "Temporary activities (TA)"
+)
+ta_edges <- tibble(from = 1:5, to = 2:6)
+ta_graph <- tbl_graph(nodes = ta_nodes, edges = ta_edges)
+
+combined_graph <- bind_graphs(ro_graph, ta_graph)
+
+ggraph(combined_graph, layout = "tree") +
+  geom_node_label(
+    aes(x = x, y = y, label = step), 
+    size = 2.5, label.r = unit(0, units = "pt")
+  ) +
+  geom_edge_link(
+    aes(
+      start_cap = label_rect(node1.step, padding = margin(5, 5, 5, 5, "pt")),
+      end_cap = label_rect(node2.step, padding = margin(5, 5, 5, 5, "pt"))
+    ),
+    arrow = arrow(angle = 30, length = unit(6, "pt"), type = "closed"),
+    edge_linewidth = 0.25
+  ) +
+  facet_nodes(vars(type), scales = "free_x") +
+  labs(x = NULL, y = NULL) +
+  theme_ongo() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.border = element_blank(),
+    axis.text = element_blank(),
+    strip.text = element_text(hjust = 0.5)
+  )
+```
+
 
 
 # Theoretical background and expectations
