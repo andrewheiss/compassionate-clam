@@ -66,6 +66,7 @@ list(
   
   ## Models ----
   tar_target(m_full_ordbeta, f_full_ordbeta(ongo_wide)),
+  tar_target(m_full_ordbeta_interaction, f_full_ordbeta_interaction(ongo_wide)),
   tar_target(m_full_zoib, f_full_zoib(ongo_wide)),
 
   ## Posterior predictions ----
@@ -76,7 +77,7 @@ list(
   tar_target(epreds_issue, f_epreds_issue(m_full_ordbeta, issue_indicator_lookup)),
   tar_target(epreds_local, f_epreds_local(m_full_ordbeta)),
   tar_target(epreds_timing, f_epreds_timing(m_full_ordbeta)),
-  tar_target(epreds_timing_local, f_epreds_timing_local(m_full_ordbeta)),
+  tar_target(epreds_timing_local, f_epreds_timing_local(m_full_ordbeta_interaction)),
   
   ## Analysis notebook ----
   tar_quarto(manuscript_nice, path = "manuscript", quiet = FALSE, profile = "nice"),

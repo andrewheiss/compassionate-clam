@@ -31,7 +31,7 @@ set.seed(196491)
 
 # Load targets
 tar_load(ongo)
-tar_load(c(m_full_ordbeta))
+tar_load(c(m_full_ordbeta, m_full_ordbeta_interaction))
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
 invisible(list2env(tar_read(table_functions), .GlobalEnv))
 
@@ -144,6 +144,7 @@ prior_summary(m_full_ordbeta) |>
 models <- tribble(
   ~model_name, ~model,
   "Full model", m_full_ordbeta,
+  "Model with local connections × time interaction", m_full_ordbeta_interaction
 ) |> 
   mutate(duration = map(model, ~{
     .$fit |> 
@@ -199,7 +200,7 @@ Raw coefficients aren't super useful for interpreting things, but here's a table
 ```{r results-table}
 #| classes: no-stripe
 modelsummary(
-  m_full_ordbeta,
+  list(m_full_ordbeta, m_full_ordbeta_interaction),
   statistic = "[{conf.low}, {conf.high}]",
   ci_method = "hdi",
   metrics = c("R2"),

@@ -26,6 +26,30 @@ f_full_ordbeta <- function(data) {
   return(model)
 }
 
+f_full_ordbeta_interaction <- function(data) {
+  library(ordbetareg)
+  
+  BAYES_SEED <- 121171  # From random.org
+  
+  model <- ordbetareg(
+    bf(
+      province_count ~ 
+        issue_arts_and_culture + issue_education +
+        issue_industry_association + issue_economy_and_trade + 
+        issue_charity_and_humanitarian + issue_general + issue_health +
+        issue_environment + issue_science_and_technology +
+        (local_connect * years_since_law) + year_registered_cat
+    ), 
+    data = data,
+    true_bounds = c(1, 32),
+    coef_prior_mean = 0,
+    coef_prior_SD = 2.5,
+    phi_prior = 1/100,
+    seed = BAYES_SEED)
+  
+  return(model)
+}
+
 f_full_zoib <- function(data) {
   BAYES_SEED <- 102819  # From random.org
   
@@ -142,7 +166,8 @@ f_epreds_local <- function(model, ndraws = 1000) {
 f_epreds_timing <- function(model, ndraws = 1000) {
   model |> 
     epred_draws(datagrid(model = model, years_since_law = 0:5), 
-                ndraws = ndraws, seed = 58214) |> 
+                ndraws = 1000, seed = 58214) |> 
+    mutate(years_since_law = 2017 + years_since_law) |> 
     ungroup()
 }
 
@@ -151,5 +176,6 @@ f_epreds_timing_local <- function(model, ndraws = 1000) {
     epred_draws(datagrid(model = model, 
                          local_connect = unique, years_since_law = 0:5), 
                 ndraws = ndraws, seed = 58214) |> 
+    mutate(years_since_law = 2017 + years_since_law) |> 
     ungroup()
 }
