@@ -396,8 +396,8 @@ p1 <- preds_issue_plot |>
   scale_fill_manual(values = clrs[c(3, 5, 7)]) +
   facet_wrap(vars(issue_area_nice), strip.position = "bottom", nrow = 1) +
   labs(
-    x = NULL, y = "Proportion of predictions", fill = NULL,
-    title = "Expected proportion of type of geographic reach across issue area",
+    x = NULL, y = "Predicted probability of geographic reach", fill = NULL,
+    title = "Predicted proportion of type of geographic reach across issue area",
     subtitle = "Posterior predictions of outcome categories"
   ) +
   theme_ongo() +
@@ -509,8 +509,8 @@ p1 <- preds_local_plot |>
   scale_fill_manual(values = clrs[c(3, 5, 7)]) +
   facet_wrap(vars(local_connect), strip.position = "bottom", nrow = 1) +
   labs(
-    x = NULL, y = "Proportion of predictions", fill = NULL,
-    title = "Expected proportion of type of geographic\nreach across local connections",
+    x = NULL, y = "Predicted probability of geographic reach", fill = NULL,
+    title = "Predicted proportion of type of\ngeographic reach across local connections",
     subtitle = "Posterior predictions of outcome categories"
   ) +
   theme_ongo() +
@@ -561,84 +561,143 @@ International NGOs with locally focused missions and connections with local prov
 
 The ONGO Law officially came into effect on January 1, 2017, and as seen previously in @fig-registration-timeline, the first year of the law saw the greatest total number of registrations. In our third empirical expectation, we propose that these early registrants under the new law were both less of a threat to regime stability and a higher priority for bureaucratic processing, and thus should be registered in more provinces and have more geographic flexibility throughout the country. However, the results of our model support the *reverse* of this expectation. @fig-timing-preds-1 once again shows the predicted posterior outcomes for 1,000 simulated INGOs across a range of time since January 2017. Organizations that registered in the first year are predicted to work in all provinces 41--46% of the time, and are predicted to work in two or more provinces 34--39% of the time. These early INGOs are the most likely to be registered in only one province and are predicted to do so 17--23% of the time. After the initial wave of registrations in 2017, the likelihood of nationwide reach steadily increases and replaces both the probability of a single province or a partial range of provinces. By the end of 2021---5 years after the ONGO Law took effect---the probability of national -level registration increases to 55--61% while the probability of working in a range of provinces increases to predicted to work in two or more provinces increase to 27--32%. These late INGOs are the least likely to be registered in only one province and are predicted to do so only 17--22% of the time. @fig-timing-preds-2 demonstrates the same results with the posterior distribution of the expected count of provinces over five years since 2017. INGOs that register early are predicted to work in 17--22 provinces, while those that wait until 2021 are predicted to work in 21--28.
 
-```{r fig-timing-preds, fig.width=6, fig.height=3}
+```{r fig-timing-preds, fig.width=8, fig.height=4}
 #| include: true
 #| echo: false
-#| layout-ncol: 1
-#| fig-cap: "Posterior predictions from ordered Beta regression model, conditional on time since registration."
-#| fig-subcap: 
-#|   - "Proportions of posterior predictions of INGOs working in 1 province, all 32 provinces, or somewhere in between. Distinct x-axis values sum to 100% across the panels."
-#|   - "Distribution of the expectation of posterior predictions. These distributions take into account single-province and nationwide predictions and represent the overall conditional average geographic range for INGOs."
+#| fig-cap: "Posterior predictions from ordered Beta regression model, 
+#|   conditional on time since law took effect in January 2017. *Top*: Predicted 
+#|   proportion of INGOs working in 1 province, all 32 provinces, or somewhere 
+#|   in between. Filled areas depict 50 posterior samples of the outcome category 
+#|   probabilities, so the fuzziness represents the uncertainty in category 
+#|   boundaries. *Bottom*: Expectation (or average) of posterior predictive 
+#|   distributions. This distribution takes into account single-province and 
+#|   nationwide predictions and represents the *overall* conditional average 
+#|   geographic range for INGOs over time. Shaded regions show the 50%, 80%, 
+#|   and 95% credible intervals."
 preds_timing_plot <- preds_timing |> 
   unnest(preds) |> 
   mutate(outcome = case_when(
-    .prediction == 0 ~ "1 province",
-    .prediction > 0 & .prediction < 1 ~ "1–32 provinces",
-    .prediction == 1 ~ "32 provinces"
+    .prediction == 0 ~ "Only 1 province",
+    .prediction > 0 & .prediction < 1 ~ "Between 1–32 provinces",
+    .prediction == 1 ~ "All 32 provinces",
+    .ptype = factor(
+      levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"), 
+      ordered = TRUE)
   )) |> 
-  group_by(outcome, years_since_law, draw) |>  
+  mutate(years_since_law = 2017 + years_since_law) |> 
+  group_by(outcome, years_since_law, draw) |>
   summarize(count = n()) |> 
-  group_by(years_since_law, draw) |> 
-  mutate(prop = count / sum(count))
+  group_by(years_since_law) |> 
+  mutate(prop = count / sum(count) * 100)
 
-# preds_timing_plot |>
-#   group_by(outcome, years_since_law) |>
-#   median_qi(prop)
-# 
-# epreds_timing |>
-#   mutate(.epred = prop_to_provinces(.epred)) |>
-#   group_by(years_since_law) |>
-#   median_qi(.epred)
+preds_timing_text <- preds_timing_plot |> 
+  filter(years_since_law == 2017.2) |> 
+  group_by(outcome) |> 
+  summarize(median_prop = median_qi(prop)) |> 
+  unnest(median_prop) |> 
+  mutate(y_plot = (y / 2) + lag(cumsum(y), default = 0)) |> 
+  mutate(y_plot = 1 - y_plot) |> 
+  mutate(years_since_law = 2017.2)
 
-ggplot(preds_timing_plot, aes(x = years_since_law, y = prop)) +
-  stat_lineribbon(.width = c(0.5, 0.8, 0.95), 
-                  alpha = 0.35, fill = clrs[7], color = clrs[7]) +
-  facet_wrap(vars(outcome), nrow = 1) +
-  scale_y_continuous(labels = label_percent()) +
-  labs(x = "Years since law took effect (2017)", 
-       y = "Proportion of predictions",
-       caption = "Shaded regions show the 50%, 80%, and 95% credible intervals") +
+layers <- preds_timing_plot |> 
+  filter(draw <= 50) |> 
+  split(~ draw) |> 
+  lapply(\(x) {
+    geom_area(
+      data = x,
+      aes(y = prop, fill = outcome),
+      alpha = 0.1
+    )
+  })
+
+p1 <- ggplot(preds_timing_plot, aes(x = years_since_law)) +
+  layers +
+  geom_text(
+    data = preds_timing_text, 
+    aes(y = y_plot, label = outcome),
+    color = "white",
+    hjust = 0, fontface = "bold", size = 3, show.legend = FALSE
+  ) +
+  scale_x_continuous(expand = expansion(mult = 0.02)) +
+  scale_y_continuous(labels = label_percent(), expand = c(0, 0)) +
+  scale_color_manual(values = colorspace::darken(clrs[c(3, 5, 7)], 0.1)) +
+  scale_fill_manual(values = colorspace::lighten(clrs[c(3, 5, 7)], 0)) +
+  labs(
+    x = NULL, y = "Predicted probability of geographic reach", fill = NULL,
+    title = "Predicted proportion of type of \ngeographic reach since January 2017",
+    subtitle = "Posterior predictions of outcome categories"
+  ) +
+  guides(fill = "none") +
+  theme_ongo() +
+  theme(
+    panel.grid.major = element_blank()
+  )
+
+p2 <- epreds_timing |>
+  ggplot(aes(x = years_since_law, y = prop_to_provinces(.epred))) +
+  stat_lineribbon(
+    .width = c(0.5, 0.8, 0.95),
+    alpha = 0.35, fill = clrs[6], color = clrs[6]
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 32, 8),
+    sec.axis = sec_axis(
+      trans = ~ provinces_to_prop(.),
+      name = "Proportion of provinces",
+      breaks = seq(0, 1, 0.25),
+      labels = label_percent()
+    )
+  ) +
+  labs(
+    x = NULL, y = "Expected provinces",
+    title = "Expected count of provinces",
+    subtitle = "Expectation of posterior predictions"
+  ) +
+  coord_cartesian(ylim = c(1, 32)) +
   theme_ongo()
 
-epreds_timing |> 
-  ggplot(aes(x = years_since_law, y = .epred)) +
-  stat_lineribbon(.width = c(0.5, 0.8, 0.95), 
-                  alpha = 0.35, fill = clrs[7], color = clrs[7]) +
-  scale_y_continuous(labels = label_percent(),
-                     sec.axis = sec_axis(trans = ~ prop_to_provinces(.),
-                                         name = "Expected provinces",
-                                         breaks = seq(15, 27, 3))) +
-  guides(fill = "none") +
-  labs(x = "Years since law took effect (2017)", y = "Expected proportion of provinces",
-       caption = "Shaded regions show the 50%, 80%, and 95% credible intervals") +
-  theme_ongo() +
-  theme(axis.title.y.right = element_text(hjust = 1, margin = margin(l = 10), angle = 90),
-        axis.ticks.y.right = element_line(linewidth = 0.25, color = "grey50"))
+p1 | p2
 ```
+
 
 We lack sufficient theory or data to explain why this trend goes against our expectations, but we can again make reasonable speculations. As we saw previously with INGOs and local connections, organizations appear to strategically seek out the best avenues and methods for registering. Organizations that participated in the initial wave of registrations in 2017 likely had closer connections with local officials and were able to speed through the bureaucratic process registration more easily. As a preliminary test of this speculation, we rerun our main model with an interaction between years since registration and local connections to see how the effect of local connections changes over time. As seen in @fig-timing-local, early registrants in 2017 without local connections are more likely to have a larger geographic reach, registering in an average of 19--23 provinces, while their locally-focused counterparts are only expected to register in an average of 7--16 provinces. Accordingly, it may be that organizations with local connections are more likely to register early because of their pre-existing bureaucratic relationships, while organizations with a larger national reach take longer to undertake the registration process and thus register later. Further research on this point is warranted.
 
-```{r fig-timing-local, fig.width=6, fig.height=3}
+```{r fig-timing-local, fig.width=6, fig.height=3, out.width="80%"}
 #| include: true
 #| echo: false
-#| fig-cap: "Distribution of the expectation of posterior predictions across both time and local connections. These distributions take into account single-province and nationwide predictions and represent the overall conditional average geographic range for INGOs."
-epreds_timing_local |> 
-  mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
-  ggplot(aes(x = years_since_law, y = .epred)) +
-  stat_lineribbon(.width = c(0.5, 0.8, 0.95), 
-                  alpha = 0.35, fill = clrs[7], color = clrs[7]) +
-  scale_y_continuous(labels = label_percent(),
-                     sec.axis = sec_axis(trans = ~ prop_to_provinces(.),
-                                         name = "Expected provinces",
-                                         breaks = seq(3, 27, 4))) +
+#| fig-cap: "Expectation (or average) of posterior predictive distributions 
+#|   from model with interaction between local connections and time since 
+#|   January 2017. These predictions take into account single-province and 
+#|   nationwide predictions and represent the overall conditional average 
+#|   geographic range for INGOs over time across, conditional on local 
+#|   connections. Shaded regions show the 50%, 80%, and 95% credible intervals"
+epreds_timing_local |>
+  mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |>
+  ggplot(aes(x = years_since_law, y = prop_to_provinces(.epred))) +
+  stat_lineribbon(
+    .width = c(0.5, 0.8, 0.95),
+    alpha = 0.35, fill = clrs[6], color = clrs[6]
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 32, 8),
+    sec.axis = sec_axis(
+      trans = ~ provinces_to_prop(.),
+      name = "Proportion of provinces",
+      breaks = seq(0, 1, 0.25),
+      labels = label_percent()
+    )
+  ) +
   guides(fill = "none") +
-  labs(x = "Years since law took effect (2017)", y = "Expected proportion of provinces",
-       caption = "Shaded regions show the 50%, 80%, and 95% credible intervals") +
+  labs(
+    x = NULL, y = "Expected provinces",
+    title = "Expected count of provinces across local connections",
+    subtitle = "Expectation of posterior predictions"
+  ) +
+  coord_cartesian(ylim = c(1, 32)) +
   facet_wrap(vars(local_connect)) +
-  theme_ongo() +
-  theme(axis.title.y.right = element_text(hjust = 1, margin = margin(l = 10), angle = 90),
-        axis.ticks.y.right = element_line(linewidth = 0.25, color = "grey50"))
+  theme_ongo()
 ```
+
 
 # Flexibility, contentiousness, and government relationships: The cases of Greenpeace and The Nature Conservancy
 
