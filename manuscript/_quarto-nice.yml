@@ -13,8 +13,10 @@ format:
       - html/custom.scss
     citeproc: false
     filters: 
-      - "_extensions/andrewheiss/wordcount/citeproc.lua"
-      - "_extensions/andrewheiss/wordcount/wordcount.lua"
+      - at: pre-render
+        path: "_extensions/andrewheiss/wordcount/citeproc.lua"
+      - at: pre-render
+        path: "_extensions/andrewheiss/wordcount/wordcount.lua"
     lightbox: auto
     knitr:
       opts_chunk:
