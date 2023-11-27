@@ -74,7 +74,9 @@ invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
 set_annotation_fonts()
 ```
 
-# Introduction
+::: {.content-visible when-format="html"}
+# Introduction {.hide}
+:::
 
 In the past decade, nearly 100 countries have proposed or enacted legal measures designed to restrict civil society [@ICNL:2021], and only 21% of countries have open and unrestricted civic space [@ChaudhryHeiss:2022a; @Civicus:2023]. This global trend of closing or shrinking civic space [@Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyPrakash:2020; @DupuyRonPrakash:2016] has affected countries of all regime types, including both autocracies and democracies such as Morocco and Palestine [@AtiaHerrold:2018], India [@press-trust-india:2019], Vietnam [@Sidel:2023], Canada [@CIVICUS:2013], and the United States [@Cramer:2020]. On April 28, 2016, China passed its own set of legal restrictions on civil society with its Law of the People's Republic of China on Administration of Activities of Overseas Nongovernmental Organizations in the Mainland of China, or "ONGO Law," which formally took effect on January 1, 2017. The law requires all international NGOs (INGOs) to either register representative offices (ROs) or file temporary activities to lawfully operate in mainland China.As an authoritarian state with a growing nonprofit sector, the Chinese model of implementing restrictive laws for international NGOs (INGOs) has important implications for understanding the dynamics of how civil society laws can be used as policy tools to harness INGOs.
 

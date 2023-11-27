@@ -5,6 +5,13 @@ format:
   # Nice HTML output
   html:
     toc: true
+    include-in-header:
+      - text: |
+          <style type="text/css">
+          h2.hide {
+            display: none;
+          }
+          </style>
     language: 
       title-block-published: "Latest version"
     shift-heading-level-by: 1
