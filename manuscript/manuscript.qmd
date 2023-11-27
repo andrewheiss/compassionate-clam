@@ -315,7 +315,12 @@ Main structure for these expectations + our analysis:
 
 We test these theoretical expectations using a mixed methods approach. Using 
 
-- Stats + case study: **Flexibility**
+1: issue - stats + case study
+2: localness - stats
+3: timing - stats
+
+
+- Stats + case study: **Local**
 - Stats + case study: **Contentiousness**
 - Case study: **Relationship with PSU and government** (stats/descriptive bc lots of chambers of commerce)
 
@@ -864,15 +869,15 @@ epreds_timing_local |>
 ```
 
 
-# Flexibility, contentiousness, and government relationships: The cases of Greenpeace and The Nature Conservancy
+# Contentiousness and government relationships: The cases of Greenpeace and The Nature Conservancy
 
-Paragraph justifying why the case study is needed
+Paragraph justifying why the case study is needed - stats are cool but missing details about contentiousness of issues - also, stats only look at ROs, not TAs or any ONGOs that left the country, so we're missing some dynamics of ONGO-government relations. We can explore our empirical expectations in more depth by looking at a comparative case study of Greenpeace and NC
 
-Education, Environment, lower expected operating space (flexibility?)
+Education, Environment, lower expected operating space
 
 So Issue areas can predict some level of flexibility/restrictions INGOs receive, but that is not the full story, the relations with the government (one more dimension/variable) also plays important roles, see TNC vs. Greenpeace 
 
-TODO: Meng - TA vs. RO, exploring main mechanisms of flexibility, contentiousness, and relationships
+TODO: Meng - TA vs. RO, exploring main mechanisms of contentiousness, and relationships
 
 
 # Discussion and conclusion
