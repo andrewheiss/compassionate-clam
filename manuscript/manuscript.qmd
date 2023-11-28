@@ -12,7 +12,7 @@ author:
   email: aheiss@gsu.edu
   orcid: 0000-0002-3948-3914
 abstract: |
-  China’s 2017 Overseas NGO (ONGO) Law is part of a larger global trend of legal restrictions on international nongovernmental organizations (INGOs). However, the effects of this global crackdown on INGOs have been difficult to measure since there is often divergence between the formal de jure regulations and the de facto implementation of these laws. Additionally, the severity and consistency of the enforcement of these laws often depends on the type of services provided by these organizations. In this paper, we explore the effect of China’s ONGO law on INGO operations in the five years since the passage of the law. We test whether and how INGO operational space under the ONGO law is influenced by organizations' issue areas. We argue that the less contentious the issue areas INGOs work in the more likely they are granted greater operational space, measured by the number of provinces they are legally authorized to work in. China provides an excellent setting for examining the phenomenon of closing space civic space, since the 2017 ONGO law hypothetically regulates both claim-making and service-providing NGOs, while the level of ambiguity of the law gives ample room for arbitrary discretion and conflicting attitudes by authorities. We test our argument by analyzing administrative data from 633 registered representative offices of INGOs registered in China between 2017–2021 and test our hypothesis with a multilevel Bayesian model. Our results speak to the broader literature on closing civic space and provide an empirical illustration of the practical effect of NGO restrictions on global civil society.
+  TODO: **Update this based on the finished version of the paper.** China’s 2017 Overseas NGO (ONGO) Law is part of a larger global trend of legal restrictions on international nongovernmental organizations (INGOs). However, the effects of this global crackdown on INGOs have been difficult to measure since there is often divergence between the formal de jure regulations and the de facto implementation of these laws. Additionally, the severity and consistency of the enforcement of these laws often depends on the type of services provided by these organizations. In this paper, we explore the effect of China’s ONGO law on INGO operations in the five years since the passage of the law. We test whether and how INGO operational space under the ONGO law is influenced by organizations' issue areas. We argue that the less contentious the issue areas INGOs work in the more likely they are granted greater operational space, measured by the number of provinces they are legally authorized to work in. China provides an excellent setting for examining the phenomenon of closing space civic space, since the 2017 ONGO law hypothetically regulates both claim-making and service-providing NGOs, while the level of ambiguity of the law gives ample room for arbitrary discretion and conflicting attitudes by authorities. We test our argument by analyzing administrative data from 633 registered representative offices of INGOs registered in China between 2017–2021 and test our hypothesis with a multilevel Bayesian model. Our results speak to the broader literature on closing civic space and provide an empirical illustration of the practical effect of NGO restrictions on global civil society.
 keywords:
   - international NGOs
   - civil society
@@ -80,6 +80,12 @@ set_annotation_fonts()
 
 In the past decade, nearly 100 countries have proposed or enacted legal measures designed to restrict civil society [@ICNL:2021], and only 21% of countries have open and unrestricted civic space [@ChaudhryHeiss:2022a; @Civicus:2023]. This global trend of closing or shrinking civic space [@Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyPrakash:2020; @DupuyRonPrakash:2016] has affected countries of all regime types, including both autocracies and democracies such as Morocco and Palestine [@AtiaHerrold:2018], India [@press-trust-india:2019], Vietnam [@Sidel:2023], Canada [@CIVICUS:2013], and the United States [@Cramer:2020]. On April 28, 2016, China passed its own set of legal restrictions on civil society with its Law of the People's Republic of China on Administration of Activities of Overseas Nongovernmental Organizations in the Mainland of China, or "ONGO Law," which formally took effect on January 1, 2017. The law requires all international NGOs (INGOs) to either register representative offices (ROs) or file temporary activities to lawfully operate in mainland China. As an authoritarian state with a growing nonprofit sector, the Chinese model of implementing restrictive laws for international NGOs (INGOs) has important implications for understanding the dynamics of how civil society laws can be used as policy tools to harness INGOs.
 
+The purpose of this study is to empirically examine how the ONGO Law has influenced the population of INGOs that have successfully registered in China since 2017, and in particular how the ONGO Law has shaped the operational space allowed for INGO operations in the country. By examining the *de facto* implementation of the law in addition to its formal *de jure* regulations, we provide a more comprehensive and data-based picture of the operational space for INGOs. By relying on representative empirical data from mainland China, our study also contributes to a growing body of research on the effects of closing civic space on INGO behavior and strategies.
+
+This paper explores the characteristics of all registered INGOs in China in the five years after the ONGO Law became effective and examines the association between INGO issue areas and the operational space granted to them in the country. Registering as an RO under the ONGO Law is a complex process that requires the consent of a Chinese Professional Supervisory Unit (PSU)---a governmental or quasi-governmental unit related to an INGO's issue area which oversees and co-supervises the INGO with Public Security Bureaus. Obtaining the consent of a PSU to apply for registration has become a key challenge for INGOs interested in formal registration, since potential PSUs do not have a legal obligation to assume such a demanding role [@Jia:2017; @Shieh:2018; @YeHuang:2018]. INGOs vary in their ability to attract partner PSUs, and organizations that are unable to find corresponding PSUs are more limited in their geographic reach within the country. INGOs are authorized to operate within China on a province-by-province basis. Many organizations are allowed to work in all 32 mainland provincial administrative regions, but many are also only authorized to work in a handful, or even only a single province. We use the number of provinces that INGOs are authorized to work in as a proxy to measure the operational space for INGOs in China based on the assumption that INGOs need to or hope to have the approval to be able to carry out their programs in a geographical scope as large as possible [@Li:2020].
+
+TODO: Andrew - make this a paragraph, not a list. 
+
 We make three general theoretical contributions in this paper:
 
 1. Expansion of work using institutional approaches to examine the regulation and restriction of civil society - [@DeMattee:2019]. To further understanding this global phenomena , China is an important case to explore the impacts such restrictive laws have on the operation of INGOs. Such legal restrictions can be either direct (denial of legal access/cannot register) or covert (red-tape, requiring the approval of PSUs, or the uncertainty of having to filing TAs case by case)
@@ -88,14 +94,9 @@ We make three general theoretical contributions in this paper:
 
 3. Exploring differentiated application of these laws - *de facto* vs. *de jure* and differentiated treatment for more vs. less contentious INGOs. Authoritarian -> arbitrary and varied application of the law -> different *operating space* 
 
+TODO: Andrew: Also, new cool thing here is that we can look at de facto implementation in greater detail. Existing studies use things like V-Dem's core civil society index or civil society repression index to capture the general regulatory environment, but changes in those scores aren't necessarily tied to specific laws. Here we can see that differential enforcement/de facto/de jure stuff directly
 
-TODO: New cool thing here is that we can look at de facto implementation in greater detail. Existing studies use things like V-Dem's core civil society index or civil society repression index to capture the general regulatory environment, but changes in those scores aren't necessarily tied to specific laws. Here we can see that differential enforcement/de facto/de jure stuff directly
-
-
-The purpose of this study is to empirically examine how the ONGO Law has influenced the population of INGOs that have successfully registered in China since 2017, and in particular how the ONGO Law has shaped the operational space allowed for INGO operations in the country. By examining the *de facto* implementation of the law in addition to its formal *de jure* regulations, we provide a more comprehensive and data-based picture of the operational space for INGOs. By relying on representative empirical data from mainland China, our study also contributes to a growing body of research on the effects of closing civic space on INGO behavior and strategies.
-
-This paper explores the characteristics of all registered INGOs in China in the five years after the ONGO Law became effective and examines the association between INGO issue areas and the operational space granted to them in the country. Registering as an RO under the ONGO Law is a complex process that requires the consent of a Chinese Professional Supervisory Unit (PSU)---a governmental or quasi-governmental unit related to an INGO's issue area which oversees and co-supervises the INGO with Public Security Bureaus. Obtaining the consent of a PSU to apply for registration has become a key challenge for INGOs interested in formal registration, since potential PSUs do not have a legal obligation to assume such a demanding role [@Jia:2017; @Shieh:2018; @YeHuang:2018]. INGOs vary in their ability to attract partner PSUs, and organizations that are unable to find corresponding PSUs are more limited in their geographic reach within the country. INGOs are authorized to operate within China on a province-by-province basis. Many organizations are allowed to work in all 32 mainland provincial administrative regions, but many are also only authorized to work in a handful, or even only a single province. We use the number of provinces that INGOs are authorized to work in as a proxy to measure the operational space for INGOs in China based on the assumption that INGOs need to or hope to have the approval to be able to carry out their programs in a geographical scope as large as possible [@Li:2020].
-
+TODO: Andrew: Roadmap of paper, to add later
 In this paper, we first explore the ongoing phenomena of closing civic space and authoritarian regulation of civil society, examining how governments conceptualize the role of international civil society in their domestic politics and why governments select regulatory regimes for international NGOs. We then investigate how international NGOs have responded and adapted to more restrictive regulatory environments and theorize that a key component of INGO regulatory adaptation is *organizational flexibility*, or the ability to operate with greater latitude in host countries. We propose two key determinants of this flexibility: (1) organizational characteristics and (2) host government preferences and relationships TODO and their interplay/interaction. We illustrate this theory using the case of China TODO stats and case studies, mixed method, demonstrating how INGOs that address issues that align with government preferences enjoy the most organizational flexibility in the country.
 
 
@@ -109,9 +110,7 @@ Many INGOs gained legal identity within mainland China using the vehicle of fore
 
 The legal framework governing INGOs was overhauled by the 2017 Chinese ONGO Law. The new law applies to all overseas (including Hong Kong, Macau, and Taiwan) non-governmental organizations that conduct not-for-profit activities in the fields of economic development, education, science, technology, culture, public health, sports, environment protection, poverty alleviation, and disaster relief (Article 3). The ONGO Law stipulates two ways for INGOs to lawfully conduct nonprofit activities in China: (1) submitting an application for formal permanent registration, or (2) filing documentation of temporary activities with the Ministry of Public Security and provincial-level Public Security Bureaus, which are the registering and regulatory authority for INGOs. Formal registration of an RO allows them to maintain an ongoing present in the country, while temporary activities are intended for INGOs that need to conduct one-off programs that last no longer than one year. Abiding by these two channels to obtain lawful presence is mandatory for INGOs after the Overseas NGO Law came into effect, any INGOs that could not successfully obtain proper legal authorization would be deemed illegal.
 
-TODO: Meng - add brief explanations of the TA/RO pathways figure and articulate the "cooperative requirements part", i.e., seeking a psu or Chinese partner
-
-TODO: Andrew - image of TA/RO pathways @fig-ro-ta-pathways
+TODO: Meng - add brief explanations of the TA/RO pathways figure in @fig-ro-ta-pathways and articulate the "cooperative requirements part", i.e., seeking a psu or Chinese partner
 
 ```{r fig-ro-ta-pathways, fig.width=6, fig.height=3}
 #| echo: false
@@ -180,20 +179,17 @@ ggraph(combined_graph, layout = "tree") +
 
 TODO: Andrew: This 2017 law fits with a broader global phenomenon of closing civic space… General crackdown stuff + China crackdown stuff + our addition
 
+TODO: Andrew: I'll clean up/rewrite this section and the section headings, etc.
+
+## The "closing space" phenomenon - Institutional approach to closing space
+
 China's 2017 ONGO Law has been discussed by scholars mostly as a part of a global trend of restricting and cracking down on international NGOs [@ChaudhryHeiss:2022; @Carothers:2016]. Studies on the law has been focused on discussing the historical and political impetus of passing the law [@Shieh:2018] or analyzing the regulatory regimes it that has established and potential implications for INGOs operating in China [@Feng:2017; @TeetsHsu:2016]. However, little work has been done to examine the actual implementation situation of this law, and how the dynamics of ONGOs' operations and projects have been affected by the law after successfully gaining legal registration and documentation. A few studies [@Jia:2017; @YeHuang:2018] have reflected on the implementation of the ONGO Law after its first year, including the initial phase of drafting and refining implementing regulations and promotion, as well as training sessions conducted by Public Security Bureaus in different locations. However, a more up-to-date and comprehensive understanding of the effects of the ONGO law is still lacking.
 
 This paper aims to fill these gaps by empirically examining how the "closing space" hypothesis applies to China in the years after the ONGO Law took effect. China provides an excellent setting for testing these theories because China's promulgation of restrictive INGO law as an authoritarian jurisdiction fits the observed global trends in recent years, thus can serve as an representative case to deepen scholarly understanding around these themes. Also, the level of ambiguity of the legal framework gives ample room for arbitrary discretion and conflicting attitudes by authorities [@Jia:2017], enabling us to analyze rules in form (*de jure*) as well as rules in use (*de facto*).
 
-## The "closing space" phenomenon - Institutional approach to closing space
-
 Many different reasons for these restrictions and several purposes - INGOs pose a threat to regime stability, but they also provide governments with services and technical expertise. Civil society/CSO/NGO + host government definition - De Mattee and institutional taxonomy. My stuff on gatekeeping vs. program capture.
 
 Contentiousness, regime stability, other reasons [see @Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyPrakash:2020; @DupuyRonPrakash:2016].
-
-Main idea: organizations that work on more contentious issues like human rights advocacy face stricter regulations [@Bush:2015; @ChaudhryHeiss:2021]
-
-(Meng added)
-
 
 ## Regulations as policy tool to shape behavior
 
@@ -202,11 +198,14 @@ Main idea: organizations that work on more contentious issues like human rights 
 TODO: Meng - China crackdown lit
 
 
-
-
 ## De jure vs. de facto implementation of civil society regulations - Differential enforcement
 
+TODO: Andrew - I'll clean up this section
+
 @ChaudhryHeiss:2022 and the divergence in de jure and de facto regulations---the implementation doesn't have to match the written law, and often the written law can serve as a "weapon hanging on the wall that never fires" that serves as a warning to potentially uncooperative NGOs [@Kozenko:2015]. See also [@ToeplerZimmerFrohlich:2020; @Plantan:2022]
+
+"We discuss the role of civil society organizations (CSOs) as agents of democratization and note the emergence of dual, at times apparently conflicting policy postures within authoritarian regimes (restriction and repression for some CSOs vs. financial support and opportunities for collaboration for others)." [@ToeplerZimmerFrohlich:2020]
+
 INGO regulations are implemented and enforced differentially - difference in de jure and de facto. This differential enforcement is one mechanism to allow host governments to harness the aspects of INGO programming that align with their domestic policy preferences while limiting INGO behavior that could threaten regime stability. 
 
 Why pass laws in the first place and why enforcement differently?
@@ -219,17 +218,12 @@ Also, [@Plantan:2022] finds "that I find" evidence of selective implementation t
 
 The presence of de jure regulations and the strictness of their de facto enforcement are both determined by the interplay between INGO characteristics and government preferences.
 
-Contentiousness, regime stability, other reasons [see @Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyPrakash:2020; @DupuyRonPrakash:2016].
-
 Main idea: organizations that work on more contentious issues like human rights advocacy face stricter regulations [@Bush:2015; @ChaudhryHeiss:2021]
 
-::: content-hidden
-"We discuss the role of civil society organizations (CSOs) as agents of democratization and note the emergence of dual, at times apparently conflicting policy postures within authoritarian regimes (restriction and repression for some CSOs vs. financial support and opportunities for collaboration for others)." [@ToeplerZimmerFrohlich:2020]
 
-Also, [@Plantan:2022] finds "that I find" evidence of selective implementation that reveals which groups are seen as threatening or beneficial."
-:::
+# Empirical expectations and analytical approach
 
-# Empirical expectations
+TODO: Andrew: I'll clean up this section
 
 See @fig-theory
 
@@ -284,19 +278,15 @@ ggraph(theory_graph, x = x, y = y) +
   )
 ```
 
-
 Based on this framework, we can identify and test several theoretical expectations:
 
 Based on extant literature and theoretical understanding, we argue that the operation space INGOs are granted is associated with the level of contentiousness their missions, i.e., the issue areas they work in. Since the level of contentiousness is also manifested by the level of difficulty they face while seeking lawful registration.
-
 
 In 2018 Batke and Hang posited that the ONGO law was showing signs of reorienting the missions of legally recognized INGOs and the overall scope of international civil society to be more explicitly aligned with government preferences. @HolbigLang:2022 recently confirmed this prediction, finding that the issue areas addressed by legally recognized INGOs have "shift[ed] towards fields of activity high up the government’s domestic policy agenda" [-@HolbigLang:2022, p. 587].
 
 Following our theory, government preferences thus directly influence INGO issue areas, which in turn shapes the amount of flexibility enjoyed by the INGO. Accordingly, we expect that INGOs working on non-contentious, regime-aligned issues will have greater reach throughout the country:
 
 - **Theoretical expectation 1**: Because they are seen as less of a threat to regime stability and more aligned with government policy preferences, INGOs working on less contentious issues should be registered in more provinces.
-
-
 
 Relationships with PSUs are a critical part of the INGO registration process. No PSU is obligated to take on a supervisory role for an INGO, and interested organizations have to cultivate relationships with local officials. Accordingly, many of the INGOs we observe in our data either demonstrate close connections with local governmental authorities or frame their activities and services with a narrower geographic scope.
 
@@ -308,17 +298,11 @@ Finally, we also expect that the operational space for INGOs is negatively assoc
 
 - **Theoretical expectation 3** (registration timing): Because formal registration can take a long time and can involve many bureaucratic hurdles, INGOs that registered soon after the law took effect should be be (1) less of a threat and (2) a higher priority for processing, and so should be registered in more provinces.
 
-
-# Data and empirical approach
-
-Main structure for these expectations + our analysis:
-
 We test these theoretical expectations using a mixed methods approach. Using 
 
 1: issue - stats + case study
 2: localness - stats
 3: timing - stats
-
 
 - Stats + case study: **Local**
 - Stats + case study: **Contentiousness**
@@ -829,7 +813,6 @@ p2 <- epreds_timing |>
 p1 | p2
 ```
 
-
 We lack sufficient theory or data to explain why this trend goes against our expectations, but we can again make reasonable speculations. As we saw previously with INGOs and local connections, organizations appear to strategically seek out the best avenues and methods for registering. Organizations that participated in the initial wave of registrations in 2017 likely had closer connections with local officials and were able to speed through the bureaucratic process registration more easily. As a preliminary test of this speculation, we rerun our main model with an interaction between years since registration and local connections to see how the effect of local connections changes over time. As seen in @fig-timing-local, early registrants in 2017 without local connections are more likely to have a larger geographic reach, registering in an average of 19--23 provinces, while their locally-focused counterparts are only expected to register in an average of 7--16 provinces. Accordingly, it may be that organizations with local connections are more likely to register early because of their pre-existing bureaucratic relationships, while organizations with a larger national reach take longer to undertake the registration process and thus register later. Further research on this point is warranted.
 
 ```{r fig-timing-local, fig.width=6, fig.height=3, out.width="80%"}
@@ -871,13 +854,15 @@ epreds_timing_local |>
 
 # Contentiousness and government relationships: The cases of Greenpeace and The Nature Conservancy
 
+TODO: Meng
+
 Paragraph justifying why the case study is needed - stats are cool but missing details about contentiousness of issues - also, stats only look at ROs, not TAs or any ONGOs that left the country, so we're missing some dynamics of ONGO-government relations. We can explore our empirical expectations in more depth by looking at a comparative case study of Greenpeace and NC
 
 Education, Environment, lower expected operating space
 
 So Issue areas can predict some level of flexibility/restrictions INGOs receive, but that is not the full story, the relations with the government (one more dimension/variable) also plays important roles, see TNC vs. Greenpeace 
 
-TODO: Meng - TA vs. RO, exploring main mechanisms of contentiousness, and relationships
+TODO: Meng - TA vs. RO, exploring main mechanisms of contentiousness and relationships
 
 
 # Discussion and conclusion
@@ -885,4 +870,7 @@ TODO: Meng - TA vs. RO, exploring main mechanisms of contentiousness, and relati
 TODO: Andrew: Not fully exploring the TA thing here - that's in another paper
 
 
-# References
+# References 
+
+::: {#refs .bibliography}
+:::
