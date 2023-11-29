@@ -84,27 +84,25 @@ The purpose of this study is to empirically examine how the ONGO Law has influen
 
 This paper explores the characteristics of all registered INGOs in China in the five years after the ONGO Law became effective and examines the association between INGO issue areas and the operational space granted to them in the country. Registering as an RO under the ONGO Law is a complex process that requires the consent of a Chinese Professional Supervisory Unit (PSU)---a governmental or quasi-governmental unit related to an INGO's issue area which oversees and co-supervises the INGO with Public Security Bureaus. Obtaining the consent of a PSU to apply for registration has become a key challenge for INGOs interested in formal registration, since potential PSUs do not have a legal obligation to assume such a demanding role [@Jia:2017; @Shieh:2018; @YeHuang:2018]. INGOs vary in their ability to attract partner PSUs, and organizations that are unable to find corresponding PSUs are more limited in their geographic reach within the country. INGOs are authorized to operate within China on a province-by-province basis. Many organizations are allowed to work in all 32 mainland provincial administrative regions, but many are also only authorized to work in a handful, or even only a single province. We use the number of provinces that INGOs are authorized to work in as a proxy to measure the operational space for INGOs in China based on the assumption that INGOs need to or hope to have the approval to be able to carry out their programs in a geographical scope as large as possible [@Li:2020].
 
-TODO: Andrew - make this a paragraph, not a list. 
+TODO: Andrew - make this a paragraph, not a list.
 
 We make three general theoretical contributions in this paper:
 
-1. Expansion of work using institutional approaches to examine the regulation and restriction of civil society - [@DeMattee:2019]. To further understanding this global phenomena , China is an important case to explore the impacts such restrictive laws have on the operation of INGOs. Such legal restrictions can be either direct (denial of legal access/cannot register) or covert (red-tape, requiring the approval of PSUs, or the uncertainty of having to filing TAs case by case)
+1.  Expansion of work using institutional approaches to examine the regulation and restriction of civil society - [@DeMattee:2019]. To further understanding this global phenomena , China is an important case to explore the impacts such restrictive laws have on the operation of INGOs. Such legal restrictions can be either direct (denial of legal access/cannot register) or covert (red-tape, requiring the approval of PSUs, or the uncertainty of having to filing TAs case by case)
 
-2. Looking at how civil society laws act as a policy tool that regimes can leverage to shift NGO behavior: to tame INGO to be more cooperative to government. The requirement of PSU and Chinese partner to re-direct INGOs to be more authority friendly - The impacts on international civil society we examine include not only access or representation of INGOs in China, but also whether there is change of behaviors [@WuNie:2021]. Mention the concept of *flexibility (in the sense of adjusting to change)* too? 
+2.  Looking at how civil society laws act as a policy tool that regimes can leverage to shift NGO behavior: to tame INGO to be more cooperative to government. The requirement of PSU and Chinese partner to re-direct INGOs to be more authority friendly - The impacts on international civil society we examine include not only access or representation of INGOs in China, but also whether there is change of behaviors [@WuNie:2021]. Mention the concept of *flexibility (in the sense of adjusting to change)* too?
 
-3. Exploring differentiated application of these laws - *de facto* vs. *de jure* and differentiated treatment for more vs. less contentious INGOs. Authoritarian -> arbitrary and varied application of the law -> different *operating space* 
+3.  Exploring differentiated application of these laws - *de facto* vs. *de jure* and differentiated treatment for more vs. less contentious INGOs. Authoritarian -\> arbitrary and varied application of the law -\> different *operating space*
 
 TODO: Andrew: Also, new cool thing here is that we can look at de facto implementation in greater detail. Existing studies use things like V-Dem's core civil society index or civil society repression index to capture the general regulatory environment, but changes in those scores aren't necessarily tied to specific laws. Here we can see that differential enforcement/de facto/de jure stuff directly
 
-TODO: Andrew: Roadmap of paper, to add later
-In this paper, we first explore the ongoing phenomena of closing civic space and authoritarian regulation of civil society, examining how governments conceptualize the role of international civil society in their domestic politics and why governments select regulatory regimes for international NGOs. Term we'll use = operational space, not flexibility ~~We then investigate how international NGOs have responded and adapted to more restrictive regulatory environments and theorize that a key component of INGO regulatory adaptation is the ability to operate with greater latitude in host countries. We propose two key determinants of this flexibility: (1) organizational characteristics and (2) host government preferences and relationships TODO and their interplay/interaction.~~ We illustrate this theory using the case of China TODO stats and case studies, mixed method, demonstrating how INGOs that address issues that align with government preferences enjoy the most organizational flexibility in the country.
-
+TODO: Andrew: Roadmap of paper, to add later In this paper, we first explore the ongoing phenomena of closing civic space and authoritarian regulation of civil society, examining how governments conceptualize the role of international civil society in their domestic politics and why governments select regulatory regimes for international NGOs. Term we'll use = operational space, not flexibility ~~We then investigate how international NGOs have responded and adapted to more restrictive regulatory environments and theorize that a key component of INGO regulatory adaptation is the ability to operate with greater latitude in host countries. We propose two key determinants of this flexibility: (1) organizational characteristics and (2) host government preferences and relationships TODO and their interplay/interaction.~~ We illustrate this theory using the case of China TODO stats and case studies, mixed method, demonstrating how INGOs that address issues that align with government preferences enjoy the most organizational flexibility in the country.
 
 # Closing civic space in China - legal background thing
 
-China provides a fascinating example of both authoritarian preferences for INGO regulations and INGO adaptations to these regulations. 
+China provides a fascinating example of both authoritarian preferences for INGO regulations and INGO adaptations to these regulations.
 
-International NGOs began to play an important role in China in the early 1990s as part of the country's Reform and Opening-Up policy, and organizations like Save the Children and the Ford Foundation established local offices and branches. Since then, INGOs and global civil society have played pivotal roles in providing funding, organizational and program management skills, as well as catalytic support for the emergence of China's domestic nonprofit sector [@Yin:2009]. Prior to the implementation of the 2017 ONGO Law, regulation of INGOs in China was obscure [@Shieh:2018; @Spires:2022]. The only legal document relevant to INGOs was a section of the Regulation on the Management of Foundations by the State Council that specifies the registration of representative offices ("ROs") of foreign foundations with the Ministry of Civil Affairs, the regulator of Chinese domestic NGOs. However, the actual application of the regulation was very limited. Up until the ONGO Law took effect in 2017, there were fewer than 30 foreign foundation ROs registered at the Ministry of Civil Affairs, while some Chinese officials estimated in 2016 that there were roughly over 7,000 INGOs operating in China [@YeHuang:2018].
+International NGOs began to play an important role in China in the early 1990s as part of the country's Reform and Opening-Up policy, and organizations like Save the Children and the Ford Foundation established local offices and branches. Since then, INGOs and global civil society have played pivotal roles in providing funding, organizational and program management skills, as well as catalytic support for the emergence of China's domestic nonprofit sector [@Yin:2009]. Prior to the implementation of the 2017 ONGO Law, regulation of INGOs in China was obscure [@Shieh:2018; @Spires:2022]. The only legal document relevant to INGOs was a section of the Regulation on the Management of Foundations by the State Council that specifies the registration of representative offices ("ROs") of foreign foundations with the Ministry of Civil Affairs, the regulator of Chinese domestic NGOs. However, the actual application of the regulation was very limited. Up until the ONGO Law took effect in 2017, there were fewer than 30 foreign foundation ROs registered at the Ministry of Civil Affairs, while some Chinese officials estimated in 2016 that there were roughly over 7,000 INGOs operating in China [@YeHuang:2018; Spires:2020a].
 
 Many INGOs gained legal identity within mainland China using the vehicle of foreign-funded companies [@Sidel:2016], though there were no clear requirements for them to have a formal legal presence in China [@Han:2011; @HolbigLang:2022; @Yin:2009]. However, the legal form of foreign-funded company is not quite compatible with the nonprofit nature of INGOs. Under the Chinese legal system, enterprises are intended to be for-profit entities and nonprofit organizations are required to choose other stand-alone legal forms, including foundations, associations, and social service organizations [@Ye:2021]. Thus, INGOs obtaining legal identity in this way have to navigate through a legal framework designed for a for-profit institutional logic, e.g, focusing on protecting investors' right to investment returns.
 
@@ -174,10 +172,9 @@ ggraph(combined_graph, layout = "tree") +
   )
 ```
 
-
 # Theoretical background
 
-TODO: Andrew: This 2017 law fits with a broader global phenomenon of closing civic space… General crackdown stuff + China crackdown stuff + our addition
+TODO: Andrew: This 2017 law fits with a broader global phenomenon of closing civic space... General crackdown stuff + China crackdown stuff + our addition
 
 TODO: Andrew: I'll clean up/rewrite this section and the section headings, etc.
 
@@ -191,12 +188,6 @@ Many different reasons for these restrictions and several purposes - INGOs pose 
 
 Contentiousness, regime stability, other reasons [see @Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyPrakash:2020; @DupuyRonPrakash:2016].
 
-## Regulations as policy tool to shape behavior
-
-*note* changed the sub-title to incorporate the policy tool lense too. 
-
-TODO: Meng - China crackdown lit
-
 
 ## De jure vs. de facto implementation of civil society regulations - Differential enforcement
 
@@ -206,7 +197,7 @@ TODO: Andrew - I'll clean up this section
 
 "We discuss the role of civil society organizations (CSOs) as agents of democratization and note the emergence of dual, at times apparently conflicting policy postures within authoritarian regimes (restriction and repression for some CSOs vs. financial support and opportunities for collaboration for others)." [@ToeplerZimmerFrohlich:2020]
 
-INGO regulations are implemented and enforced differentially - difference in de jure and de facto. This differential enforcement is one mechanism to allow host governments to harness the aspects of INGO programming that align with their domestic policy preferences while limiting INGO behavior that could threaten regime stability. 
+INGO regulations are implemented and enforced differentially - difference in de jure and de facto. This differential enforcement is one mechanism to allow host governments to harness the aspects of INGO programming that align with their domestic policy preferences while limiting INGO behavior that could threaten regime stability.
 
 Why pass laws in the first place and why enforcement differently?
 
@@ -219,6 +210,14 @@ Also, [@Plantan:2022] finds "that I find" evidence of selective implementation t
 The presence of de jure regulations and the strictness of their de facto enforcement are both determined by the interplay between INGO characteristics and government preferences.
 
 Main idea: organizations that work on more contentious issues like human rights advocacy face stricter regulations [@Bush:2015; @ChaudhryHeiss:2021]
+
+
+## China's Overseas NGO law as a policy tool and its implications
+
+*note* changed the sub-title to incorporate the policy tool lense too.
+
+TODO: Meng - China crackdown lit
+
 
 
 # Empirical expectations and analytical approach
@@ -282,31 +281,29 @@ Based on this framework, we can identify and test several theoretical expectatio
 
 Based on extant literature and theoretical understanding, we argue that the operation space INGOs are granted is associated with the level of contentiousness their missions, i.e., the issue areas they work in. Since the level of contentiousness is also manifested by the level of difficulty they face while seeking lawful registration.
 
-In 2018 Batke and Hang posited that the ONGO law was showing signs of reorienting the missions of legally recognized INGOs and the overall scope of international civil society to be more explicitly aligned with government preferences. @HolbigLang:2022 recently confirmed this prediction, finding that the issue areas addressed by legally recognized INGOs have "shift[ed] towards fields of activity high up the government’s domestic policy agenda" [-@HolbigLang:2022, p. 587].
+In 2018 Batke and Hang posited that the ONGO law was showing signs of reorienting the missions of legally recognized INGOs and the overall scope of international civil society to be more explicitly aligned with government preferences. @HolbigLang:2022 recently confirmed this prediction, finding that the issue areas addressed by legally recognized INGOs have "shift\[ed\] towards fields of activity high up the government's domestic policy agenda" [-@HolbigLang:2022, p. 587].
 
 Following our theory, government preferences thus directly influence INGO issue areas, which in turn shapes the amount of flexibility enjoyed by the INGO. Accordingly, we expect that INGOs working on non-contentious, regime-aligned issues will have greater reach throughout the country:
 
-- **Theoretical expectation 1**: Because they are seen as less of a threat to regime stability and more aligned with government policy preferences, INGOs working on less contentious issues should be registered in more provinces.
+-   **Theoretical expectation 1**: Because they are seen as less of a threat to regime stability and more aligned with government policy preferences, INGOs working on less contentious issues should be registered in more provinces.
 
 Relationships with PSUs are a critical part of the INGO registration process. No PSU is obligated to take on a supervisory role for an INGO, and interested organizations have to cultivate relationships with local officials. Accordingly, many of the INGOs we observe in our data either demonstrate close connections with local governmental authorities or frame their activities and services with a narrower geographic scope.
 
 Using the number of provinces an INGO is authorized to work in as a proxy for organizational flexibility and reach might not reflect reality. Some INGOs explicitly limit their operations to specific provinces, either because their programming is more tailored to local conditions, or because they do not feel a need to go through the longer process of obtaining national-level registration. Accordingly, we temper our issue area expectation with a measure of explicitly local purpose. Organizations that have no intention of registering nationally should be registered in fewer provinces:
 
-- **Theoretical expectation 2**: Because they are explicitly focused on local issues, INGOs with explicitly local missions should be registered in fewer provinces.
+-   **Theoretical expectation 2**: Because they are explicitly focused on local issues, INGOs with explicitly local missions should be registered in fewer provinces.
 
 Finally, we also expect that the operational space for INGOs is negatively associated with the time elapsed since the law took effect. The mechanism behind this expectation is directly related to both issue area and government preferences.
 
-- **Theoretical expectation 3** (registration timing): Because formal registration can take a long time and can involve many bureaucratic hurdles, INGOs that registered soon after the law took effect should be be (1) less of a threat and (2) a higher priority for processing, and so should be registered in more provinces.
+-   **Theoretical expectation 3** (registration timing): Because formal registration can take a long time and can involve many bureaucratic hurdles, INGOs that registered soon after the law took effect should be be (1) less of a threat and (2) a higher priority for processing, and so should be registered in more provinces.
 
-We test these theoretical expectations using a mixed methods approach. Using 
+We test these theoretical expectations using a mixed methods approach. Using
 
-1: issue - stats + case study
-2: localness - stats
-3: timing - stats
+1: issue - stats + case study 2: localness - stats 3: timing - stats
 
-- Stats + case study: **Local**
-- Stats + case study: **Contentiousness**
-- Case study: **Relationship with PSU and government** (stats/descriptive bc lots of chambers of commerce)
+-   Stats + case study: **Local**
+-   Stats + case study: **Contentiousness**
+-   Case study: **Relationship with PSU and government** (stats/descriptive bc lots of chambers of commerce)
 
 ## Data
 
@@ -374,11 +371,11 @@ p2 <- ggplot(provinces_collapsed, aes(x = province_count)) +
   plot_layout(nrow = 1, widths = c(0.7, 0.3))
 ```
 
-Modeling the count of provinces each INGO is authorized to operate in presents a unique statistical challenge. As seen in @fig-province-count-collapsed, roughly 30% of INGOs are registered in only one province, 40% are registered nationwide, while the remaining 30% are registered in 2–31 provinces. Our main variable of interest is thus a mix of continuous outcomes (i.e. a range of provinces) bounded between two discrete outcomes (i.e. one province and all provinces). Standard modeling approaches like ordinary least squares regression (OLS) cannot accurately capture the unique features of the data and will generate predictions that fall outside allowable bounds (i.e. negative counts of provinces or more than 32 provinces). If we transform the count of provinces to a percentage, Beta regression would work well, as it is naturally limited to outcomes within a 0–1 range. However, Beta regression cannot handle values that are exactly 0 or 1, making it inappropriate for our data with its inflated counts at 0 (1) and 100% (32). To account for values at the bounds, we rely on ordered Beta regression [@Kubinec:2022], an extension of zero-and-one-inflated Beta regression that allows us to simultaneously model the continuous range of provinces (2–31) and the discrete outcomes (1 province and 32 provinces) without relying on percentages. We can thus explore the dynamics of each of our independent variables of interest in multiple ways—we can see (1) how each variable predicts that an organizations works in one province, nationwide, or somewhere in between, and (2) how each variable predicts the overall expected count of provinces.
+Modeling the count of provinces each INGO is authorized to operate in presents a unique statistical challenge. As seen in @fig-province-count-collapsed, roughly 30% of INGOs are registered in only one province, 40% are registered nationwide, while the remaining 30% are registered in 2--31 provinces. Our main variable of interest is thus a mix of continuous outcomes (i.e. a range of provinces) bounded between two discrete outcomes (i.e. one province and all provinces). Standard modeling approaches like ordinary least squares regression (OLS) cannot accurately capture the unique features of the data and will generate predictions that fall outside allowable bounds (i.e. negative counts of provinces or more than 32 provinces). If we transform the count of provinces to a percentage, Beta regression would work well, as it is naturally limited to outcomes within a 0--1 range. However, Beta regression cannot handle values that are exactly 0 or 1, making it inappropriate for our data with its inflated counts at 0 (1) and 100% (32). To account for values at the bounds, we rely on ordered Beta regression [@Kubinec:2022], an extension of zero-and-one-inflated Beta regression that allows us to simultaneously model the continuous range of provinces (2--31) and the discrete outcomes (1 province and 32 provinces) without relying on percentages. We can thus explore the dynamics of each of our independent variables of interest in multiple ways---we can see (1) how each variable predicts that an organizations works in one province, nationwide, or somewhere in between, and (2) how each variable predicts the overall expected count of provinces.
 
 @eq-ordbeta provides a formal definition of our modeling choices. Since we are primarily interested in how an INGO's issue area, its local connections, and the timing of its registration after January 2017, we include these as explanatory variables. We also include province-specific random offsets for each intercept to account for between-region differences in how INGOs are regulated, since every RO is overseen by provincial-level Public Security Bureaus. We use weakly informative priors for all model parameters.
 
-:::{.column-page-inset}
+::: column-page-inset
 $$
 \begin{aligned}
 &\ \textbf{Registered provinces for INGO } i \\
@@ -822,7 +819,7 @@ p2 <- epreds_timing |>
 p1 | p2
 ```
 
-We lack sufficient theory or data to explain why this trend goes against our expectations, but we can again make reasonable speculations. As we saw previously with INGOs and local connections, organizations appear to strategically seek out the best avenues and methods for registering. Organizations that participated in the initial wave of registrations in 2017 likely had closer connections with local officials and were able to speed through the bureaucratic process registration more easily. As a preliminary test of this speculation, we rerun our main model with an interaction between years since registration and local connections to see how the effect of local connections changes over time. As seen in @fig-timing-local, early registrants in 2017 without local connections are more likely to have a larger geographic reach, registering in an average of 19--23 provinces, while their locally-focused counterparts are only expected to register in an average of 7--16 provinces. Accordingly, it may be that organizations with local connections are more likely to register early because of their pre-existing bureaucratic relationships, while organizations with a larger national reach take longer to undertake the registration process and thus register later. Further research on this point is warranted.
+We lack sufficient theory or data to explain why this trend goes against our expectations, but we can again make reasonable speculations. As we saw previously with INGOs and local connections, organizations appear to strategically seek out the best avenues and methods for registering. [@Jia:2017a] Organizations that participated in the initial wave of registrations in 2017 likely had closer connections with local officials and were able to speed through the bureaucratic process registration more easily. As a preliminary test of this speculation, we rerun our main model with an interaction between years since registration and local connections to see how the effect of local connections changes over time. As seen in @fig-timing-local, early registrants in 2017 without local connections are more likely to have a larger geographic reach, registering in an average of 19--23 provinces, while their locally-focused counterparts are only expected to register in an average of 7--16 provinces. Accordingly, it may be that organizations with local connections are more likely to register early because of their pre-existing bureaucratic relationships, while organizations with a larger national reach take longer to undertake the registration process and thus register later. Another possible explanation is interpreting earlier timing in registration as more eager to register as discussed in the measurement section. INGOs that self-perceive as more contentious would be more nervous about the legal consequences of not being able to register and thus be more eager to seek registration earlier [@ChinaPhilanthropyReserchInstitute:2018]. Compared with their more "rest-assured" peers, INGOs seeking to register earlier are more likely to have reduced operational space. To understand the underlying mechanism with registration timing, further research is warranted.
 
 ```{r fig-timing-local, fig.width=6, fig.height=3, out.width="80%"}
 #| include: true
@@ -860,7 +857,6 @@ epreds_timing_local |>
   theme_ongo()
 ```
 
-
 # Contentiousness and government relationships: The cases of Greenpeace and The Nature Conservancy
 
 TODO: Meng
@@ -869,17 +865,15 @@ Paragraph justifying why the case study is needed - stats are cool but missing d
 
 Education, Environment, lower expected operating space
 
-So Issue areas can predict some level of flexibility/restrictions INGOs receive, but that is not the full story, the relations with the government (one more dimension/variable) also plays important roles, see TNC vs. Greenpeace 
+So Issue areas can predict some level of flexibility/restrictions INGOs receive, but that is not the full story, the relations with the government (one more dimension/variable) also plays important roles, see TNC vs. Greenpeace
 
 TODO: Meng - TA vs. RO, exploring main mechanisms of contentiousness and relationships
-
 
 # Discussion and conclusion
 
 TODO: Andrew: Not fully exploring the TA thing here - that's in another paper
 
-
-# References 
+# References
 
 ::: {#refs .bibliography}
 :::
