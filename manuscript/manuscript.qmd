@@ -1,7 +1,7 @@
 ---
 title: "The Implementation of China’s Overseas NGO Law and the Operating Space for International Civil Society"
 short-title: "China's ONGO Law and International Civil Society"
-date: "2023-11-27"
+date: "2023-11-29"
 author:
 - name: Meng Ye
   affiliation: Georgia State University
@@ -474,22 +474,23 @@ Next we explore our data in more depth by generating and analyzing posterior pre
 
 ### Issue area
 
-Following our first empirical expectation, we predict that INGOs working on less contentious issues should be registered in more provinces and have more geographic flexibility in operating throughout the country. To explore this, we can take advantage of the simultaneous continuous and discrete features of ordered Beta regression and see how often an INGO in each issue area is predicted to work in a single province, across all provinces, or some number in between. @fig-issue-preds-1 presents a summary of predicted posterior outcomes for 1,000 hypothetical INGOs, varying each possible issue area and holding all other variables at their mean or modal values. Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelming the most likely kind of organization to work nationally---arts and culture organizations are predicted to work in all 32 provinces 80% of the time (with a credible interval of 78--83%) and are only predicted to work in a single province a rare 3--5% of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only 32--38% of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing 24--29% of the time---at least 10 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly the patterns in predictions: the most common outcome is for organizations to work nationally (50--60% of the time), followed by working in at least 2 provinces (25--40% of the time), followed by working in a single province (10--20% of the time). @fig-issue-preds-2 shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend---arts and culture INGOs are predicted to work in 28--30 provinces on average, while education INGOs are only predicted to work in 12--20. All other issues range between 20--28 provinces.
+Following our first empirical expectation, we predict that INGOs working on less contentious issues should be registered in more provinces and have more geographic flexibility in operating throughout the country. To explore this, we can take advantage of the simultaneous continuous and discrete features of ordered Beta regression and see how often an INGO in each issue area is predicted to work in a single province, across all provinces, or some number in between. @fig-issue-preds(a) presents a summary of predicted posterior outcomes for 1,000 hypothetical INGOs, varying each possible issue area and holding all other variables at their mean or modal values. Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelming the most likely kind of organization to work nationally---arts and culture organizations are predicted to work in all 32 provinces 80% of the time (with a credible interval of 78--83%) and are only predicted to work in a single province a rare 3--5% of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only 32--38% of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing 24--29% of the time---at least 10 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly the patterns in predictions: the most common outcome is for organizations to work nationally (50--60% of the time), followed by working in at least 2 provinces (25--40% of the time), followed by working in a single province (10--20% of the time). @fig-issue-preds(b) shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend---arts and culture INGOs are predicted to work in 28--30 provinces on average, while education INGOs are only predicted to work in 12--20. All other issues range between 20--28 provinces.
 
 ```{r fig-issue-preds, fig.width=8, fig.height=6}
 #| include: true
 #| echo: false
 #| column: body-outset
-#| fig-cap: "*Top*: Posterior predictions from ordered Beta regression model,
+#| fig-cap: "**A**: Posterior predictions from ordered Beta regression model,
 #|   conditional on organization issue area, showing the predicted proportion of
 #|   INGOs working in 1 province, all 32 provinces, or somewhere in between. The
 #|   vertical slices of the bars depict 500 posterior samples; the fuzziness
 #|   represents the uncertainty in category boundaries. 95% credible intervals 
-#|   are shown as ranges in each category. *Bottom*: Expectation (or average) of
+#|   are shown as ranges in each category. **B**: Expectation (or average) of
 #|   posterior predictive distributions. These distributions take into account 
 #|   single-province and nationwide predictions and represent the *overall*
 #|   conditional average geographic range for INGOs. Points show posterior 
 #|   median; lines show 80% and 95% credible intervals."
+
 preds_issue_plot <- preds_issue |> 
   left_join(issue_indicator_lookup, by = join_by(issue_area)) |> 
   mutate(outcome = case_when(
@@ -552,7 +553,8 @@ p1 <- preds_issue_plot |>
   labs(
     x = NULL, y = "Predicted probability of geographic reach", fill = NULL,
     title = "Predicted proportion of type of geographic reach across issue area",
-    subtitle = "Posterior predictions of outcome categories"
+    subtitle = "Posterior predictions of outcome categories",
+    tag = "A"
   ) +
   theme_ongo() +
   theme(
@@ -586,7 +588,8 @@ p2 <- epreds_issue |>
   labs(
     x = NULL, y = "Expected provinces",
     title = "Expected count of provinces",
-    subtitle = "Expectation of posterior predictions"
+    subtitle = "Expectation of posterior predictions",
+    tag = "B"
   ) +
   coord_cartesian(ylim = c(1, 32)) +
   theme_ongo() +
@@ -605,21 +608,22 @@ As explained previously, we expect that the contentiousness of an NGO's issue ar
 
 ### Local connections
 
-In our second empirical expectation, we posit that since INGOs that seek out local connections and that are focused on more local China-specific issues, those organizations should be registered in fewer provinces. The results from our model confirm this expectation. @fig-local-preds-1 shows the distribution of predicted posterior outcomes for 1,000 hypothetical INGOs. Organizations without local connections are predicted to work nationally across all provinces nearly half of the time (with a 95% credible interval of 46--51%), and are predicted to work in two or more provinces 32--37% of the time. These organizations with no local connections or local programmatic focus are only predicted to work in a single province 15--19% of the time. In contrast, INGOs *with* local connections are far more likely to only work in one province (32--38%), or only work in a handful of provinces (36--41%). For these locally-focused organizations, the least common prediction is to work nationally, with only a 23--29% probability. @fig-local-preds-2 shows the posterior distribution of the average number of provinces INGOs are expected to be registered in, conditional on their local connections. The same relationship holds---an INGO without local connections is predicted to work in 19--24 provinces on average, while an organization with local connections is only predicted to work in 8--17.
+In our second empirical expectation, we posit that since INGOs that seek out local connections and that are focused on more local China-specific issues, those organizations should be registered in fewer provinces. The results from our model confirm this expectation. @fig-local-preds(a) shows the distribution of predicted posterior outcomes for 1,000 hypothetical INGOs. Organizations without local connections are predicted to work nationally across all provinces nearly half of the time (with a 95% credible interval of 46--51%), and are predicted to work in two or more provinces 32--37% of the time. These organizations with no local connections or local programmatic focus are only predicted to work in a single province 15--19% of the time. In contrast, INGOs *with* local connections are far more likely to only work in one province (32--38%), or only work in a handful of provinces (36--41%). For these locally-focused organizations, the least common prediction is to work nationally, with only a 23--29% probability. @fig-local-preds(b) shows the posterior distribution of the average number of provinces INGOs are expected to be registered in, conditional on their local connections. The same relationship holds---an INGO without local connections is predicted to work in 19--24 provinces on average, while an organization with local connections is only predicted to work in 8--17.
 
 ```{r fig-local-preds, fig.width=8, fig.height=4}
 #| include: true
 #| echo: false
 #| fig-cap: "Posterior predictions from ordered Beta regression model, 
-#|   conditional on having local connections. *Top*: Predicted proportion of 
+#|   conditional on having local connections. **A**: Predicted proportion of 
 #|   INGOs working in 1 province, all 32 provinces, or somewhere in between. 
 #|   The vertical slices of the bars depict 500 posterior samples; the fuzziness 
 #|   represents the uncertainty in category boundaries. 95% credible intervals 
-#|   are shown as ranges in each category. *Bottom*: Expectation (or average) of 
+#|   are shown as ranges in each category. **B**: Expectation (or average) of 
 #|   posterior predictive distributions. These distributions take into account 
 #|   single-province and nationwide predictions and represent the *overall* 
 #|   conditional average geographic range for INGOs. Points show posterior 
 #|   median; lines show 80% and 95% credible intervals."
+
 preds_local_plot <- preds_local |> 
   unnest(preds) |> 
   mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
@@ -665,7 +669,8 @@ p1 <- preds_local_plot |>
   labs(
     x = NULL, y = "Predicted probability of geographic reach", fill = NULL,
     title = "Predicted proportion of type of\ngeographic reach across local connections",
-    subtitle = "Posterior predictions of outcome categories"
+    subtitle = "Posterior predictions of outcome categories",
+    tag = "A"
   ) +
   theme_ongo() +
   theme(
@@ -694,7 +699,8 @@ p2 <- epreds_local |>
   labs(
     x = NULL, y = "Expected provinces",
     title = "Expected count of provinces",
-    subtitle = "Expectation of posterior predictions"
+    subtitle = "Expectation of posterior predictions",
+    tag = "B"
   ) +
   coord_cartesian(ylim = c(1, 32)) +
   theme_ongo() +
@@ -713,21 +719,22 @@ International NGOs with locally focused missions and connections with local prov
 
 ### Registration timing
 
-The ONGO Law officially came into effect on January 1, 2017, and as seen previously in @fig-registration-timeline, the first year of the law saw the greatest total number of registrations. In our third empirical expectation, we propose that these early registrants under the new law were both less of a threat to regime stability and a higher priority for bureaucratic processing, and thus should be registered in more provinces and have more geographic flexibility throughout the country. However, the results of our model support the *reverse* of this expectation. @fig-timing-preds-1 once again shows the predicted posterior outcomes for 1,000 simulated INGOs across a range of time since January 2017. Organizations that registered in the first year are predicted to work in all provinces 41--46% of the time, and are predicted to work in two or more provinces 34--39% of the time. These early INGOs are the most likely to be registered in only one province and are predicted to do so 17--23% of the time. After the initial wave of registrations in 2017, the likelihood of nationwide reach steadily increases and replaces both the probability of a single province or a partial range of provinces. By the end of 2021---5 years after the ONGO Law took effect---the probability of national -level registration increases to 55--61% while the probability of working in a range of provinces increases to predicted to work in two or more provinces increase to 27--32%. These late INGOs are the least likely to be registered in only one province and are predicted to do so only 17--22% of the time. @fig-timing-preds-2 demonstrates the same results with the posterior distribution of the expected count of provinces over five years since 2017. INGOs that register early are predicted to work in 17--22 provinces, while those that wait until 2021 are predicted to work in 21--28.
+The ONGO Law officially came into effect on January 1, 2017, and as seen previously in @fig-registration-timeline, the first year of the law saw the greatest total number of registrations. In our third empirical expectation, we propose that these early registrants under the new law were both less of a threat to regime stability and a higher priority for bureaucratic processing, and thus should be registered in more provinces and have more geographic flexibility throughout the country. However, the results of our model support the *reverse* of this expectation. @fig-timing-preds(a) once again shows the predicted posterior outcomes for 1,000 simulated INGOs across a range of time since January 2017. Organizations that registered in the first year are predicted to work in all provinces 41--46% of the time, and are predicted to work in two or more provinces 34--39% of the time. These early INGOs are the most likely to be registered in only one province and are predicted to do so 17--23% of the time. After the initial wave of registrations in 2017, the likelihood of nationwide reach steadily increases and replaces both the probability of a single province or a partial range of provinces. By the end of 2021---5 years after the ONGO Law took effect---the probability of national-level registration increases to 55--61% while the probability of working in a range of provinces increases to predicted to work in two or more provinces increase to 27--32%. These late INGOs are the least likely to be registered in only one province and are predicted to do so only 17--22% of the time. @fig-timing-preds(b) demonstrates the same results with the posterior distribution of the expected count of provinces over five years since 2017. INGOs that register early are predicted to work in 17--22 provinces, while those that wait until 2021 are predicted to work in 21--28.
 
 ```{r fig-timing-preds, fig.width=8, fig.height=4}
 #| include: true
 #| echo: false
 #| fig-cap: "Posterior predictions from ordered Beta regression model, 
-#|   conditional on time since law took effect in January 2017. *Top*: Predicted 
+#|   conditional on time since law took effect in January 2017. **A**: Predicted 
 #|   proportion of INGOs working in 1 province, all 32 provinces, or somewhere 
 #|   in between. Filled areas depict 50 posterior samples of the outcome category 
 #|   probabilities, so the fuzziness represents the uncertainty in category 
-#|   boundaries. *Bottom*: Expectation (or average) of posterior predictive 
+#|   boundaries. **B**: Expectation (or average) of posterior predictive 
 #|   distributions. This distribution takes into account single-province and 
 #|   nationwide predictions and represents the *overall* conditional average 
 #|   geographic range for INGOs over time. Shaded regions show the 50%, 80%, 
 #|   and 95% credible intervals."
+
 preds_timing_plot <- preds_timing |> 
   unnest(preds) |> 
   mutate(outcome = case_when(
@@ -779,7 +786,8 @@ p1 <- ggplot(preds_timing_plot, aes(x = years_since_law)) +
   labs(
     x = NULL, y = "Predicted probability of geographic reach", fill = NULL,
     title = "Predicted proportion of type of \ngeographic reach since January 2017",
-    subtitle = "Posterior predictions of outcome categories"
+    subtitle = "Posterior predictions of outcome categories",
+    tag = "A"
   ) +
   guides(fill = "none") +
   theme_ongo() +
@@ -805,7 +813,8 @@ p2 <- epreds_timing |>
   labs(
     x = NULL, y = "Expected provinces",
     title = "Expected count of provinces",
-    subtitle = "Expectation of posterior predictions"
+    subtitle = "Expectation of posterior predictions",
+    tag = "B"
   ) +
   coord_cartesian(ylim = c(1, 32)) +
   theme_ongo()
