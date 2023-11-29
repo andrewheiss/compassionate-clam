@@ -5,5 +5,7 @@ project:
     - "*.qmd"
     - "!submissions/*.qmd"
 
+csl: csl/apa.csl
+
 profile: 
   default: nice
