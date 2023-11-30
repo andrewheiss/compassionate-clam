@@ -1,6 +1,5 @@
 library(glue)
 library(rvest)
-suppressPackageStartupMessages(library(lubridate))
 
 # Helper functions for switching between province counts and proportions
 provinces_to_prop <- function(x, lower = 1, upper = 32) {
@@ -11,17 +10,50 @@ prop_to_provinces <- function(x, lower = 1, upper = 32) {
   (x * (upper - lower)) + lower
 }
 
+load_clean_civicus <- function() {
+  library(countrycode)
+  
+  civicus <- read_html(
+    glue(
+      "http://web.archive.org/web/20230903154216/",
+      "https://monitor.civicus.org/widgets/world/"
+    )) |>
+    html_element(xpath = '//*[@id="countries-list-container"]/div[2]/table') |> 
+    html_table() |>
+    filter(Country != "Greenland") |> 
+    rename(Rating = `Current rating`) |> 
+    mutate(
+      iso3 = countrycode(
+        Country, "country.name", "iso3c",
+        custom_match = c("Kosovo" = "XXK", "Micronesia" = "FSM")
+      ),
+      Score = as.numeric(str_extract(Score, "^(\\d+)/", group = 1)),
+      Rating = factor(
+        Rating,
+        levels = c("Closed", "Repressed", "Obstructed", "Narrowed", "Open"),
+        ordered = TRUE
+      )
+    )
+  
+  return(civicus)
+}
 
 load_clean_chinafile <- function() {
-  chinafile <- read_html(glue("https://web.archive.org/web/20220922181643/",
-                              "https://jessicachinafile.github.io/index_RO_table.html")) |> 
+  chinafile <- read_html(
+    glue(
+      "https://web.archive.org/web/20220922181643/",
+      "https://jessicachinafile.github.io/index_RO_table.html"
+    )
+  ) |>
     html_element(css = "#filter") |>
     html_table() |>
-    select(org_name_cn = `Organization Name (Chinese)`,
-           org_name_en = `Organization Name (English)`) |>
+    select(
+      org_name_cn = `Organization Name (Chinese)`,
+      org_name_en = `Organization Name (English)`
+    ) |>
     group_by(org_name_cn) |>
     slice(1)
-  
+
   return(chinafile)
 }
 

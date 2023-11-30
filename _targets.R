@@ -54,6 +54,7 @@ list(
   tar_target(count_prop_functions, lst(provinces_to_prop, prop_to_provinces)),
 
   ## Process and clean data ----
+  tar_target(civicus_clean, load_clean_civicus()),
   tar_target(chinafile_clean, load_clean_chinafile()),
   tar_target(province_name, province_cn_to_en()),
   tar_target(
