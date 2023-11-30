@@ -119,6 +119,7 @@ TODO: Meng - add brief explanations of the TA/RO pathways figure in @fig-ro-ta-p
 #| fig-cap: "Two possible pathways for international NGOs to legally work in 
 #|   China under the 2017 ONGO law, either as formal Registered Organizations 
 #|   (ROs) or by undertaking specific Temporary Activities (TAs)"
+
 ro_nodes <- tibble(
   step = c(
     "Find a professional supervisory unit (PSU)",
@@ -136,15 +137,14 @@ ro_graph <- tbl_graph(nodes = ro_nodes, edges = ro_edges)
 ta_nodes <- tibble(
   step = c(
     "Find an eligible Chinese partner to file paperwork",
-    "Obtain PSU approval",
-    "Channel money through partner’s bank",
+    "File activity information with Public Security Bureau",
     "Keep programming within approved scope",
     "Finish work within a year",
     "Submit final project report to Public Security Bureau"
   ),
   type = "Temporary activities (TA)"
 )
-ta_edges <- tibble(from = 1:5, to = 2:6)
+ta_edges <- tibble(from = 1:4, to = 2:5)
 ta_graph <- tbl_graph(nodes = ta_nodes, edges = ta_edges)
 
 combined_graph <- bind_graphs(ro_graph, ta_graph)
@@ -232,11 +232,11 @@ See @fig-theory
 #| include: true
 #| warning: false
 #| message: false
-#| fig-cap: "Diagram of our theoretical framework showing three possible determinants of INGO operational flexibility: the contentiousness of the INGO's issue area, the inherent geographic scope of the INGO's operations, and the government's interest in and relationship with the INGO."
+#| fig-cap: "Diagram of our theoretical framework showing three possible determinants of INGO operational space: the contentiousness of the INGO's issue area, the inherent geographic scope of the INGO's operations, and the government's interest in and relationship with the INGO."
 theory_nodes <- tribble(
   ~id, ~name, ~x, ~y, ~highlight,
   1,   "Issue contentiousness", 1, 0, FALSE,
-  2,   "Operational flexibility", 3, 0, TRUE,
+  2,   "Operational space", 3, 0, TRUE,
   3,   "Local focus", 2, 1, FALSE,
   4,   "Government preferences", 2, -1, FALSE
 )
