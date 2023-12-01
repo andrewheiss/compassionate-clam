@@ -184,7 +184,9 @@ ggraph(combined_graph, layout = "tree") +
   )
 ```
 
-Registering as an RO under the ONGO Law is a complex process that requires the consent of a Chinese Professional Supervisory Unit (PSU)---a governmental or quasi-governmental unit related to an INGO's issue area which oversees and co-supervises the INGO with Public Security Bureaus. Obtaining the consent of a PSU to apply for registration has become a key challenge for INGOs interested in formal registration, since potential PSUs do not have a legal obligation to assume such a demanding role [@Jia:2017; @Shieh:2018; @YeHuang:2018]. INGOs that are unable to find a PSU willing to support their proposed programming are unable to work in the country. The mechanisms of the ONGO Law thus provide the government with latitude to selectively partner with INGOs that align with regime preferences while providing layers of oversight and control.
+Registering as an RO under the ONGO Law is a complex process that requires the consent of a Chinese Professional Supervisory Unit (PSU)---a governmental or quasi-governmental unit related to an INGO's issue area which oversees and co-supervises the INGO with Public Security Bureaus. Obtaining the consent of a PSU to apply for registration has become a key challenge for INGOs interested in formal registration, since potential PSUs do not have a legal obligation to assume such a demanding role [@Jia:2017; @Shieh:2018; @YeHuang:2018]. 
+
+Organizations vary in their ability to attract partner PSUs, and INGOs that are unable to find corresponding PSUs are more limited in their geographic reach within the country. INGOs are authorized to operate within China on a province-by-province basis. Many organizations are allowed to work in all 32 mainland provincial administrative regions, but many are also only authorized to work in a handful, or even only a single province. In this paper, we use the number of provinces that INGOs are authorized to work in as a proxy for INGO operational space based on the assumption that INGOs need to or hope to be able to carry out their programs in as broad a geographical scope as possible [@Li:2020]. For example, in emergency circumstances like the COVID-19 pandemic, it would be extremely difficult for INGOs to plan beforehand which areas might need their service. Having the potential to shift programs to other provinces as needed thus provides a form of operational space. 
 
 # Theoretical background
 
@@ -236,10 +238,14 @@ TODO: Meng - China crackdown lit
 
 Such legal restrictions can be either direct (denial of legal access/cannot register) or covert (red-tape, requiring the approval of PSUs, or the uncertainty of having to filing TAs case by case). 
 
+In 2018, @BatkeHang:2018 posited that the ONGO law was showing signs of reorienting the missions of legally recognized INGOs and the overall scope of international civil society to be more explicitly aligned with government preferences. @HolbigLang:2022 recently confirmed this prediction, finding that the issue areas addressed by legally recognized INGOs have "shift\[ed\] towards fields of activity high up the government's domestic policy agenda" [-@HolbigLang:2022, p. 587].
+
 
 # Empirical expectations and analytical approach
 
 TODO: Andrew: I'll clean up this section
+
+Operational space is determined by the interaction between NGO characteristics and regime preferences
 
 See @fig-theory
 
@@ -298,7 +304,6 @@ Based on this framework, we can identify and test several theoretical expectatio
 
 Based on extant literature and theoretical understanding, we argue that the operation space INGOs are granted is associated with the level of contentiousness their missions, i.e., the issue areas they work in. Since the level of contentiousness is also manifested by the level of difficulty they face while seeking lawful registration.
 
-In 2018 Batke and Hang posited that the ONGO law was showing signs of reorienting the missions of legally recognized INGOs and the overall scope of international civil society to be more explicitly aligned with government preferences. @HolbigLang:2022 recently confirmed this prediction, finding that the issue areas addressed by legally recognized INGOs have "shift\[ed\] towards fields of activity high up the government's domestic policy agenda" [-@HolbigLang:2022, p. 587].
 
 Following our theory, government preferences thus directly influence INGO issue areas, which in turn shapes the amount of flexibility enjoyed by the INGO. Accordingly, we expect that INGOs working on non-contentious, regime-aligned issues will have greater reach throughout the country:
 
@@ -332,7 +337,7 @@ We code the variables we use in the empirical analysis from the registration inf
 
 ### Dependent variable
 
-As seen previously, INGOs must partner with professional supervisory units (PSUs) to become ROs. Organizations vary in their ability to attract partner PSUs, and INGOs that are unable to find corresponding PSUs are more limited in their geographic reach within the country. INGOs are authorized to operate within China on a province-by-province basis. Many organizations are allowed to work in all 32 mainland provincial administrative regions, but many are also only authorized to work in a handful, or even only a single province. We use the number of provinces that INGOs are authorized to work in as a proxy for INGO operational space based on the assumption that INGOs need to or hope to be able to carry out their programs in as broad a geographical scope as possible [@Li:2020]. For example, in emergency circumstances like the COVID-19 pandemic, it would be extremely difficult for INGOs to plan beforehand which areas might need their service. Having the potential to shift programs to other provinces as needed thus provides a form of operational space.
+As seen previously, INGOs must partner with professional supervisory units (PSUs) to become ROs. TODO describe the province count variable
 
 ### Independent variables
 
@@ -350,7 +355,7 @@ Our key independent variables correspond to each of our three empirical expectat
 
 Our second independent variable is a dichotomous indicator of whether the INGO explicitly states that it intends to operate locally (below province level). There are cases where the aim of the INGO is attached to a locality, either having a county or city name in their RO name or purposes, or the INGO are actually set up by people in China and they registered the RO to communicate between the "hometown" and the INGO set up abroad. We thus include this variable in our analysis to explore how having local connections is associated with the operational space of ROs.
 
-Our final independent variable measures how much time elapsed between the January 1, 2017 (when the law took effect) and the organization's official registration date. There is great variance in the timing of registering an RO among INGOs, since there has been a *de facto* grace period for INGOs to seek legal presence after the law took effect[@Shieh:2018]. This is largely because both INGOs and the regulators needed some transitional time to explore the specific implementation of the law as large ambiguity was left when the law was passed. We use this temporal variable as a proxy for the motivation or eagerness of INGOs to register an RO, for some INGOs are inclined to avoid the cumbersome registration procedures at the early stage if there is no real consequences for continuing operations without registration, while others took the time to talk with multiple potential PSUs to find a more suitable superior or regulatory dynamic. (TODO: find a citation for this, probably Spires, if there is one.)
+Our final independent variable measures how much time elapsed between the January 1, 2017 (when the law took effect) and the organization's official registration date. There is great variance in the timing of registering an RO among INGOs, since there has been a *de facto* grace period for INGOs to seek legal presence after the law took effect [@Shieh:2018]. This is largely because both INGOs and the regulators needed some transitional time to explore the specific implementation of the law as large ambiguity was left when the law was passed. We use this temporal variable as a proxy for the motivation or eagerness of INGOs to register an RO, for some INGOs are inclined to avoid the cumbersome registration procedures at the early stage if there is no real consequences for continuing operations without registration, while others took the time to talk with multiple potential PSUs to find a more suitable superior or regulatory dynamic. (TODO: find a citation for this, probably Spires, if there is one.)
 
 ## Modeling approach
 
@@ -388,19 +393,15 @@ p2 <- ggplot(provinces_collapsed, aes(x = province_count)) +
   plot_layout(nrow = 1, widths = c(0.7, 0.3))
 ```
 
-Modeling the count of provinces each INGO is authorized to operate in presents a unique statistical challenge. As seen in @fig-province-count-collapsed, roughly 30% of INGOs are registered in only one province, 40% are registered nationwide, while the remaining 30% are registered in 2--31 provinces. Our main variable of interest is thus a mix of continuous outcomes (i.e. a range of provinces) bounded between two discrete outcomes (i.e. one province and all provinces). Standard modeling approaches like ordinary least squares regression (OLS) cannot accurately capture the unique features of the data and will generate predictions that fall outside allowable bounds (i.e. negative counts of provinces or more than 32 provinces). If we transform the count of provinces to a percentage, Beta regression would work well, as it is naturally limited to outcomes within a 0--1 range. However, Beta regression cannot handle values that are exactly 0 or 1, making it inappropriate for our data with its inflated counts at 0 (1) and 100% (32). To account for values at the bounds, we rely on ordered Beta regression [@Kubinec:2022], an extension of zero-and-one-inflated Beta regression that allows us to simultaneously model the continuous range of provinces (2--31) and the discrete outcomes (1 province and 32 provinces) without relying on percentages. We can thus explore the dynamics of each of our independent variables of interest in multiple ways---we can see (1) how each variable predicts that an organizations works in one province, nationwide, or somewhere in between, and (2) how each variable predicts the overall expected count of provinces.
+Modeling the count of provinces each INGO is authorized to operate in presents a unique statistical challenge. As seen in @fig-province-count-collapsed, roughly 30% of INGOs are registered in only one province, 40% are registered nationwide, while the remaining 30% are registered in 2--31 provinces. Our main variable of interest is thus a mix of continuous outcomes (i.e. a range of provinces) bounded between two discrete outcomes (i.e. one province and all provinces). Standard modeling approaches like ordinary least squares regression (OLS) cannot accurately capture the unique features of the data and will generate predictions that fall outside allowable bounds (i.e. negative counts of provinces or more than 32 provinces). If we transform the count of provinces to a percentage, Beta regression would work well, as it is naturally limited to outcomes within a 0--1 range. However, Beta regression cannot handle values that are exactly 0 or 1, making it inappropriate for our data with its inflated counts at 0 (1) and 100% (32). To account for values at the bounds, we rely on ordered Beta regression [@Kubinec:2022], an extension of zero-and-one-inflated Beta regression that allows us to simultaneously model the continuous range of provinces (2--31) and the discrete outcomes (1 province and 32 provinces) without relying on percentages. We can thus explore the dynamics of each of our independent variables of interest in multiple ways---we can see (1) how each variable predicts that an organizations works in one province, nationwide, or somewhere in between, and (2) how each variable predicts the overall expected count of provinces. 
 
-@eq-ordbeta provides a formal definition of our modeling choices. Since we are primarily interested in how an INGO's issue area, its local connections, and the timing of its registration after January 2017, we include these as explanatory variables. We also include province-specific random offsets for each intercept to account for between-region differences in how INGOs are regulated, since every RO is overseen by provincial-level Public Security Bureaus. We use weakly informative priors for all model parameters.
+Since we are primarily interested in how an INGO's issue area, its local connections, and the timing of its registration after January 2017, we include these as explanatory variables. We also include random province intercepts to account for between-region differences in how INGOs are regulated, since every RO is overseen by provincial-level Public Security Bureaus. We use the following model and priors (see appendix TODO for more details):
 
-::: column-page-inset
 $$
 \begin{aligned}
 &\ \textbf{Registered provinces for INGO } i \\
 \text{Count of provinces}\ \sim&\ \operatorname{Ordered\,Beta}(\mu_i, \phi_y, k_{1_y}, k_{2_y}) \\[8pt]
 &\ \textbf{Model of outcome average} \\
-% Put the huge equation in a nested \begin{aligned}[t] environment so that 
-% \mathrlap{} can go around it so that the annotations in the priors can be 
-% aligned closer to the math
 \mu_i =&\ 
   \mathrlap{\begin{aligned}[t]
   & \beta_0 + \beta_1\ \text{Issue[Arts and culture]} + \beta_2\ \text{Issue[Education]}\ +\\
@@ -417,8 +418,8 @@ $$
 k_{1_y}, k_{2_y}\ \sim&\ \operatorname{Induced\,Dirichlet}(1, 1, 1), && \text{0–continuous and continuous–1 cutpoints} \\
 &\ \quad \text{or } \bigl[P(\alpha_1), P(\alpha_1 + \alpha_2)\bigr] && \quad\text{(boundaries between 3 Dirichlet columns)}
 \end{aligned}
-$$ {#eq-ordbeta}
-:::
+$$
+
 
 # Results
 
@@ -896,3 +897,11 @@ TODO: Andrew: Not fully exploring the TA thing here - that's in another paper
 
 ::: {#refs .bibliography}
 :::
+
+\newpage
+
+:::: {#appendix-count}
+
+# Appendix
+
+::::
