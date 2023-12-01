@@ -50,7 +50,7 @@ list(
     theme_ongo, set_annotation_fonts, clrs, 
     prop_to_provinces, provinces_to_prop)
   ),
-  tar_target(table_functions, lst(opts_int, opts_theme)),
+  tar_target(table_functions, lst(opts_int, opts_theme, gt_linebreak, gt_pct, fmt_markdown_latex)),
   tar_target(count_prop_functions, lst(provinces_to_prop, prop_to_provinces)),
 
   ## Process and clean data ----

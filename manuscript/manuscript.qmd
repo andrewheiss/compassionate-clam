@@ -79,6 +79,7 @@ tar_load(c(
 
 # Plotting and modelsummary functions
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
+invisible(list2env(tar_read(table_functions), .GlobalEnv))
 
 theme_set(theme_ongo())
 set_annotation_fonts()
@@ -341,17 +342,48 @@ As seen previously, INGOs must partner with professional supervisory units (PSUs
 
 ### Independent variables
 
-Our key independent variables correspond to each of our three empirical expectations. First we code each INGO's issue area based on its mission statement reported in its registration documentation. Given there is certain level of subjectivity in the coding process, the coding of issue areas are cross-checked between the researchers---Author 1 assigned each organization into one of the issue areas defined in Article 3 of the ONGO Law, and Author 2 cross-checked the coding for ambiguous cases. We include our coding rules for overlapping issue areas in the appendix (TODO). We categorize each organization into one of the following nine issue areas:
+Our key independent variables correspond to each of our three empirical expectations. First we code each INGO's issue area based on its mission statement reported in its registration documentation. Given there is certain level of subjectivity in the coding process, the coding of issue areas are cross-checked between the researchers---Author 1 assigned each organization into one of the issue areas defined in Article 3 of the ONGO Law, and Author 2 cross-checked the coding for ambiguous cases. We include our coding rules for overlapping issue areas in the appendix (TODO). We categorize each organization into nine different issue areas (see @tbl-issues).
 
--   **Economy and trade**
--   **Environment** (including animal protection)
--   **Education** (including youth development)
--   **Charity and humanitarian** poverty alleviation, disaster relief, etc., including rural development
--   **Science and technology**
--   **Industry association**
--   **Health**, public health and health care system support (professional training)
--   **Arts and Culture** including sports and international culture exchange
--   **General**, usually grant-making organizations, or working on general international communication, including among governments, or working on multiple fields not overlapping
+::: {#tbl-issues}
+
+```{r}
+#| label: table-issues
+#| include: true
+tribble(
+  ~Issue, ~Examples,
+  "Arts and culture", "World Dance Council; Special Olympics",
+  "Charity and humanitarian", "Save the Children; Half the Sky Foundation",
+  "Economy and trade", "World Economic Forum; Chile-China Chamber of Commerce",
+  "Education", "Children’s Education Foundation; BSK International",
+  "Environment", "The Nature Conservancy; World Wide Fund for Nature",
+  "General", "Bill and Melinda Gates Foundation; Ford Foundation",
+  "Health", "American Heart Association; Operation Smile",
+  "Industry association", "World Cement Association; Colombian Coffee Growers Federation",
+  "Science and technology", "Royal Aeronautical Society; American Society of Civil Engineers"
+) |> 
+  gt() |> 
+  tab_footnote(
+    footnote = "Includes poverty alleviation, disaster relief, rural development, etc.",
+    locations = cells_body(columns = Issue, rows = 2)
+  ) |> 
+  tab_footnote(
+    footnote = "Includes grant-making organizations, organizations working on general international communication, and organizations working on multiple non-overlapping issues",
+    locations = cells_body(columns = Issue, rows = 6)
+  ) |> 
+  cols_width(Issue ~ gt_pct(20), Examples ~ gt_pct(50)) |> 
+  tab_style(
+    style = cell_text(v_align = "top"),
+    locations = cells_body()
+  ) |>
+  opts_theme() |> 
+  tab_options(
+    quarto.disable_processing = TRUE
+  )
+```
+
+Possible INGO issue areas and example organizations
+
+:::
 
 Our second independent variable is a dichotomous indicator of whether the INGO explicitly states that it intends to operate locally (below province level). There are cases where the aim of the INGO is attached to a locality, either having a county or city name in their RO name or purposes, or the INGO are actually set up by people in China and they registered the RO to communicate between the "hometown" and the INGO set up abroad. We thus include this variable in our analysis to explore how having local connections is associated with the operational space of ROs.
 
