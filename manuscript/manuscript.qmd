@@ -30,78 +30,93 @@ if (is.null(knitr::pandoc_to())) {
   fmt_out <- knitr::pandoc_to()
 }
 
-knitr::opts_chunk$set(echo = FALSE, include = FALSE, 
-                      warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(
+  echo = FALSE, include = FALSE,
+  warning = FALSE, message = FALSE
+)
 
-knitr::opts_chunk$set(fig.align = "center", fig.retina = 3,
-                      fig.width = 6, fig.height = (6 * 0.618),
-                      out.width = "100%", collapse = TRUE)
+knitr::opts_chunk$set(
+  fig.align = "center", fig.retina = 3,
+  fig.width = 6, fig.height = (6 * 0.618),
+  out.width = "100%", collapse = TRUE
+)
 
-options(digits = 3, width = 120,
-        dplyr.summarise.inform = FALSE,
-        knitr.kable.NA = "")
+options(
+  digits = 3, width = 120,
+  dplyr.summarise.inform = FALSE,
+  knitr.kable.NA = ""
+)
 ```
 
 ```{r libraries-data}
 library(tidyverse)
-library(scales)
-library(lubridate)
-library(tidybayes)
 library(sf)
+library(scales)
+library(tidybayes)
 library(ggrepel)
 library(marginaleffects)
 library(tidygraph)
 library(ggraph)
 library(patchwork)
-library(kableExtra)
 library(gt)
 library(targets)
-
-tar_config_set(store = here::here('_targets'),
-               script = here::here('_targets.R'))
 
 # Generated via random.org
 set.seed(8511)
 
-# Load targets 
-tar_load(c(ongo, ongo_mapdata))
-tar_load(c(preds_issue, preds_local, preds_timing,
-           epreds_issue, epreds_local, epreds_timing,
-           epreds_timing_local, issue_indicator_lookup))
+# Targets stuff
+tar_config_set(
+  store = here::here("_targets"),
+  script = here::here("_targets.R")
+)
+ 
+tar_load(c(ongo, ongo_mapdata, civicus_clean))
+tar_load(c(
+  preds_issue, preds_local, preds_timing,
+  epreds_issue, epreds_local, epreds_timing,
+  epreds_timing_local, issue_indicator_lookup
+))
 
 # Plotting and modelsummary functions
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
+
+theme_set(theme_ongo())
 set_annotation_fonts()
 ```
+
+```{r civicus-stuff}
+civicus_prop <- civicus_clean |> 
+  group_by(open = Score > 80) |> 
+  summarize(total = n()) |> 
+  mutate(
+    prop = total / sum(total),
+    prop_nice = label_percent(accuracy = 1)(prop)
+  ) |> 
+  mutate(open = janitor::make_clean_names(open)) |> 
+  split(~open)
+```
+
 
 ::: {.content-visible when-format="html"}
 # Introduction {.hide}
 :::
 
-TODO: Andrew - review all the re-structuring made by Meng
+In the past two decades, nearly 100 countries have proposed or enacted legal measures designed to restrict nongovernmental organizations (NGOs) and civil society more broadly [@Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyPrakash:2020; @DupuyRonPrakash:2016].[^ngo-clarification] According to the CIVICUS Civil Society Monitor, as of 2023 only `r civicus_prop$true$prop_nice` of countries have open and unrestricted civic space [@ChaudhryHeiss:2022a; @CIVICUSMonitor]. This global trend of closing or shrinking civic space has affected countries of all regime types, including both autocracies and democracies such as Morocco and Palestine [@AtiaHerrold:2018], India [@press-trust-india:2019], Vietnam [@Sidel:2023], Canada [@CIVICUS:2013], and the United States [@Cramer:2020]. On April 28, 2016, China passed its own set of civil society restrictions with its Law of the People's Republic of China on Administration of Activities of Overseas Nongovernmental Organizations in the Mainland of China---or "ONGO Law"---which formally took effect on January 1, 2017. The law requires all international NGOs (INGOs) to either establish formal in-country representative offices (ROs) or file short-term temporary activities (TAs) to lawfully operate in mainland China. Without recognized legal status, INGOs are prohibited from working in the country, and even with legal recognition, INGO programming is limited to government-approved activities.
+
+[^ngo-clarification]: "Civil society" is a broad concept that includes a range of organizational forms, both formal and informal. In this paper, we look at nongovernmental organizations (NGOs), often called nonprofit organizations or third sector organizations—formal non-profit-seeking organizations that are neither privately-owned nor government-controlled. We define international NGOs as organizations that conduct work predominantly in at least one other country outside of their home country.
+
+As an authoritarian state with a growing nonprofit sector, China's regulatory regime for INGOs serves as an important example for understanding and exploring how autocracies use restrictive laws as policy tools as they engage with international civil society. The restrictive policies implemented by China's 2017 ONGO law serve dueling purposes that both harness the benefits and reduce the risks of INGOs. The law is designed to decrease demand for foreign civil society organizations and limit the influence they might have over domestic policies [@DeMattee:2018; @DeMattee:2019], while also allowing the regime to benefit from the expertise, services, and reputational advantages of working partnering with international civil society [@Plantan:2022; @Heiss:2019]. These dual demands lead to differential enforcement of civil society laws and a divergence between formal *de jure* regulations and the *de facto* implementation of those laws [@ChaudhryHeiss:2022], as the government enforces civil society regulations selectively depending on regime preferences for INGO services.
+
+In this paper, we use the case of China to explore how the dual demands to both restrict and embrace INGOs have shaped the international nonprofit sector in the five years since the 2017 ONGO Law came into effect. We examine how the ONGO Law has influenced the population of INGOs that have successfully registered in China, as well as the association between factors such as INGO issue areas and the operational space granted to them in the country. Through our study, we make several contributions to a growing body of research on the effects of closing civic space on INGO behavior and strategies. First, we expand work that uses institutional approaches to understanding civil society regulations, which argues that states strategically regulate INGOs to maintain regime stability, choosing forms of regulation and repression that minimize threats to internal political stability [@Chaudhry:2022; @DeMattee:2018; @DeMattee:2019; @Heiss:2019]. Second, we explore how authoritarian civil society regulations act as policy tools that regimes can leverage to shift INGO behavior in their favor and how restrictive laws can reshape and tame organizational strategies [@Li:2020; @WuNie:2021; @LianMurdie:2023]. Third, we build on work by @LiFarid:2023 to explore how, as policy tools, these regulations lead to differentiated application of the law depending on organizational characteristics. We argue that INGO issue areas, missions, and pre-existing relationships with local government officials influence the degree of operating space available for INGOs.
+
+By focusing on INGO operational space in China, we provide a unique view into the *de facto* regulatory environment for foreign civil society in an authoritarian state. Many previous studies use broad indexes of civil society openness, such as the core civil society index from the Varieties of Democracy project [@LianMurdie:2023; @ChaudhryHeiss:2022]. These measures capture the general regulatory environment for all civil society—including domestic NGOs, INGOs, and informal organizations—but do not reflect the specific implementation of laws for INGOs. In this paper, though, we use a mixed methods approach to explore the regulatory environment for INGOs in particular, providing much a richer description of authoritarian regulation of international civil society.
+
+Below, we provide a brief overview of China's 2017 ONGO Law and the different regulatory mechanisms—and practical limitations—it provides for INGOs to obtain legal access to the country. We then summarize existing research on authoritarian regulation of INGOs and the differential application of these laws based on regime preferences and organizational characteristics, and propose a set of empirical expectations based on this literature. We test these expectations with a mixed methods research design, combining Bayeisan analysis of administrative data from 633 formally registered INGOs with a comparative case study of Greenpeace and The Nature Conservancy, two INGOs working on similar issue areas which took different approaches to operating in China after 2017. We conclude with a broader discussion of authoritarian civil society regulations and propose future methods for exploring the practical operating environment for INGOs working in such regimes.
 
 
-In the past decade, nearly 100 countries have proposed or enacted legal measures designed to restrict civil society [@ICNL:2021], and only 21% of countries have open and unrestricted civic space [@ChaudhryHeiss:2022a; @Civicus:2023]. This global trend of closing or shrinking civic space [@Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyPrakash:2020; @DupuyRonPrakash:2016] has affected countries of all regime types, including both autocracies and democracies such as Morocco and Palestine [@AtiaHerrold:2018], India [@press-trust-india:2019], Vietnam [@Sidel:2023], Canada [@CIVICUS:2013], and the United States [@Cramer:2020]. On April 28, 2016, China passed its own set of legal restrictions on civil society with its Law of the People's Republic of China on Administration of Activities of Overseas Nongovernmental Organizations in the Mainland of China, or "ONGO Law," which formally took effect on January 1, 2017. The law requires all international NGOs (INGOs) to either register representative offices (ROs) or file temporary activities to lawfully operate in mainland China. 
+# The legal framework established by the 2017 ONGO law
 
-As an authoritarian state with a growing nonprofit sector, the Chinese model of implementing restrictive laws for international NGOs (INGOs) has important implications for understanding the dynamics of how civil society laws can be used as policy tools to harness the activities of INGOs. Globally, theoretical frameworks such as [@DeMattee:2019] focus on the 
-institutional approaches, i.e., restrictive laws to crack down international civil society. (TO DO: whether to explain INGO vs. Civil Society as mentioned by MPSA reviewers).  To further understanding this global phenomena , China is an important case to explore the impacts such restrictive laws have on the operation of INGOs. Such legal restrictions can be either direct (denial of legal access/cannot register) or covert (red-tape, requiring the approval of PSUs, or the uncertainty of having to filing TAs case by case). 
-
-
-This paper explores the characteristics of all registered INGOs in China in the five years after the ONGO Law became effective and examines how the ONGO Law has influenced the population of INGOs that have successfully registered in China, as well as the association between factors such as INGO issue areas and the operational space granted to them in the country. Scholars have discussed the discrepancy that can exist between the *de facto* implementation of the law and the formal *de jure* regulations. (Andrew TO DO: add literature). We engage with this conversation by analyzing a more comprehensive and data-based picture of INGOs operating in China in the post ONGO law era. Exploring differentiated application of these laws and differentiated treatment for more vs. less contentious INGOs. Authoritarian -\> arbitrary and varied application of the law -\> different *operating space*
-
-
-TODO: Andrew: Also, new cool thing here is that we can look at de facto implementation in greater detail. Existing studies use things like V-Dem's core civil society index or civil society repression index to capture the general regulatory environment, but changes in those scores aren't necessarily tied to specific laws. Here we can see that differential enforcement/de facto/de jure stuff directly
-
-
-Our study also contributes to a growing body of research on the effects of closing civic space on INGO behavior and strategies using a mixed-method approach.  Looking at how civil society laws act as a policy tool that regimes can leverage to shift NGO behavior: to tame INGO to be more cooperative to government. The requirement of PSU and Chinese partner to re-direct INGOs to be more authority friendly - The impacts on international civil society we examine include not only access or representation of INGOs in China, but also whether there is change of behaviors [@WuNie:2021]. In addition to quantitative analysis of the administrative data of 633 registered offices of INGOs. We also explored how the relationship with the government and the organizational flexibility of INGOs can come into play under the ONGO law. 
-
-
-TODO: Andrew: Roadmap of paper, to add later In this paper, we first explore the ongoing phenomena of closing civic space and authoritarian regulation of civil society, examining how governments conceptualize the role of international civil society in their domestic politics and why governments select regulatory regimes for international NGOs. Term we'll use = operational space, not flexibility ~~We then investigate how international NGOs have responded and adapted to more restrictive regulatory environments and theorize that a key component of INGO regulatory adaptation is the ability to operate with greater latitude in host countries. We propose two key determinants of this flexibility: (1) organizational characteristics and (2) host government preferences and relationships TODO and their interplay/interaction.~~ We illustrate this theory using the case of China TODO stats and case studies, mixed method, demonstrating how INGOs that address issues that align with government preferences enjoy the most organizational flexibility in the country.
-
-
-# The legal framework established by the ONGO law
-
-International NGOs began to play an important role in China in the early 1990s as part of the country's Reform and Opening-Up policy, and organizations like Save the Children and the Ford Foundation established local offices and branches. Since then, INGOs and global civil society have played pivotal roles in providing funding, organizational and program management skills, as well as catalytic support for the emergence of China's domestic nonprofit sector [@Yin:2009]. Prior to the implementation of the 2017 ONGO Law, regulation of INGOs in China was obscure [@Shieh:2018; @Spires:2022]. The only legal document relevant to INGOs was a section of the Regulation on the Management of Foundations by the State Council that specifies the registration of representative offices ("ROs") of foreign foundations with the Ministry of Civil Affairs, the regulator of Chinese domestic NGOs. However, the actual application of the regulation was very limited. Up until the ONGO Law took effect in 2017, there were fewer than 30 foreign foundation ROs registered at the Ministry of Civil Affairs, while some Chinese officials estimated in 2016 that there were roughly over 7,000 INGOs operating in China [@YeHuang:2018; Spires:2020a].
+International NGOs began to play an important role in China in the early 1990s as part of the country's Reform and Opening-Up policy, and organizations like Save the Children and the Ford Foundation established local offices and branches. Since then, INGOs and global civil society have played pivotal roles in providing funding, organizational and program management skills, as well as catalytic support for the emergence of China's domestic nonprofit sector [@Yin:2009]. Prior to the implementation of the 2017 ONGO Law, regulation of INGOs in China was obscure [@Shieh:2018; @Spires:2022]. The only legal document relevant to INGOs was a section of the Regulation on the Management of Foundations by the State Council that specifies the registration of representative offices ("ROs") of foreign foundations with the Ministry of Civil Affairs, the regulator of Chinese domestic NGOs. However, the actual application of the regulation was very limited. Up until the ONGO Law took effect in 2017, there were fewer than 30 foreign foundation ROs registered at the Ministry of Civil Affairs, while some Chinese officials estimated in 2016 that there were roughly over 7,000 INGOs operating in China [@YeHuang:2018; @Spires:2020a].
 
 Many INGOs gained legal identity within mainland China using the vehicle of foreign-funded companies [@Sidel:2016], though there were no clear requirements for them to have a formal legal presence in China [@Han:2011; @HolbigLang:2022; @Yin:2009]. However, the legal form of foreign-funded company is not quite compatible with the nonprofit nature of INGOs. Under the Chinese legal system, enterprises are intended to be for-profit entities and nonprofit organizations are required to choose other stand-alone legal forms, including foundations, associations, and social service organizations [@Ye:2021]. Thus, INGOs obtaining legal identity in this way have to navigate through a legal framework designed for a for-profit institutional logic, e.g, focusing on protecting investors' right to investment returns.
 
@@ -125,8 +140,8 @@ ro_nodes <- tibble(
     "Find a professional supervisory unit (PSU)",
     "Obtain PSU approval",
     "Open organization bank accounts",
-    "Keep programming within approved scope",
     "Submit annual work plans to PSU and Public Security Bureau",
+    "Keep programming within approved scope",
     "Submit annual reports to PSU and Public Security Bureau"
   ),
   type = "Registered organization (RO)"
@@ -219,6 +234,9 @@ Main idea: organizations that work on more contentious issues like human rights 
 
 TODO: Meng - China crackdown lit
 
+@LiFarid:2023
+
+Such legal restrictions can be either direct (denial of legal access/cannot register) or covert (red-tape, requiring the approval of PSUs, or the uncertainty of having to filing TAs case by case). 
 
 
 # Empirical expectations and analytical approach
@@ -334,7 +352,7 @@ Our key independent variables correspond to each of our three empirical expectat
 
 Our second independent variable is a dichotomous indicator of whether the INGO explicitly states that it intends to operate locally (below province level). There are cases where the aim of the INGO is attached to a locality, either having a county or city name in their RO name or purposes, or the INGO are actually set up by people in China and they registered the RO to communicate between the "hometown" and the INGO set up abroad. We thus include this variable in our analysis to explore how having local connections is associated with the operational space of ROs.
 
-Our final independent variable measures how much time elapsed between the January 1, 2017 (when the law took effect) and the organization's official registration date. There is great variance in the timing of registering an RO among INGOs, since there has been a *de facto* grace period for INGOs to seek legal presence after the law took effect[@Shieh:2018]. This is largely because both INGOs and the regulators needed some transitional time to explore the specific implementation of the law as large ambiguity was left when the law was passed. We use this temporal variable as a proxy for the motivation or eagerness of INGOs to register an RO, for some INGOs are inclined to avoid the cumbersome registration procedures at the early stage if there is no real consequences for continuing operations without registration, while others took the time to talk with multiple potential PSUs to find a more suitable superior or regulatory dynamic. (to find a citation for this, probably Spires, if there is one.)
+Our final independent variable measures how much time elapsed between the January 1, 2017 (when the law took effect) and the organization's official registration date. There is great variance in the timing of registering an RO among INGOs, since there has been a *de facto* grace period for INGOs to seek legal presence after the law took effect[@Shieh:2018]. This is largely because both INGOs and the regulators needed some transitional time to explore the specific implementation of the law as large ambiguity was left when the law was passed. We use this temporal variable as a proxy for the motivation or eagerness of INGOs to register an RO, for some INGOs are inclined to avoid the cumbersome registration procedures at the early stage if there is no real consequences for continuing operations without registration, while others took the time to talk with multiple potential PSUs to find a more suitable superior or regulatory dynamic. (TODO: find a citation for this, probably Spires, if there is one.)
 
 ## Modeling approach
 
