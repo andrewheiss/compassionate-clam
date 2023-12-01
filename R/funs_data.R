@@ -118,9 +118,13 @@ clean_map_data <- function(ongo) {
     summarise(ro_count = n())
   
   # Join ONGO count to map
-  mapdata <- sf_china |>  
+  mapdata <- sf_china |>
     left_join(province_count, by = "province_cn") |> 
-    mutate(ro_count = ifelse(is.na(ro_count), 0, ro_count))
+    mutate(ro_count = ifelse(is.na(ro_count), 0, ro_count)) |> 
+    mutate(
+      is_taiwan = province_cn == "台湾",
+      ro_count = ifelse(is_taiwan, NA, ro_count)
+    )
   
   return(mapdata)
 }
