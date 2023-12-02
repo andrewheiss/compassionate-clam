@@ -185,25 +185,38 @@ ggraph(combined_graph, layout = "tree") +
   )
 ```
 
-Registering as an RO under the ONGO Law is a complex process that requires the consent of a Chinese Professional Supervisory Unit (PSU)---a governmental or quasi-governmental unit related to an INGO's issue area which oversees and co-supervises the INGO with Public Security Bureaus. Obtaining the consent of a PSU to apply for registration has become a key challenge for INGOs interested in formal registration, since potential PSUs do not have a legal obligation to assume such a demanding role [@Jia:2017; @Shieh:2018; @YeHuang:2018]. 
+Registering as an RO under the ONGO Law is a complex process that requires the consent of a Chinese Professional Supervisory Unit (PSU)---a governmental or quasi-governmental unit related to an INGO's issue area which oversees and co-supervises the INGO with Public Security Bureaus. Obtaining the consent of a PSU to apply for registration has become a key challenge for INGOs interested in formal registration, since potential PSUs do not have a legal obligation to assume such a demanding role [@Jia:2017; @Shieh:2018; @YeHuang:2018]. Organizations vary in their ability to attract partner PSUs, and INGOs that are unable to find corresponding PSUs are more limited in their geographic reach within the country. INGOs are authorized to operate within China on a province-by-province basis. Many organizations are allowed to work in all 32 mainland provincial administrative regions, but many are also only authorized to work in a handful, or even only a single province. 
 
-Organizations vary in their ability to attract partner PSUs, and INGOs that are unable to find corresponding PSUs are more limited in their geographic reach within the country. INGOs are authorized to operate within China on a province-by-province basis. Many organizations are allowed to work in all 32 mainland provincial administrative regions, but many are also only authorized to work in a handful, or even only a single province. In this paper, we use the number of provinces that INGOs are authorized to work in as a proxy for INGO operational space based on the assumption that INGOs need to or hope to be able to carry out their programs in as broad a geographical scope as possible [@Li:2020]. For example, in emergency circumstances like the COVID-19 pandemic, it would be extremely difficult for INGOs to plan beforehand which areas might need their service. Having the potential to shift programs to other provinces as needed thus provides a form of operational space. 
+# Closing space, differential enforcement, and INGO operational space
 
-# Theoretical background
+The 2017 ONGO Law's provision of two legal pathways for registration is an example of administrative crackdown [@Chaudhry:2022] an example of fit within the broader global phen
 
-TODO: Andrew: This 2017 law fits with a broader global phenomenon of closing civic space... General crackdown stuff + China crackdown stuff + our addition
+Why crack down?
 
-TODO: Andrew: I'll clean up/rewrite this section and the section headings, etc.
+Many different reasons for these restrictions and several purposes - INGOs pose a threat to regime stability, but they also provide governments with services and technical expertise. Civil society/CSO/NGO + host government definition - De Mattee and institutional taxonomy. My stuff on gatekeeping vs. program capture.
 
-## The "closing space" phenomenon - Institutional approach to closing space
+Contentiousness, regime stability, other reasons [see @Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyPrakash:2020; @DupuyRonPrakash:2016].
+
+To situate our analysis of the impacts of China's ONGO Law in existing work on closing civic space, we propose a theoretical framework to explain
+
+---
+
 
 China's 2017 ONGO Law has been discussed by scholars mostly as a part of a global trend of restricting and cracking down on international NGOs [@ChaudhryHeiss:2022; @Carothers:2016]. Studies on the law has been focused on discussing the historical and political impetus of passing the law [@Shieh:2018] or analyzing the regulatory regimes it that has established and potential implications for INGOs operating in China [@Feng:2017; @TeetsHsu:2016]. However, little work has been done to examine the actual implementation situation of this law, and how the dynamics of ONGOs' operations and projects have been affected by the law after successfully gaining legal registration and documentation. A few studies [@Jia:2017; @YeHuang:2018] have reflected on the implementation of the ONGO Law after its first year, including the initial phase of drafting and refining implementing regulations and promotion, as well as training sessions conducted by Public Security Bureaus in different locations. However, a more up-to-date and comprehensive understanding of the effects of the ONGO law is still lacking.
 
 This paper aims to fill these gaps by empirically examining how the "closing space" hypothesis applies to China in the years after the ONGO Law took effect. China provides an excellent setting for testing these theories because China's promulgation of restrictive INGO law as an authoritarian jurisdiction fits the observed global trends in recent years, thus can serve as an representative case to deepen scholarly understanding around these themes. Also, the level of ambiguity of the legal framework gives ample room for arbitrary discretion and conflicting attitudes by authorities [@Jia:2017], enabling us to analyze rules in form (*de jure*) as well as rules in use (*de facto*).
 
-Many different reasons for these restrictions and several purposes - INGOs pose a threat to regime stability, but they also provide governments with services and technical expertise. Civil society/CSO/NGO + host government definition - De Mattee and institutional taxonomy. My stuff on gatekeeping vs. program capture.
 
-Contentiousness, regime stability, other reasons [see @Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyPrakash:2020; @DupuyRonPrakash:2016].
+
+The government can thus use the RO registration process to limit the potential reach of INGOs.
+
+In this paper, we use the number of provinces that INGOs are authorized to work in as a proxy for INGO operational space based on the assumption that INGOs need to or hope to be able to carry out their programs in as broad a geographical scope as possible [@Li:2020]. For example, in emergency circumstances like the COVID-19 pandemic, it would be extremely difficult for INGOs to plan beforehand which areas might need their service. Having the potential to shift programs to other provinces as needed thus provides a form of operational space. 
+
+
+
+TODO: Andrew: This 2017 law fits with a broader global phenomenon of closing civic space... General crackdown stuff + China crackdown stuff + our addition
+
+TODO: Andrew: I'll clean up/rewrite this section and the section headings, etc.
 
 
 ## De jure vs. de facto implementation of civil society regulations - Differential enforcement
@@ -250,7 +263,7 @@ Operational space is determined by the interaction between NGO characteristics a
 
 See @fig-theory
 
-```{r fig-theory, fig.width=6, fig.height=2}
+```{r fig-theory, fig.width=6, fig.height=1.75}
 #| echo: false
 #| include: true
 #| warning: false
@@ -258,10 +271,10 @@ See @fig-theory
 #| fig-cap: "Diagram of our theoretical framework showing three possible determinants of INGO operational space: the contentiousness of the INGO's issue area, the inherent geographic scope of the INGO's operations, and the government's interest in and relationship with the INGO."
 theory_nodes <- tribble(
   ~id, ~name, ~x, ~y, ~highlight,
-  1,   "Issue contentiousness", 1, 0, FALSE,
-  2,   "Operational space", 3, 0, TRUE,
-  3,   "Local focus", 2, 1, FALSE,
-  4,   "Government preferences", 2, -1, FALSE
+  1,   "Issue contentiousness", 2, 1, FALSE,
+  2,   "Operational space", 2, 0, TRUE,
+  3,   "Local focus", 3, 1, FALSE,
+  4,   "Government preferences", 1, 1, FALSE
 )
 
 theory_edges <- tribble(
@@ -279,8 +292,8 @@ theory_graph <- tbl_graph(nodes = theory_nodes, edges = theory_edges, directed =
 ggraph(theory_graph, x = x, y = y) + 
   geom_edge_link(
     aes(
-      start_cap = label_rect(node1.name, padding = margin(10, 5, 10, 5, "pt")),
-      end_cap = label_rect(node2.name, padding = margin(10, 5, 10, 5, "pt"))
+      start_cap = label_rect(node1.name, padding = margin(10, 0, 10, -05, "pt")),
+      end_cap = label_rect(node2.name, padding = margin(10, -5, 10, -5, "pt"))
     ),
     arrow = arrow(angle = 30, length = unit(6, "pt"), type = "closed"),
     edge_linewidth = 0.25
@@ -289,7 +302,7 @@ ggraph(theory_graph, x = x, y = y) +
     aes(x = x, y = y, label = name, fill = highlight), 
     size = 3, label.r = unit(0, units = "pt"), fontface = "bold"
   ) +
-  scale_x_continuous(expand = expansion(add = 0.3)) +
+  scale_x_continuous(expand = expansion(add = 0.4)) +
   scale_y_continuous(expand = expansion(add = 0.2)) +
   scale_fill_manual(values = c("white", clrs[1]), guide = "none") +
   labs(x = NULL, y = NULL) +
