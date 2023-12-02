@@ -27,7 +27,8 @@ _targets.yaml
 
 # Data stuff
 data/raw_data/
-data/manual_data/
+data/manual_data/*
+!data/manual_data/table-case-study.csv
 data/derived_data/
 
 /.luarc.json

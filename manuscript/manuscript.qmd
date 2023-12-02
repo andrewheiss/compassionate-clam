@@ -906,6 +906,7 @@ We lack sufficient theory or data to explain why this trend goes against our exp
 #|   nationwide predictions and represent the overall conditional average 
 #|   geographic range for INGOs over time across, conditional on local 
 #|   connections. Shaded regions show the 50%, 80%, and 95% credible intervals"
+
 epreds_timing_local |>
   mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |>
   ggplot(aes(x = years_since_law, y = prop_to_provinces(.epred))) +
@@ -937,7 +938,7 @@ epreds_timing_local |>
 
 We also conducted the qualitative study of two selected cases of INGOs in China to further understand the patterns revealed in the quantitative modeling and to examine a more comprehensive picture of how the operations of INGOs have been impacted by the ONGO Law. As explained, the registration documentation data enables us to analyze how the operational space is associated with issue areas and other factors for those INGOs that could successfully register. However, for INGOs that could not get registered but try to maintain their legal presence in China, a typical choice would be constantly filing temporary activities [@Corsetti:2019]. So, we purposefully selected two environmental INGOs with different registration status to conduct a comparative analysis. One of them, the Nature Conservancy (“TNC”), successfully registered a RO under the ONGO Law, while the other INGO, Greenpeace has been filing temporary activities one after another since 2017 to continue carrying out programs in China. We use secondary data including public interviews (previously conducted by one of the authors) and their websites, in addition to official ONGO Law records of ROs and temporary activities to conduct the case studies. 
 
-TNC and Greenpeace are both well-known INGOs working in the environmental issue area. Their headquarters are based in western countries and have offices around the world. They started to have long-standing offices in Beijing around the turn of the century, with TNC in 1998 and Greenpeace in 2001. Despite these similarities, the two INGOs had quite different experiences to sustain their legal presence in China after the ONGO Law took effect. According to records by the MPS, TNC’s RO was registered on May 19, 2017, with the National Forestry and Grassland Administration as their PSU. The RO in Beijing is eligible to operate in 27 provinces. Comparatively, Greenpeace has not registered any RO as of December 1, 2023. Instead, they have filed  67 temporary activities, almost going through the filing process 10 times each year. 
+TNC and Greenpeace are both well-known INGOs working in the environmental issue area. Their headquarters are based in western countries and have offices around the world. They started to have long-standing offices in Beijing around the turn of the century, with TNC in 1998 and Greenpeace in 2001. Despite these similarities, the two INGOs had quite different experiences to sustain their legal presence in China after the ONGO Law took effect. According to records by the MPS, TNC’s RO was registered on May 19, 2017, with the National Forestry and Grassland Administration as their PSU. The RO in Beijing is eligible to operate in 27 provinces. Comparatively, Greenpeace has not registered any RO as of December 1, 2023. Instead, they have filed 67 temporary activities, almost going through the filing process 10 times each year. 
 
 There are various drawbacks to having to constantly file temporary activities. First would be high administrative costs. Since the filing of temporary activities needs to be submitted by INGOs’ Chinese partners, it would mean discussing and securing the partnerships 67 times, mostly with different organizations. Moreover, this model also imposes high uncertainty to the operation of INGOs. There is no guarantee whether the next Chinese partner would agree to collaborate and file the documentation for them. And it is impossible to run longer-term projects, given all temporary activities cannot last longer than a year. Finally, temporary activities would be programs Chinese partners feel comfortable to collaborate in, i.e., safe activities with little political and administrative risks. So there is less flexibility in the kinds of work an INGO can with temporary activities. 
 
@@ -949,14 +950,18 @@ What factors could have contributed to the contrasting experiences of TNC and Gr
 #| label: table-case-study
 #| include: true
 
-compare_table <- read_csv("data/manual_data/table_case_study.csv")
+compare_table <- read_csv(here::here("data", "manual_data", "table-case-study.csv"))
 
 compare_table |> 
-  gt() |> 
-#  cols_width(Issue ~ gt_pct(20), Examples ~ gt_pct(50)) |> 
+  gt(rowname_col = "Characteristic") |> 
+  cols_width(Characteristic ~ gt_pct(20), everything() ~ gt_pct(30)) |>
   tab_style(
     style = cell_text(v_align = "top"),
     locations = cells_body()
+  ) |>
+  tab_style(
+    style = cell_text(v_align = "top", weight = "bold"),
+    locations = cells_stub()
   ) |>
   opts_theme() |> 
   tab_options(
@@ -968,7 +973,7 @@ Comparison of the work of The Nature Conservancy and Greenpeace in China
 
 :::
 
-@table-case-study summarizes the comparison of the cases of TNC and Greenpeace. The case study shows that in addition to the correlation of issue area and operational space found in the quantitative model, the dimension of relationship with the government also exerts influence on the contentious level and restrictions INGOs can face, revealing the potential patterns of differential treatment INGOs can receive in the *de facto* implementation of the law. Greenpeace also showed high organizational flexibility in the face of high legal barriers with the ONGO law : despite the various drawbacks discussed above, they were still able to keep conducting programs in China. A more evasive group of INGOs after the ONGO law would be those not having the same level of flexibility as Greenpeace and have left China either not choosing to seek registration or failed to do so and not able file temporary activities constantly. The variance in organizational flexibility can be worthy of further research. 
+@tbl-case-study summarizes the comparison of the cases of TNC and Greenpeace. The case study shows that in addition to the correlation of issue area and operational space found in the quantitative model, the dimension of relationship with the government also exerts influence on the contentious level and restrictions INGOs can face, revealing the potential patterns of differential treatment INGOs can receive in the *de facto* implementation of the law. Greenpeace also showed high organizational flexibility in the face of high legal barriers with the ONGO law : despite the various drawbacks discussed above, they were still able to keep conducting programs in China. A more evasive group of INGOs after the ONGO law would be those not having the same level of flexibility as Greenpeace and have left China either not choosing to seek registration or failed to do so and not able file temporary activities constantly. The variance in organizational flexibility can be worthy of further research. 
 
 
 # Discussion and conclusion
