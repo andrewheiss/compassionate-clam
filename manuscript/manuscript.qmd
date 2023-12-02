@@ -935,15 +935,41 @@ epreds_timing_local |>
 
 # Contentiousness and government relationships: The cases of Greenpeace and The Nature Conservancy
 
-TODO: Meng
+We also conducted the qualitative study of two selected cases of INGOs in China to further understand the patterns revealed in the quantitative modeling and to examine a more comprehensive picture of how the operations of INGOs have been impacted by the ONGO Law. As explained, the registration documentation data enables us to analyze how the operational space is associated with issue areas and other factors for those INGOs that could successfully register. However, for INGOs that could not get registered but try to maintain their legal presence in China, a typical choice would be constantly filing temporary activities [@Corsetti:2019]. So, we purposefully selected two environmental INGOs with different registration status to conduct a comparative analysis. One of them, the Nature Conservancy (“TNC”), successfully registered a RO under the ONGO Law, while the other INGO, Greenpeace has been filing temporary activities one after another since 2017 to continue carrying out programs in China. We use secondary data including public interviews (previously conducted by one of the authors) and their websites, in addition to official ONGO Law records of ROs and temporary activities to conduct the case studies. 
 
-Paragraph justifying why the case study is needed - stats are cool but missing details about contentiousness of issues - also, stats only look at ROs, not TAs or any ONGOs that left the country, so we're missing some dynamics of ONGO-government relations. We can explore our empirical expectations in more depth by looking at a comparative case study of Greenpeace and NC
+TNC and Greenpeace are both well-known INGOs working in the environmental issue area. Their headquarters are based in western countries and have offices around the world. They started to have long-standing offices in Beijing around the turn of the century, with TNC in 1998 and Greenpeace in 2001. Despite these similarities, the two INGOs had quite different experiences to sustain their legal presence in China after the ONGO Law took effect. According to records by the MPS, TNC’s RO was registered on May 19, 2017, with the National Forestry and Grassland Administration as their PSU. The RO in Beijing is eligible to operate in 27 provinces. Comparatively, Greenpeace has not registered any RO as of December 1, 2023. Instead, they have filed  67 temporary activities, almost going through the filing process 10 times each year. 
 
-Education, Environment, lower expected operating space
+There are various drawbacks to having to constantly file temporary activities. First would be high administrative costs. Since the filing of temporary activities needs to be submitted by INGOs’ Chinese partners, it would mean discussing and securing the partnerships 67 times, mostly with different organizations. Moreover, this model also imposes high uncertainty to the operation of INGOs. There is no guarantee whether the next Chinese partner would agree to collaborate and file the documentation for them. And it is impossible to run longer-term projects, given all temporary activities cannot last longer than a year. Finally, temporary activities would be programs Chinese partners feel comfortable to collaborate in, i.e., safe activities with little political and administrative risks. So there is less flexibility in the kinds of work an INGO can with temporary activities. 
 
-So Issue areas can predict some level of flexibility/restrictions INGOs receive, but that is not the full story, the relations with the government (one more dimension/variable) also plays important roles, see TNC vs. Greenpeace
+What factors could have contributed to the contrasting experiences of TNC and Greenpeace under the ONGO Law? After analyzing the data, the working approach and relationship with the government emerged as pivotal differences between the two INGOs, which fits existing discussions on the differential treatment of INGOs based on their relationship with the authority [TO DO: add citations]. In a public interview with TNC’s RO in China about their registration experience, the chief representative stated TNC’s working approach in China has been “science-based”, using “non-confrontational, collaborative approach in working closely with governments, the business community and others” [@ChinaPhilanthropyReserchInstitute:2018a]. Over the years, they have provided technical support for the central government and local governments like the Yunnan and Zhejiang Province to build national parks and nature reserve areas and helped drafted such documents as the China Biodiversity Conservation Strategy and Action Plan (2011-2030). Using the non-confrontational working model and establishing long partnerships with the government enabled TNC to secure the content of a national governmental agency in corresponding issue area to be their PSU, and thus successfully got registered and authorized to operate in relatively large number of provinces. In contrast, Greenpeace states in their mission that they work as “independent campaigning organizations that use peaceful protest and creative confrontation to expose global environmental problems”. Their description of the work in China also uses such key words as “brings change”, “non-violent direct action”, and “impartiality and independence”. One project Greenpeace shares on their website their exposure of the damages the company Sinar Mas Group's did in southwest Yunnan back in 2004. The conducted three rounds of  independent investigation and later revealed that the multinational paper industry company used reforestation as a cover while actually logging Yunnan's natural forests. Although this confrontation was not with the government, it showcases Greenpeace’s investigative, watch dog like work stance. To the authority, it would mean less predictable and manageable. 
 
-TODO: Meng - TA vs. RO, exploring main mechanisms of contentiousness and relationships
+::: {#tbl-case-study}
+
+```{r}
+#| label: table-case-study
+#| include: true
+
+compare_table <- read_csv("data/manual_data/table_case_study.csv")
+
+compare_table |> 
+  gt() |> 
+#  cols_width(Issue ~ gt_pct(20), Examples ~ gt_pct(50)) |> 
+  tab_style(
+    style = cell_text(v_align = "top"),
+    locations = cells_body()
+  ) |>
+  opts_theme() |> 
+  tab_options(
+    quarto.disable_processing = TRUE
+  )
+```
+
+Comparison of the work of The Nature Conservancy and Greenpeace in China
+
+:::
+
+@table-case-study summarizes the comparison of the cases of TNC and Greenpeace. The case study shows that in addition to the correlation of issue area and operational space found in the quantitative model, the dimension of relationship with the government also exerts influence on the contentious level and restrictions INGOs can face, revealing the potential patterns of differential treatment INGOs can receive in the *de facto* implementation of the law. Greenpeace also showed high organizational flexibility in the face of high legal barriers with the ONGO law : despite the various drawbacks discussed above, they were still able to keep conducting programs in China. A more evasive group of INGOs after the ONGO law would be those not having the same level of flexibility as Greenpeace and have left China either not choosing to seek registration or failed to do so and not able file temporary activities constantly. The variance in organizational flexibility can be worthy of further research. 
+
 
 # Discussion and conclusion
 
