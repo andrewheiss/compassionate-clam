@@ -185,7 +185,7 @@ ggraph(combined_graph, layout = "tree") +
   )
 ```
 
-Registering as an RO under the ONGO Law is a complex process that requires the consent of a Chinese Professional Supervisory Unit (PSU)---a governmental or quasi-governmental unit related to an INGO's issue area which oversees and co-supervises the INGO with Public Security Bureaus. Obtaining the consent of a PSU to apply for registration has become a key challenge for INGOs interested in formal registration, since potential PSUs do not have a legal obligation to assume such a demanding role [@Jia:2017; @Shieh:2018; @YeHuang:2018]. Organizations vary in their ability to attract partner PSUs, and INGOs that are unable to find corresponding PSUs are more limited in their geographic reach within the country. INGOs are authorized to operate within China on a province-by-province basis. Many organizations are allowed to work in all 32 mainland provincial administrative regions, but many are also only authorized to work in a handful, or even only a single province. 
+Registering as an RO under the ONGO Law is a complex process that requires the consent of a Chinese Professional Supervisory Unit (PSU)---a governmental or quasi-governmental unit related to an INGO's issue area which oversees and co-supervises the INGO with Public Security Bureaus. Obtaining the consent of a PSU to apply for registration has become a key challenge for INGOs interested in formal registration, since potential PSUs do not have a legal obligation to assume such a demanding role [@Jia:2017; @Shieh:2018; @YeHuang:2018]. Organizations vary in their ability to attract partner PSUs, and INGOs that are unable to find suitable PSUs can end up not being able to registered or registered with great limitation in terms of work areas and geographical reach. INGOs are authorized to operate within China on a province-by-province basis. Many organizations are allowed to work in all 32 mainland provincial administrative regions, but many are also only authorized to work in a handful, or even only a single province. 
 
 # Closing space, differential enforcement, and INGO operational space
 
@@ -351,7 +351,7 @@ We code the variables we use in the empirical analysis from the registration inf
 
 ### Dependent variable
 
-As seen previously, INGOs must partner with professional supervisory units (PSUs) to become ROs. TODO describe the province count variable
+As explained, the dependent variable is the count of provinces that INGOs are authorized to work in as documented in their official registration record. The documentation lists the specific provincial regions each INGO RO can conduct activities in and we derive the number of provinces based on the lists. Since the maximum count of provinces INGOs can possibly work in is 32, this variable ranges from 1 to 32. 
 
 ### Independent variables
 
@@ -934,7 +934,7 @@ epreds_timing_local |>
   theme_ongo()
 ```
 
-# Contentiousness and government relationships: The cases of Greenpeace and The Nature Conservancy
+# Contentiousness and government relationships: The cases ofThe Nature Conservancy and Greenpeace 
 
 We also conducted the qualitative study of two selected cases of INGOs in China to further understand the patterns revealed in the quantitative modeling and to examine a more comprehensive picture of how the operations of INGOs have been impacted by the ONGO Law. As explained, the registration documentation data enables us to analyze how the operational space is associated with issue areas and other factors for those INGOs that could successfully register. However, for INGOs that could not get registered but try to maintain their legal presence in China, a typical choice would be constantly filing temporary activities [@Corsetti:2019]. So, we purposefully selected two environmental INGOs with different registration status to conduct a comparative analysis. One of them, the Nature Conservancy (“TNC”), successfully registered a RO under the ONGO Law, while the other INGO, Greenpeace has been filing temporary activities one after another since 2017 to continue carrying out programs in China. We use secondary data including public interviews (previously conducted by one of the authors) and their websites, in addition to official ONGO Law records of ROs and temporary activities to conduct the case studies. 
 
