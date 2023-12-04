@@ -82,7 +82,7 @@ preds_local_text <- preds_local_plot |>
 
 preds_local_plot |> 
   ggplot(aes(x = draw, y = prop)) +
-  geom_col(aes(fill = outcome), position = position_stack(), linewidth = 0, width = 1) +
+  geom_area(aes(fill = outcome), position = position_stack()) +
   geom_text(
     data = preds_local_text,
     aes(x = 250, y = y_plot, label = prop_ci_nice),
