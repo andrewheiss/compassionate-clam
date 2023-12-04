@@ -1,6 +1,6 @@
 ---
 title: "Operational constraints and closing civic space: International NGO restrictions and Chinaâ€™s Overseas NGO law"
-short-title: "China's ONGO Law and International Civil Society"
+short-title: "Operational constraints and closing civic space"
 date: "2023-12-03"
 author:
 - name: Meng Ye
@@ -392,7 +392,7 @@ k_{1_y}, k_{2_y}\ \sim&\ \operatorname{Induced\,Dirichlet}(1, 1, 1), && \text{0â
 $$
 
 
-# Results
+# Results and discussion
 
 ## Descriptive overview
 
@@ -901,7 +901,14 @@ Comparison of the work of The Nature Conservancy and Greenpeace in China
 
 @tbl-case-study summarizes the comparison of the cases of TNC and Greenpeace. The case study shows that in addition to the correlation of issue area and operational space found in the quantitative model, the dimension of relationship with the government also exerts influence on the contentious level and restrictions INGOs can face, revealing the potential patterns of differential treatment INGOs can receive in the *de facto* implementation of the law. 
 
-# Discussion and conclusion
+# Conclusion
+
+1. Summary
+2. Limitations
+3. Implications for policy/nonprofits
+4. Implications for future research
+
+(yay Marc Bellemare https://marcfbellemare.com/wordpress/12060)
 
 TODO: Andrew: Not fully exploring the TA thing here - that's in another paper
 
