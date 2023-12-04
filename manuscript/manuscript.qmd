@@ -129,8 +129,8 @@ The legal framework governing INGOs was overhauled by the 2016 ONGO Law. The new
 #| warning: false
 #| message: false
 #| fig-cap: "Two possible pathways for international NGOs to legally work in 
-#|   China under the 2017 ONGO law, either as formal Registered Organizations 
-#|   (ROs) or by undertaking specific Temporary Activities (TAs)"
+#|   China under the 2017 ONGO law, either as formal Representative Offices 
+#|   or by undertaking specific Temporary Activities"
 
 ro_nodes <- tibble(
   step = c(
