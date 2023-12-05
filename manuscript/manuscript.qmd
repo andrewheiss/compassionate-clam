@@ -76,6 +76,7 @@ tar_load(c(
   epreds_issue, epreds_local, epreds_timing,
   epreds_timing_local, issue_indicator_lookup
 ))
+tar_load(c(preds_issue_plot, preds_local_plot, preds_timing_plot))
 
 # Plotting and modelsummary functions
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
@@ -488,21 +489,6 @@ Following our first empirical expectation, we predict that INGOs working on less
 #|   conditional average geographic range for INGOs. Points show posterior 
 #|   median; lines show 80% and 95% credible intervals."
 
-preds_issue_plot <- preds_issue |> 
-  left_join(issue_indicator_lookup, by = join_by(issue_area)) |> 
-  mutate(outcome = case_when(
-    .prediction == 0 ~ "Only 1 province",
-    .prediction > 0 & .prediction < 1 ~ "Between 1–32 provinces",
-    .prediction == 1 ~ "All 32 provinces",
-    .ptype = factor(
-      levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"), 
-      ordered = TRUE)
-  )) |> 
-  group_by(outcome, issue_area_nice, draw) |> 
-  summarize(count = n()) |> 
-  group_by(issue_area_nice, draw) |> 
-  mutate(prop = count / sum(count))
-
 preds_issue_plot_order <- preds_issue_plot |> 
   filter(outcome == "All 32 provinces") |>
   group_by(issue_area_nice) |> 
@@ -623,22 +609,6 @@ In our second empirical expectation, we posit that since INGOs that seek out loc
 #|   conditional average geographic range for INGOs. Points show posterior 
 #|   median; lines show 80% and 95% credible intervals."
 
-preds_local_plot <- preds_local |> 
-  unnest(preds) |> 
-  mutate(local_connect = factor(local_connect, labels = c("No local connections", "Local connections"))) |> 
-  mutate(outcome = case_when(
-    .prediction == 0 ~ "Only 1 province",
-    .prediction > 0 & .prediction < 1 ~ "Between 1–32 provinces",
-    .prediction == 1 ~ "All 32 provinces",
-    .ptype = factor(
-      levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"), 
-      ordered = TRUE)
-  )) |> 
-  group_by(outcome, local_connect, draw) |> 
-  summarize(count = n()) |> 
-  group_by(local_connect, draw) |> 
-  mutate(prop = count / sum(count))
-
 preds_local_text <- preds_local_plot |> 
   group_by(outcome, local_connect) |> 
   summarize(median_prop = median_qi(prop)) |> 
@@ -733,22 +703,6 @@ The ONGO Law officially came into effect on January 1, 2017, and as seen previou
 #|   nationwide predictions and represents the *overall* conditional average 
 #|   geographic range for INGOs over time. Shaded regions show the 50%, 80%, 
 #|   and 95% credible intervals."
-
-preds_timing_plot <- preds_timing |> 
-  unnest(preds) |> 
-  mutate(outcome = case_when(
-    .prediction == 0 ~ "Only 1 province",
-    .prediction > 0 & .prediction < 1 ~ "Between 1–32 provinces",
-    .prediction == 1 ~ "All 32 provinces",
-    .ptype = factor(
-      levels = c("Only 1 province", "Between 1–32 provinces", "All 32 provinces"), 
-      ordered = TRUE)
-  )) |> 
-  mutate(years_since_law = 2017 + years_since_law) |> 
-  group_by(outcome, years_since_law, draw) |>
-  summarize(count = n()) |> 
-  group_by(years_since_law) |> 
-  mutate(prop = count / sum(count) * 100)
 
 preds_timing_text <- preds_timing_plot |> 
   filter(years_since_law == 2017.2) |> 

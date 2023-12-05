@@ -80,6 +80,10 @@ list(
   tar_target(epreds_timing, f_epreds_timing(m_full_ordbeta)),
   tar_target(epreds_timing_local, f_epreds_timing_local(m_full_ordbeta_interaction)),
   
+  tar_target(preds_issue_plot, build_preds_issue_plot_data(preds_issue, issue_indicator_lookup)),
+  tar_target(preds_local_plot, build_preds_local_plot_data(preds_local)),
+  tar_target(preds_timing_plot, build_preds_timing_plot_data(preds_timing)),
+  
   ## Analysis notebook ----
   tar_quarto(manuscript_nice, path = "manuscript", quiet = FALSE, profile = "nice"),
   tar_quarto(manuscript_manuscripty, path = "manuscript", quiet = FALSE, profile = "ms"),
