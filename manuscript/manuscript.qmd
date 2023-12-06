@@ -274,13 +274,13 @@ We examine these theoretical expectations using a mixed methods approach. First,
 
 ## Data
 
-Our data comes from INGOs' public registration documents disclosed by the Ministry of Public Security's Overseas NGO Office, which maintains a website with complete documentation of all the ROs and temporary activities registered or filled across China. We include all INGO registrations between January 1, 2017, when the law took effect, to December 31, 2021, with information for all `r nrow(ongo)` actively registered organizations. The filing documents for ROs disclose each INGO's name, address, registration date, regulating Public Security Bureau, PSU, issue area and purposes of the RO, and the specific provinces they can work in. We merge this INGO data with translated English organization names data from ChinaFile. Our data and reproducible code is available at `ANONYMIZED_DOI_URL`.
+Our data comes from INGOs' public registration documents disclosed by the Ministry of Public Security's Overseas NGO Office, which maintains a website with complete documentation of all the ROs and temporary activities registered or filled across China. We include all INGO registrations between January 1, 2017, when the law took effect, to December 31, 2021, with information for all `r nrow(ongo)` actively registered organizations. The filing documents for ROs disclose each INGO's name, address, registration date, regulating Public Security Bureau, PSU, issue area and purposes of the RO, and the specific provinces they can work in. We merge this INGO data with translated English organization names from ChinaFile. Our data and reproducible code are available at `ANONYMIZED_DOI_URL`.
 
 ## Measurement
 
 Our dependent variable is the count of provinces that INGOs are authorized to work in. We derive this value from the official registration record, which lists all the provincial regions each INGO RO can conduct activities in. This value ranges from 1–32 (the total number of province-level jurisdictions in mainland China).
 
-Our key independent variables correspond to each of our three theoretical expectations. First we code each INGO's issue area based on its mission statement reported in its registration documentation. Given there is certain level of subjectivity in the coding process, we cross-checked our manual coding of issue areas---Author 1 assigned each organization into one of the issue areas defined in Article 3 of the ONGO Law, and Author 2 cross-checked the coding for ambiguous cases. We include our coding rules for overlapping issue areas in the appendix. We categorize each organization into nine different issue areas (see @tbl-issues).
+Our key independent variables correspond to each of our three theoretical expectations. First, we code each INGO's issue area based on its mission statement reported in its registration documentation. Given the subjectivity in the coding process, we cross-checked our manual coding of issue areas---Author 1 assigned each organization to one of the issue areas defined in Article 3 of the ONGO Law, and Author 2 cross-checked the coding for ambiguous cases. We include our coding rules for overlapping issue areas in the appendix. We categorize each organization into nine different issue areas (see @tbl-issues).
 
 ::: {#tbl-issues}
 
@@ -325,16 +325,20 @@ Possible INGO issue areas and example organizations
 
 Our second independent variable is a dichotomous indicator of whether the INGO explicitly states that it intends to operate locally or sub-provincially. There are cases where the aim of the INGO is attached to a locality, either having a county or city name in their RO name or purposes, or the INGO is actually set up by people in China who registered the RO to communicate between the "hometown" and the INGO set up abroad.
 
-Our final independent variable measures how much time elapsed between January 1, 2017 (when the law took effect) and the organization's official registration date. There is great variance in the timing of registering an RO among INGOs, since there has been a *de facto* grace period for INGOs to seek legal presence after the law took effect [@Shieh:2018]. This is largely because both INGOs and the regulators needed some transitional time to explore the specific application of the law as large ambiguity was left when the law was passed. We use this temporal variable as a proxy for the motivation or eagerness of INGOs to register an RO, for some INGOs are inclined to avoid the cumbersome registration procedures at the early stage if there is no real consequences for continuing operations without registration, while others took the time to talk with multiple potential PSUs to find a more suitable superior or regulatory dynamic [@Jia:2017a].
+Our final independent variable measures how much time elapsed between January 1, 2017 (when the law took effect) and the organization's official registration date. There is great variance in the timing of registering an RO among INGOs, since there was a brief grace period for INGOs to seek legal presence after the law took effect [@Shieh:2018]. This is largely because both INGOs and the regulators needed some transitional time to explore the specific application of the law as large ambiguity was left when the law was passed. We use this temporal variable as a proxy for the motivation or eagerness of INGOs to register an RO, for some INGOs are inclined to avoid the cumbersome registration procedures at the early stage if there are no real consequences for continuing operations without registration, while others took the time to talk with multiple potential PSUs to find a more suitable superior or regulatory dynamic [@Jia:2017a].
 
 ## Modeling approach
 
-In addition to presenting descriptive summary statistics, we use a multilevel Bayesian regression model to examine the complex effects that issue area, local connections, and registration timing have on organizational flexibility. This approach allows us to hold specific variables constant and generate predictions for hypothetical new, not-yet-registered INGOs, providing us with stronger empirical implications. Additionally, Bayesian modeling allows us better model the uncertainty associated with INGO operational space—instead of reporting a single value for the number of provinces INGOs have access to, we can and report posterior credible intervals that represent the probability that the average geographic reach falls within a specific range.
+In addition to presenting descriptive summary statistics, we use a multilevel Bayesian regression model to examine the complex effects that issue area, local connections, and registration timing have on organizational flexibility. This approach allows us to hold specific variables constant and generate predictions for hypothetical new, not-yet-registered INGOs, providing us with stronger empirical implications. Additionally, Bayesian modeling allows us to analyze the uncertainty associated with INGO operational space—instead of reporting a single value for the number of provinces INGOs have access to, we report posterior credible intervals that represent the probability that the average geographic reach falls within a specific range.
 
 ```{r fig-province-count-collapsed, fig.width=6, fig.height=3}
 #| include: true
 #| echo: false
-#| fig-cap: "Count of the number of provinces each INGO is authorized to operate in. The left panel shows the full distribution of INGOs registered in 2–31 provinces; the right panel collapses these in-between counts to a single category."
+#| fig-cap: "Count of the number of provinces each INGO is authorized to operate 
+#|   in. The left panel shows the full distribution of INGOs registered in 2–31 
+#|   provinces; the right panel collapses these in-between counts into to a 
+#|   single category."
+
 provinces_collapsed <- ongo |> 
   drop_na(province_count) |> 
   mutate(province_count = case_when(
@@ -363,7 +367,7 @@ p2 <- ggplot(provinces_collapsed, aes(x = province_count)) +
   plot_layout(nrow = 1, widths = c(0.7, 0.3))
 ```
 
-Modeling the count of provinces each INGO is authorized to operate in presents a unique statistical challenge. As seen in @fig-province-count-collapsed, roughly 30% of INGOs are registered in only one province, 40% are registered nationwide, while the remaining 30% are registered in 2--31 provinces. Our main variable of interest is thus a mix of continuous outcomes (i.e. a range of provinces) bounded between two discrete outcomes (i.e. one province and all provinces). Standard modeling approaches like ordinary least squares regression (OLS) cannot accurately capture the unique features of the data and will generate predictions that fall outside allowable bounds (i.e. negative counts of provinces or more than 32 provinces). To account for values at the bounds, we rely on ordered Beta regression [@Kubinec:2022], an extension of zero-and-one-inflated Beta regression that allows us to simultaneously model the continuous range of provinces (2--31) and the discrete outcomes (1 province and 32 provinces). We can thus explore the dynamics of each of our independent variables of interest in multiple ways---we can see (1) how each variable predicts that an organizations works in one province, nationwide, or somewhere in between, and (2) how each variable predicts the overall expected count of provinces. 
+Modeling the count of provinces each INGO is authorized to operate in presents a unique statistical challenge. As seen in @fig-province-count-collapsed, roughly 30% of INGOs are registered in only one province, 40% are registered nationwide, while the remaining 30% are registered in 2--31 provinces. Our main variable of interest is thus a mix of continuous outcomes (i.e. a range of provinces) bounded between two discrete outcomes (i.e. one province and all provinces). Standard modeling approaches like ordinary least squares regression (OLS) cannot accurately capture the unique features of the data and will generate predictions that fall outside allowable bounds (i.e. negative counts of provinces or more than 32 provinces). To account for values at the bounds, we rely on ordered Beta regression [@Kubinec:2022], an extension of zero-and-one-inflated Beta regression that allows us to simultaneously model the continuous range of provinces (2--31) and the discrete outcomes (1 province and 32 provinces). We can thus explore the dynamics of each of our independent variables of interest in multiple ways---we can see how each variable (1) predicts that an organization works in one province, nationwide, or somewhere in between, and (2) predicts the overall expected count of provinces. 
 
 Since we are primarily interested in how an INGO's issue area, its local connections, and the timing of its registration after January 2017, we include these as explanatory variables. We also include random province intercepts to account for between-region differences in how INGOs are regulated, since every RO is overseen by provincial-level Public Security Bureaus. We use the following model and priors; additional model details and results are available in the appendix and in TABLE TODO:
 
@@ -395,7 +399,7 @@ $$
 
 ## Descriptive overview
 
-W first describe some of the general patterns related to INGO operational space during the first 5 years of the ONGO law. First, @fig-registration-timeline shows the distribution of the count of new INGO registrations since January 1, 2017. A couple dozen organizations were able to become ROs immediately after the law took effect during the first quarter of 2017, while hundreds more registered during the rest of that year. Nearly half of all currently-registered INGOs in China---48%---registered in 2017. After the initial first-year wave, the count of new registrations has declined slowly since 2018.
+We first describe some of the general patterns related to INGO operational space during the first 5 years of the ONGO law. First, @fig-registration-timeline shows the distribution of the count of new INGO registrations since January 1, 2017. A couple dozen organizations were able to become ROs immediately after the law took effect during the first quarter of 2017, while hundreds more registered during the rest of that year. Nearly half of all currently registered INGOs in China---48%---registered in 2017. After the initial first-year wave, the count of new registrations has declined slowly since 2018.
 
 ```{r fig-registration-timeline, fig.width=6, fig.height=3}
 #| include: true
@@ -465,7 +469,7 @@ ggplot() +
 
 ## Posterior predictions
 
-Next we explore our data in more depth by generating and analyzing posterior predictions from our ordered Beta regression model, varying specific variables of interest while holding all others constant.
+Next, we explore our data in more depth by generating and analyzing posterior predictions from our ordered Beta regression model, varying specific variables of interest while holding all others constant.
 
 ### Issue area
 
