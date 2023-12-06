@@ -157,10 +157,8 @@ preds_issue_text <- preds_issue_plot |>
   ))
 
 p_issue <- preds_issue_text |> 
-  group_by(outcome) |> 
-  mutate(issue_area_nice = make_clean_names(issue_area_nice)) |> 
-  group_by(issue_area_nice) |> 
-  mutate(outcome = make_clean_names(outcome)) |> 
+  mutate(issue_area_nice = make_clean_names(issue_area_nice, allow_dupes = TRUE)) |> 
+  mutate(outcome = make_clean_names(outcome, allow_dupes = TRUE)) |> 
   ungroup() |> 
   split(~ issue_area_nice + outcome)
 
@@ -199,10 +197,8 @@ preds_local_text <- preds_local_plot |>
   ))
 
 p_loc <- preds_local_text |> 
-  group_by(outcome) |> 
-  mutate(local_connect = make_clean_names(local_connect)) |> 
-  group_by(local_connect) |> 
-  mutate(outcome = make_clean_names(outcome)) |> 
+  mutate(local_connect = make_clean_names(local_connect, allow_dupes = TRUE)) |> 
+  mutate(outcome = make_clean_names(outcome, allow_dupes = TRUE)) |> 
   ungroup() |> 
   split(~ local_connect + outcome)
 
@@ -226,6 +222,47 @@ ros_2017 <- ongo |>
   ) |> 
   filter(pre_2018 == TRUE) |> 
   as.list()
+
+p_timing <- preds_timing_plot |> 
+  filter(years_since_law %in% c(2017, 2022)) |> 
+  group_by(years_since_law, outcome) |> 
+  summarize(median_prop = median_qi(prop)) |> 
+  unnest(median_prop) |> 
+  mutate(prop_nice = label_percent(accuracy = 1)(y)) |>
+  mutate(prop_ci_nice = glue::glue(
+    "{ymin}–{ymax}",
+    ymin = label_number(accuracy = 1, scale = 100)(ymin),
+    ymax = label_percent(accuracy = 1)(ymax)
+  )) |> 
+  group_by(outcome) |> 
+  mutate(years_since_law = make_clean_names(years_since_law)) |> 
+  group_by(years_since_law) |> 
+  mutate(outcome = make_clean_names(outcome)) |> 
+  ungroup() |> 
+  split(~ years_since_law + outcome)
+
+c_timing <- epreds_timing |> 
+  filter(years_since_law %in% c(2017, 2022)) |> 
+  group_by(years_since_law) |> 
+  mutate(count = prop_to_provinces(.epred)) |> 
+  median_qi(count) |> 
+  mutate(across(c(.lower, .upper), list(whole = ~round(., 0)))) |> 
+  mutate(count_median = round(count, 0)) |> 
+  mutate(range = glue("{.lower_whole}–{.upper_whole}")) |> 
+  mutate(years_since_law = make_clean_names(years_since_law)) |> 
+  split(~ years_since_law)
+
+c_timing_local <- epreds_timing_local |> 
+  filter(years_since_law %in% c(2017, 2022)) |> 
+  mutate(local_connect = case_match(local_connect, TRUE ~ "true", FALSE ~ "false")) |> 
+  group_by(local_connect, years_since_law) |> 
+  mutate(count = prop_to_provinces(.epred)) |> 
+  median_qi(count) |> 
+  mutate(across(c(.lower, .upper), list(whole = ~round(., 0)))) |> 
+  mutate(count_median = round(count, 0)) |> 
+  mutate(range = glue("{.lower_whole}–{.upper_whole}")) |> 
+  mutate(years_since_law = make_clean_names(years_since_law, allow_dupes = TRUE)) |> 
+  split(~ years_since_law + local_connect)
 ```
 
 ::: {.content-visible when-format="html"}
@@ -413,7 +450,7 @@ Our dependent variable is the count of provinces that INGOs are authorized to wo
 # Extract the intersections of provinces so that we don't plot the outside
 # borders and distort the coastlines. See https://stackoverflow.com/a/57138069 
 # and https://ikashnitsky.phd/2023/map-borders/
-interior_borders <- st_intersection(ongo_mapdata) %>% 
+interior_borders <- st_intersection(ongo_mapdata) |>
   filter(n.overlaps > 1) |> 
   # Remove weird points that st_intersection() adds
   filter(!(st_geometry_type(geometry) %in% c("POINT", "MULTIPOINT")))
@@ -787,11 +824,11 @@ p2 <- epreds_local |>
   plot_layout(widths = c(0.63, 0.37), guides = "collect")
 ```
 
-International NGOs with locally focused missions and connections with provincial officials are thus far more likely to purposely limit their activities to specific provinces, while organizations with broader missions have a larger geographic reach. While we cannot precisely tell which direction the causal story works with this phenomenon, we can make some reasonable speculations. It is likely that locally-oriented INGOs purposely network and seek out connections with local PSUs before formally registering, thus fostering better relationships with government officials and furthering the organization's mission within its limited provinces. It is also likely, given the high probability of national reach, that organizations without local connections purposely do not spend the time and effort to cultivate those relationships, as it is not necessary to operate across many provinces. A rival explanation that having local connections reduces an organization's operational space does not seem warranted—although INGOs with local connections do have a more limited geographic scope, organizations appear to purposely limit the number of provinces they work in in order to focus more on their local work.
+INGOs with locally focused missions and connections with provincial officials are thus far more likely to purposely limit their activities to specific provinces, while organizations with broader missions have a larger geographic reach. While we cannot precisely tell which direction the causal story works with this phenomenon, we can make some reasonable speculations. It is likely that locally-oriented INGOs purposely network and seek out connections with local PSUs before formally registering, thus fostering better relationships with government officials and furthering the organization's mission within its limited provinces. It is also likely, given the high probability of national reach, that organizations without local connections purposely do not spend the time and effort to cultivate those relationships, as it is not necessary to operate across many provinces. A rival explanation that having local connections reduces an organization's operational space does not seem warranted—although INGOs with local connections do have a more limited geographic scope, organizations appear to purposely limit the number of provinces they work in in order to focus more on their local work.
 
 ### Registration timing
 
-In our third theoretical expectation, we propose that these early registrants were both less of a threat to regime stability and a higher priority for bureaucratic processing and thus should be registered in more provinces. However, the results of our model support the opposite of this expectation. @fig-timing-preds(a) presents the predicted posterior outcomes for 1,000 simulated INGOs over time. Organizations that registered in the first year have a 41--46% probability of working in all provinces and are predicted to work in two or more provinces 34--39% of the time. These early INGOs are the most likely to be registered in only one province and are predicted to do so 17--23% of the time. After 2017, the likelihood of nationwide reach steadily increases and replaces both the probability of a single province or a partial range of provinces. By the end of 2021 the probability of national-level registration increases to 55--61% while the probability of working in a range of provinces increases to predicted to work in two or more provinces increase to 27--32%. These later INGOs are the least likely to be registered in only one province. @fig-timing-preds(b) demonstrates the expected count of provinces over five years since 2017. INGOs that register early are predicted to work in 17--22 provinces, while those that wait until 2021 are predicted to work in 21--28.
+In our third theoretical expectation, we propose that early registrants were both less of a threat to regime stability and a higher priority for bureaucratic processing and thus should be registered in more provinces. However, the results of our model support the opposite of this expectation. In @fig-timing-preds(a) organizations that registered in the first year have a `r p_timing$x2017.all_32_provinces$prop_ci_nice` probability of working in all provinces and are predicted to work in two or more provinces `r p_timing$x2017.between_1_32_provinces$prop_ci_nice` of the time. These early INGOs are the most likely to be registered in only one province and are predicted to do so `r p_timing$x2017.only_1_province$prop_ci_nice` of the time. After 2017, the likelihood of nationwide reach steadily increases and replaces both the probability of a single province or a partial range of provinces. By the end of 2021 the probability of national-level registration increases to `r p_timing$x2022.all_32_provinces$prop_ci_nice` while the probability of working in a range of provinces increases to predicted to work in two or more provinces remains around `r p_timing$x2022.between_1_32_provinces$prop_ci_nice`. These later INGOs are the least likely to be registered in only one province, with a probability of `r p_timing$x2022.only_1_province$prop_ci_nice`. @fig-timing-preds(b) demonstrates the expected count of provinces over five years since 2017. INGOs that register early are predicted to work in `r c_timing$x2017$range` provinces on average, while those that wait until 2021 are predicted to work in a far more uncertain `r c_timing$x2022$range`.
 
 ```{r fig-timing-preds, fig.width=8, fig.height=4.5}
 #| include: true
@@ -890,7 +927,7 @@ p2 <- epreds_timing |>
 p1 | p2
 ```
 
-We lack sufficient theory or data to explain why this trend goes against our expectations, but we can again make reasonable speculations. As we saw previously with INGOs and local connections, organizations appear to strategically seek out the best avenues and methods for registering [@Jia:2017a]. Organizations that participated in the initial wave of registrations in 2017 likely had closer connections with local officials and were able to speed through the bureaucratic process registration more easily. As a preliminary test of this speculation, we rerun our main model with an interaction between years since registration and local connections to see how the effect of local connections changes over time. As seen in @fig-timing-local, early registrants in 2017 without local connections are more likely to have a larger geographic reach, registering in an average of 19--23 provinces, while their locally-focused counterparts are only expected to register in an average of 7--16 provinces. Accordingly, it may be that organizations with local connections are more likely to register early because of their pre-existing bureaucratic relationships, while organizations with a larger national reach take longer to undertake the registration process and thus register later. Another possible explanation is interpreting earlier timing in registration as more eager to register as discussed in the measurement section. INGOs that self-perceive as more contentious would be more nervous about the legal consequences of not being able to register and thus be more eager to seek registration earlier [@ChinaPhilanthropyReserchInstitute:2018]. Compared with their more "rest-assured" peers, INGOs seeking to register earlier are more likely to have reduced operational space. To understand the underlying mechanism with registration timing, further research is warranted.
+We lack sufficient theory to explain why this trend goes against our expectations, but we can again make reasonable speculations. As we saw previously with INGOs and local connections, organizations appear to strategically seek out the best avenues for registering [@Jia:2017a]. Organizations that participated in the initial wave of registrations in 2017 likely had closer connections with local officials and were able to speed through the bureaucratic process registration more easily. As a preliminary test of this speculation, we rerun our main model with an interaction between years since registration and local connections to see how the effect of local connections changes over time. As seen in @fig-timing-local, early registrants in 2017 without local connections are more likely to have a larger geographic reach, registering in an average of `r c_timing_local$x2017.false$range` provinces, while their locally-focused counterparts are only expected to register in an average of `r c_timing_local$x2017.true$range` provinces. Accordingly, it may be that INGOs with local connections are more likely to register early because of their pre-existing bureaucratic relationships, while organizations with a larger national reach take longer to undertake the registration process and thus register later. Another possible explanation could be that earlier registration signals greater eagerness to reduce the uncertainty surrounding organizational legal status. INGOs that perceive themselves as more contentious may be more nervous about the legal consequences of not being able to register and thus be more willing to seek registration earlier [@ChinaPhilanthropyReserchInstitute:2018]. Compared with their safer, less contentious peers, INGOs seeking to register earlier are more likely to have reduced operational space. To understand the underlying mechanism with registration timing, further research is warranted.
 
 ```{r fig-timing-local, fig.width=6, fig.height=3.4, out.width="80%"}
 #| include: true
