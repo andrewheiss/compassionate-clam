@@ -62,7 +62,7 @@ list(
     clean_ongo_data(ongo_manual_file, chinafile_clean, province_name)
   ),
   tar_target(ongo_wide, widen_data(ongo)),
-  tar_target(ongo_mapdata, clean_map_data(ongo)),
+  tar_target(ongo_mapdata, clean_map_data(ongo, province_name)),
   tar_target(issue_indicator_lookup, make_issue_indicator_lookup(ongo)),
   
   ## Models ----

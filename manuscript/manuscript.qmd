@@ -102,9 +102,10 @@ civicus_prop <- civicus_clean |>
 
 ```{r calc-summaries}
 provinces <- ongo_mapdata |> 
+  drop_na(province_code) |> 
   st_drop_geometry() |> 
   mutate(rank = dense_rank(-ro_count)) |> 
-  mutate(list_name = janitor::make_clean_names(province_en_short)) |> 
+  mutate(list_name = janitor::make_clean_names(province_en)) |> 
   split(~ list_name)
 
 # Get the RO count for the 4th-ranked province

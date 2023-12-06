@@ -65,7 +65,7 @@ province_cn_to_en <- function() {
     "天津",      "Tianjin",        "TJ",
     "重庆",      "Chongqing",      "CQ",
     "河北",      "Hebei",          "HE",
-    "山西",      "Beijing",        "SX",
+    "山西",      "Shanxi",         "SX",
     "内蒙",      "Inner Mongolia", "NM",
     "辽宁",      "Liaoning",       "LN",
     "吉林",      "Jilin",          "JL",
@@ -98,51 +98,9 @@ province_cn_to_en <- function() {
 }
 
 
-clean_map_data <- function(ongo) {
+clean_map_data <- function(ongo, province_name) {
   suppressPackageStartupMessages(library(sf))
   suppressPackageStartupMessages(library(mapchina))
-  
-  # Manual lookup table for Andrew :)
-  provinces_zh2en <- tribble(
-    ~Name_Province, ~province_en,
-    "上海市", "Shanghai",
-    "云南省", "Yunnan Province",
-    "内蒙古自治区", "Inner Mongolia Autonomous Region",
-    "北京市", "Beijing",
-    "台湾省", "Taiwan Province",
-    "吉林省", "Jilin Province",
-    "四川省", "Sichuan Province",
-    "天津市", "Tianjin City",
-    "宁夏回族自治区", "Ningxia Hui Autonomous Region",
-    "安徽省", "Anhui Province",
-    "山东省", "Shandong Province",
-    "山西省", "Shanxi Province",
-    "广东省", "Guangdong Province",
-    "广西壮族自治区", "Guangxi Zhuang Autonomous Region",
-    "新疆维吾尔自治区", "Xinjiang Uygur Autonomous Region",
-    "江苏省", "Jiangsu Province",
-    "江西省", "Jiangxi Province",
-    "河北省", "Hebei Province",
-    "河南省", "Henan Province",
-    "浙江省", "Zhejiang Province",
-    "海南省", "Hainan",
-    "湖北省", "Hubei Province",
-    "湖南省", "Hunan Province",
-    "澳门特别行政区", "Macao Special Administrative Region",
-    "甘肃省", "Gansu Province",
-    "福建省", "Fujian Province",
-    "西藏自治区", "Tibet Autonomous Region",
-    "贵州省", "Guizhou Province",
-    "辽宁省", "Liaoning Province",
-    "重庆市", "Chongqing",
-    "陕西省", "Shaanxi Province",
-    "青海省", "Qinghai Province",
-    "香港特别行政区", "Hong Kong Special Administrative Region",
-    "黑龙江省", "Heilongjiang Province"
-  ) |>
-    mutate(province_en_short = str_remove_all(
-      province_en, " Province| Autonomous Region| Special Administrative Region"
-    ))
   
   # Clean up the geographic data
   suppressMessages({
@@ -162,10 +120,10 @@ clean_map_data <- function(ongo) {
   # Join ONGO count to map
   mapdata <- sf_china |>
     left_join(province_count, by = "province_cn") |> 
-    left_join(provinces_zh2en, by = "Name_Province") |> 
+    left_join(province_name, by = "province_cn") |> 
     mutate(ro_count = ifelse(is.na(ro_count), 0, ro_count)) |> 
     mutate(
-      is_taiwan = province_en_short == "Taiwan",
+      is_taiwan = province_cn == "台湾",
       ro_count = ifelse(is_taiwan, NA, ro_count)
     )
   
