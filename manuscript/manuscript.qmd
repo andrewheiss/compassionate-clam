@@ -115,8 +115,10 @@ province4th <- provinces |>
 
 loc <- ongo |> 
   count(local_connect) |> 
-  mutate(prop = n / sum(n)) |> 
-  mutate(prop_nice = label_percent(accuracy = 1)(prop)) |> 
+  mutate(
+    prop = n / sum(n),
+    prop_nice = label_percent(accuracy = 1)(prop)
+  ) |> 
   mutate(local_connect = janitor::make_clean_names(local_connect)) |> 
   split(~ local_connect)
 
@@ -132,6 +134,24 @@ issues <- issue_count |>
   mutate(prop_nice = label_percent(accuracy = 1)(prop)) |> 
   mutate(work_field_code1 = janitor::make_clean_names(work_field_code1)) |> 
   split(~ work_field_code1)
+
+isssue_province_counts <- epreds_issue |> 
+  group_by(issue_area) |> 
+  mutate(count = prop_to_provinces(.epred)) |> 
+  median_qi(count) |> 
+  mutate(across(c(.lower, .upper), list(whole = ~round(., 0)))) |> 
+  mutate(count_median = round(count, 0)) |> 
+  mutate(range = glue("{.lower_whole}–{.upper_whole}")) |> 
+  split(~ issue_area)
+
+ros_2017 <- ongo |> 
+  count(pre_2018 = registration_date < ymd("2018-01-01")) |> 
+  mutate(
+    prop = n / sum(n),
+    prop_nice = label_percent(accuracy = 1)(prop)
+  ) |> 
+  filter(pre_2018 == TRUE) |> 
+  as.list()
 ```
 
 ```{r calc-preds}
@@ -455,7 +475,7 @@ ggplot(issue_count, aes(y = work_field_code1, x = n)) +
 
 Our second independent variable is a dichotomous indicator of whether the INGO explicitly states that it intends to operate locally or sub-provincially. There are cases where the aim of the INGO is attached to a locality, either having a county or city name in their RO name or purposes, or the INGO is actually set up by people in China who registered the RO to communicate between the "hometown" and the INGO set up abroad. Of the `r nrow(ongo)` ROs, `r loc$true$n` (`r loc$true$prop_nice`) have a narrow local focus.
 
-Our final independent variable measures how much time elapsed between January 1, 2017 and the organization's official registration date. There is great variance in registration timing, since there was a brief grace period for INGOs to seek legal presence after the law took effect [@Shieh:2018]. Nearly half of all ROs---48%---registered in 2017, and the count of new registrations gradually declined after the initial first-year wave (see @fig-registration-timeline). This is largely because both INGOs and the regulators needed some transitional time to explore the specific application of the law as large ambiguity was left when the law was passed. We use this temporal variable as a proxy for the motivation or eagerness of INGOs to register as an RO, since INGOs may have been inclined to avoid the cumbersome registration procedures at the early stage if there were no real consequences for delaying, while others took the time to talk with multiple potential PSUs to find a more suitable superior or regulatory dynamic [@Jia:2017a].
+Our final independent variable measures how much time elapsed between January 1, 2017 and the organization's official registration date. There is great variance in registration timing, since there was a brief grace period for INGOs to seek legal presence after the law took effect [@Shieh:2018]. Nearly half of all ROs---`r ros_2017$prop_nice`---registered in 2017, and the count of new registrations gradually declined after the initial first-year wave (see @fig-registration-timeline). This is largely because both INGOs and the regulators needed some transitional time to explore the specific application of the law as large ambiguity was left when the law was passed. We use this temporal variable as a proxy for the motivation or eagerness of INGOs to register as an RO, since INGOs may have been inclined to avoid the cumbersome registration procedures at the early stage if there were no real consequences for delaying, while others took the time to talk with multiple potential PSUs to find a more suitable superior or regulatory dynamic [@Jia:2017a].
 
 ```{r fig-registration-timeline, fig.width=6, fig.height=3}
 #| include: true
@@ -545,7 +565,9 @@ $$
 
 ### Issue area
 
-Next, we explore the data in more depth by generating and analyzing posterior predictions from our model. Following our first empirical expectation, we predict that INGOs working on less contentious issues should be registered in more provinces and thus have more geographic flexibility. We take advantage of the simultaneous continuous and discrete features of ordered Beta regression and see how often an INGO in each issue area is predicted to work in a single province, across all provinces, or some number in between. @fig-issue-preds(a) presents a summary of predicted posterior outcomes for 1,000 hypothetical INGOs, varying each issue area and holding all other variables at their mean or modal values. Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelming the most likely kind of organization to work nationally---arts and culture organizations are predicted to work in all 32 provinces `r p_issue$arts_and_culture.all_32_provinces$prop_ci_nice` of the time and are only predicted to work in a single province a rare `r p_issue$arts_and_culture.only_1_province$prop_ci_nice` of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only `r p_issue$education.all_32_provinces$prop_ci_nice` of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing `r p_issue$education.only_1_province$prop_ci_nice` of the time---15--20 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly similar patterns in predictions: the most common outcome is for organizations to work nationally (≈45--60% of the time), followed by working in at least 2 provinces (≈25--35% of the time), followed by working in a single province (≈15--30% of the time). @fig-issue-preds(b) shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend---arts and culture INGOs are predicted to work in 28--30 provinces on average, while education INGOs are only predicted to work in 12--20. All other issues range between 20--28 provinces.
+Next, we explore the data in more depth by generating and analyzing posterior predictions from our model. Following our first empirical expectation, we predict that INGOs working on less contentious issues should be registered in more provinces and thus have more geographic flexibility. We take advantage of the simultaneous continuous and discrete features of ordered Beta regression and see how often an INGO in each issue area is predicted to work in a single province, across all provinces, or some number in between. @fig-issue-preds(a) presents a summary of predicted posterior outcomes for 1,000 hypothetical INGOs, varying each issue area and holding all other variables at their mean or modal values. 
+
+Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelming the most likely kind of organization to work nationally---arts and culture organizations are predicted to work in all 32 provinces `r p_issue$arts_and_culture.all_32_provinces$prop_ci_nice` of the time and are only predicted to work in a single province a rare `r p_issue$arts_and_culture.only_1_province$prop_ci_nice` of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only `r p_issue$education.all_32_provinces$prop_ci_nice` of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing `r p_issue$education.only_1_province$prop_ci_nice` of the time---15--20 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly similar patterns in predictions: the most common outcome is for organizations to work nationally (≈45--60% of the time), followed by working in at least 2 provinces (≈25--35% of the time), followed by working in a single province (≈15--30% of the time). @fig-issue-preds(b) shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend---arts and culture INGOs are predicted to work in `r isssue_province_counts$arts_and_culture$range` provinces on average, while education INGOs are only predicted to work in `r isssue_province_counts$education$range`. All other issues range between 15--25 provinces.
 
 ```{r fig-issue-preds, fig.width=8, fig.height=6.5}
 #| include: true
