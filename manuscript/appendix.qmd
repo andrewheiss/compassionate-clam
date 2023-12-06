@@ -48,6 +48,8 @@ options(
 
 ## Coding rules for issue ares
 
+Author 1 assigned each organization to one of the issue areas defined in Article 3 of the ONGO Law, and Author 2 cross-checked the coding for ambiguous cases
+
 1. Education vs. Charity
 If charitable activities are all education related, e.g. building schools, donating education facilities and books, coded as education
 If the aids provided include other community support, e.g. building bridges, roads, medical facilities, coded as charity

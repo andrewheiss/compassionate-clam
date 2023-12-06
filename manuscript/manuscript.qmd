@@ -21,6 +21,7 @@ keywords:
 code-repo: "Access the code, data, and analysis at <https://github.com/andrewheiss/compassionate-clam>"
 bibliography: references.bib
 link-citations: true
+toc-depth: 4
 ---
 
 ```{r setup, include=FALSE}
@@ -98,6 +99,93 @@ civicus_prop <- civicus_clean |>
   mutate(open = janitor::make_clean_names(open)) |> 
   split(~open)
 ```
+
+```{r calc-summaries}
+provinces <- ongo_mapdata |> 
+  st_drop_geometry() |> 
+  mutate(rank = dense_rank(-ro_count)) |> 
+  mutate(list_name = janitor::make_clean_names(province_en_short)) |> 
+  split(~ list_name)
+
+# Get the RO count for the 4th-ranked province
+province4th <- provinces |> 
+  map(~filter(.x, rank == 4)) |> 
+  keep(~nrow(.x) > 0)
+
+loc <- ongo |> 
+  count(local_connect) |> 
+  mutate(prop = n / sum(n)) |> 
+  mutate(prop_nice = label_percent(accuracy = 1)(prop)) |> 
+  mutate(local_connect = janitor::make_clean_names(local_connect)) |> 
+  split(~ local_connect)
+
+# MAYBE: Use issue_area instead of work_field_code
+issue_count <- ongo |> 
+  drop_na(work_field_code1) |> 
+  group_by(work_field_code1) |>
+  summarize(n = n()) |> 
+  mutate(work_field_code1 = fct_reorder(work_field_code1, n))
+
+issues <- issue_count |> 
+  mutate(prop = n / sum(n)) |> 
+  mutate(prop_nice = label_percent(accuracy = 1)(prop)) |> 
+  mutate(work_field_code1 = janitor::make_clean_names(work_field_code1)) |> 
+  split(~ work_field_code1)
+```
+
+```{r calc-preds}
+# Issue area
+preds_issue_plot_order <- preds_issue_plot |> 
+  filter(outcome == "All 32 provinces") |>
+  group_by(issue_area_nice) |> 
+  summarize(median_prop = median(prop)) |> 
+  arrange(median_prop) |> 
+  mutate(issue_area_nice_labels = str_wrap(issue_area_nice, 15)) |> 
+  mutate(issue_area_nice = fct_inorder(issue_area_nice))
+
+preds_issue_text <- preds_issue_plot |> 
+  group_by(outcome, issue_area_nice) |> 
+  summarize(median_prop = median_qi(prop)) |> 
+  unnest(median_prop) |> 
+  group_by(issue_area_nice) |> 
+  mutate(y_plot = (y / 2) + lag(cumsum(y), default = 0)) |> 
+  mutate(y_plot = 1 - y_plot) |> 
+  mutate(prop_nice = label_percent(accuracy = 1)(y)) |>
+  mutate(prop_ci_nice = glue::glue(
+    "{ymin}–{ymax}",
+    ymin = label_number(accuracy = 1, scale = 100)(ymin),
+    ymax = label_percent(accuracy = 1)(ymax)
+  )) |> 
+  mutate(issue_area_nice = factor(
+    issue_area_nice, 
+    levels = preds_issue_plot_order$issue_area_nice,
+    labels = preds_issue_plot_order$issue_area_nice_labels
+  ))
+
+p_issue <- preds_issue_text |> 
+  group_by(outcome) |> 
+  mutate(issue_area_nice = janitor::make_clean_names(issue_area_nice)) |> 
+  group_by(issue_area_nice) |> 
+  mutate(outcome = janitor::make_clean_names(outcome)) |> 
+  ungroup() |> 
+  split(~ issue_area_nice + outcome)
+
+# Local connections
+preds_local_text <- preds_local_plot |> 
+  group_by(outcome, local_connect) |> 
+  summarize(median_prop = median_qi(prop)) |> 
+  unnest(median_prop) |> 
+  group_by(local_connect) |> 
+  mutate(y_plot = (y / 2) + lag(cumsum(y), default = 0)) |> 
+  mutate(y_plot = 1 - y_plot) |> 
+  mutate(prop_nice = label_percent(accuracy = 1)(y)) |>
+  mutate(prop_ci_nice = glue::glue(
+    "{ymin}–{ymax}",
+    ymin = label_number(accuracy = 1, scale = 100)(ymin),
+    ymax = label_percent(accuracy = 1)(ymax)
+  ))
+```
+
 
 
 ::: {.content-visible when-format="html"}
@@ -190,7 +278,7 @@ Registering as an RO under the ONGO Law is a complex process that requires the c
 
 The 2016 ONGO Law's provision of two legal pathways for registration---each with different degrees of freedom---is an example of the broader phenomenon of closing civic space. In the past two decades, authoritarian states have used administrative and legal measures to curtail the influence of global civil society. A rich literature in comparative politics explores how authoritarian regimes counterintuitively use democratic institutions for their own benefit and survival [@Kendall-TaylorFrantz:2014a; @GandhiPrzeworski:2007]. Authoritarian states hold elections, allow opposition parties in the legislature, and set executive term limits [@LevitskyWay:2010; @Meng:2020], but use these democratic-appearing institutions to hedge against possible threats to regime stability. Quasi-democratic institutions are allowed, but only in ways that bolster the government's stability, and these institutions are kept weak and "dependent on the regime to ensure that they do not develop any real power or autonomy" [@FrantzEzrow:2011, 7].
 
-Civil society is a democratic political institution that autocrats balance as part of their stability-seeking calculus. Despite the fact that NGOs can act as "agents of democratization" [@ToeplerZimmerFrohlich:2020], thus posing a threat to non-democratic rule, most authoritarian states permit the growth of domestic and international civil society [@DeMattee:2019; @Heiss:2019; @Heiss:2019a]. INGOs provide needed resources and expertise in humanitarian relief, education, and development, and autocrats can rely on these services to consolidate power by providing improved public goods. At the same time, INGOs can pose a threat to stability by exposing human rights abuses, encouraging unwanted political reform, and engaging in political advocacy [@Heiss:2019; @ToeplerZimmerFrohlich:2020]. To capture the benefits and reduce the risk of working with INGOs, most authoritarian states rely on "administrative crackdown" [@Chaudhry:2022], or laws that create barriers to NGO advocacy, entry, and funding [@ChristensenWeinstein:2013; @ChaudhryHeiss:2022; @CarothersBrechenmacher:2014]. These laws, however, are a blunt tool and target civil society as a whole---states do not create one set of formal laws that applies only to regime-friendly INGOs and another set that applies to more risky INGOs. Instead, there is a divergence between the formal *de jure* laws and the *de facto* implementation of their accompanying regulations. In practice, NGO laws tend to not be applied universally, and formal laws often serve as a "weapon hanging on the wall that never fires" [@Kozenko:2015], acting as a warning to potentially uncooperative NGOs. 
+Civil society is a democratic political institution that autocrats balance as part of their stability-seeking calculus. Despite the fact that NGOs can act as "agents of democratization" [@ToeplerZimmerFrohlich:2020], thus posing a threat to non-democratic rule, most authoritarian states permit the growth of domestic and international civil society [@DeMattee:2019; @Heiss:2019; @Heiss:2019a]. INGOs provide needed resources and expertise in humanitarian relief, education, and development, and autocrats can rely on these services to consolidate power by providing improved public goods. At the same time, INGOs can pose a threat to stability by exposing human rights abuses, encouraging unwanted political reform, and engaging in political advocacy [@Heiss:2019; @ToeplerZimmerFrohlich:2020]. To capture the benefits and reduce the risk of working with INGOs, most authoritarian states rely on "administrative crackdown" [@Chaudhry:2022], or laws that create barriers to NGO advocacy, entry, and funding [@ChristensenWeinstein:2013; @ChaudhryHeiss:2022; @CarothersBrechenmacher:2014]. These laws, however, are a blunt tool and target civil society as a whole---states do not create one set of formal laws that applies only to regime-friendly INGOs and another set that applies to riskier INGOs. Instead, there is a divergence between the formal *de jure* laws and the *de facto* implementation of their accompanying regulations. In practice, NGO laws tend to not be applied universally, and formal laws often serve as a "weapon hanging on the wall that never fires" [@Kozenko:2015], acting as a warning to potentially uncooperative NGOs. 
 
 The authoritarian benefits of civil society regulations go beyond simply allowing or disallowing specific INGOs. Autocrats engage with INGOs in opposing ways, providing financial support and opportunities for collaboration with those that align with government policy preferences, and using legal mechanisms to restrict or expel those that do not [@ToeplerZimmerFrohlich:2020; @Plantan:2022; @LiFarid:2023]. The flexible *de facto* implementation of formal civil society laws allows authoritarians to "use nonprofit regulation as a tool of political control to shore up their continued rule" [@Spires:2020, 573], providing them with an additional policy tool for their stability-seeking calculus. These laws allow governments to capture and reshape INGO programming in their favor. Globally, increased civil society restrictions have counterintuitively led to an increase in cooperative, regime-friendly INGO programming, with INGOs praising government policies, engaging in joint programming with the government, and changing longstanding programs to align with government desires [@LianMurdie:2023].
 
@@ -270,17 +358,44 @@ Finally, we also expect that the operational space for INGOs is negatively assoc
 
 # Data and methods
 
-We examine these theoretical expectations using a mixed methods approach. First, we explore a rich dataset of all ROs registered in China between 2017–2021 using a combination of descriptive statistics and Bayesian models to understand how the international civil society in China has been reshaped since the implementation of the ONGO law. We then complement this statistical analysis with a comparative case study of two INGOs---The Nature Conservancy and Greenpeace ---to explore in detail how the ONGO has specifically influenced organizational operational space.
+We examine these theoretical expectations using a mixed methods approach. First, we explore a rich dataset of all ROs registered in China between 2017–2021 using Bayesian regression models to understand how the international civil society in China has been reshaped since the implementation of the ONGO law. We then complement this statistical analysis with a comparative case study of two INGOs---The Nature Conservancy and Greenpeace---to explore in detail how the ONGO has specifically influenced organizational operational space.
 
 ## Data
 
 Our data comes from INGOs' public registration documents disclosed by the Ministry of Public Security's Overseas NGO Office, which maintains a website with complete documentation of all the ROs and temporary activities registered or filled across China. We include all INGO registrations between January 1, 2017, when the law took effect, to December 31, 2021, with information for all `r nrow(ongo)` actively registered organizations. The filing documents for ROs disclose each INGO's name, address, registration date, regulating Public Security Bureau, PSU, issue area and purposes of the RO, and the specific provinces they can work in. We merge this INGO data with translated English organization names from ChinaFile. Our data and reproducible code are available at `ANONYMIZED_DOI_URL`.
 
-## Measurement
+Our dependent variable is the count of provinces that INGOs are authorized to work in. We derive this value from the official registration record, which lists all the provincial regions each INGO RO can conduct activities in. This value ranges from 1–32, the total number of province-level jurisdictions in mainland China. There are clear geographic trends in this measure. @fig-home-office-map shows that Beijing (`r provinces$beijing$ro_count`), Shanghai (`r provinces$shanghai$ro_count`), and Guangdong Province (`r provinces$guangdong$ro_count`) host the most ROs, while other provinces have as many as `r province4th[[1]]$ro_count` and as few as 1 permitted RO.
 
-Our dependent variable is the count of provinces that INGOs are authorized to work in. We derive this value from the official registration record, which lists all the provincial regions each INGO RO can conduct activities in. This value ranges from 1–32 (the total number of province-level jurisdictions in mainland China).
+```{r fig-home-office-map}
+#| include: true
+#| echo: false
+#| fig-cap: "Count of registered organizations across provinces"
+# Extract the intersections of provinces so that we don't plot the outside
+# borders and distort the coastlines. See https://stackoverflow.com/a/57138069 
+# and https://ikashnitsky.phd/2023/map-borders/
+interior_borders <- st_intersection(ongo_mapdata) %>% 
+  filter(n.overlaps > 1) |> 
+  # Remove weird points that st_intersection() adds
+  filter(!(st_geometry_type(geometry) %in% c("POINT", "MULTIPOINT")))
 
-Our key independent variables correspond to each of our three theoretical expectations. First, we code each INGO's issue area based on its mission statement reported in its registration documentation. Given the subjectivity in the coding process, we cross-checked our manual coding of issue areas---Author 1 assigned each organization to one of the issue areas defined in Article 3 of the ONGO Law, and Author 2 cross-checked the coding for ambiguous cases. We include our coding rules for overlapping issue areas in the appendix. We categorize each organization into nine different issue areas (see @tbl-issues).
+# Use aes(geometry) and stat = "sf_coordinates" to make geom_label_repel() work
+# with geom_sf(): https://github.com/slowkow/ggrepel/issues/111#issuecomment-416853013
+ggplot() +
+  geom_sf(data = ongo_mapdata, aes(fill = ro_count), color = NA) +
+  geom_sf(data = interior_borders, linewidth = 0.3, color = "white") +
+  scale_fill_distiller(palette = "Reds", direction = 1, guide = "none", na.value = "gray80") +
+  geom_label_repel(
+    data = filter(ongo_mapdata, ro_count > 0),
+    aes(label = ro_count, geometry = geometry),
+    stat = "sf_coordinates", seed = 1234, label.size = 0.05, size = 3,
+    color = "black", fill = scales::alpha("white", 0.7),
+    segment.color = "black", segment.size = 0.25, min.segment.length = 0
+  ) +
+  coord_sf(crs = st_crs("EPSG:4480")) +  # China Geodetic Coordinate System 2000
+  theme_void()
+```
+
+Our key independent variables correspond to each of our three theoretical expectations. First, we code each INGO's issue area based on its mission statement reported in its registration documentation. Given the subjectivity in the coding process, we cross-checked our manual coding of issue areas (see the appendix for a description of our coding). We categorize each organization into nine different issue areas (see @tbl-issues). @fig-issue-props shows the distribution of these issue areas. The two most common issues are economic, trade, and industry associations, representing `r label_percent()((issues$industry_association$n + issues$economy_and_trade$n) / sum(issue_count$n))` (`r issues$industry_association$n + issues$economy_and_trade$n`) of all INGOs. Many of these organizations are bilateral chambers of commerce or other multilateral trade organizations. Charitable, humanitarian, education, and health INGOs are far less common than their trade and industry counterparts: charity and humanitarian organizations comprise `r issues$charity_and_humanitarian$prop_nice` (`r issues$charity_and_humanitarian$n`) of ROs.
 
 ::: {#tbl-issues}
 
@@ -290,8 +405,8 @@ Our key independent variables correspond to each of our three theoretical expect
 tribble(
   ~Issue, ~Examples,
   "Arts and culture", "World Dance Council; Special Olympics",
-  "Charity and humanitarian", "Save the Children; Half the Sky Foundation",
-  "Economy and trade", "World Economic Forum; Chile-China Chamber of Commerce",
+  "Charity and humanitarian", "Save the Children; World Vision",
+  "Economy and trade", "World Economic Forum; Canada China Business Council",
   "Education", "Children’s Education Foundation; BSK International",
   "Environment", "The Nature Conservancy; World Wide Fund for Nature",
   "General", "Bill and Melinda Gates Foundation; Ford Foundation",
@@ -323,13 +438,41 @@ Possible INGO issue areas and example organizations
 
 :::
 
-Our second independent variable is a dichotomous indicator of whether the INGO explicitly states that it intends to operate locally or sub-provincially. There are cases where the aim of the INGO is attached to a locality, either having a county or city name in their RO name or purposes, or the INGO is actually set up by people in China who registered the RO to communicate between the "hometown" and the INGO set up abroad.
+```{r fig-issue-props, fig.width=6, fig.height=3}
+#| include: true
+#| echo: false
+#| fig-cap: "Count of international NGO registrations, divided by issue area"
 
-Our final independent variable measures how much time elapsed between January 1, 2017 (when the law took effect) and the organization's official registration date. There is great variance in the timing of registering an RO among INGOs, since there was a brief grace period for INGOs to seek legal presence after the law took effect [@Shieh:2018]. This is largely because both INGOs and the regulators needed some transitional time to explore the specific application of the law as large ambiguity was left when the law was passed. We use this temporal variable as a proxy for the motivation or eagerness of INGOs to register an RO, for some INGOs are inclined to avoid the cumbersome registration procedures at the early stage if there are no real consequences for continuing operations without registration, while others took the time to talk with multiple potential PSUs to find a more suitable superior or regulatory dynamic [@Jia:2017a].
+ggplot(issue_count, aes(y = work_field_code1, x = n)) +
+  geom_col(fill = clrs[5]) +
+  scale_x_continuous(sec.axis = sec_axis(trans = ~ . / sum(issue_count$n),
+                                         labels = label_percent())) +
+  labs(x = "Count of INGOs", y = NULL) +
+  theme_ongo() +
+  theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
+```
+
+Our second independent variable is a dichotomous indicator of whether the INGO explicitly states that it intends to operate locally or sub-provincially. There are cases where the aim of the INGO is attached to a locality, either having a county or city name in their RO name or purposes, or the INGO is actually set up by people in China who registered the RO to communicate between the "hometown" and the INGO set up abroad. Of the `r nrow(ongo)` ROs, `r loc$true$n` (`r loc$true$prop_nice`) have a narrow local focus.
+
+Our final independent variable measures how much time elapsed between January 1, 2017 and the organization's official registration date. There is great variance in registration timing, since there was a brief grace period for INGOs to seek legal presence after the law took effect [@Shieh:2018]. Nearly half of all ROs---48%---registered in 2017, and the count of new registrations gradually declined after the initial first-year wave (see @fig-registration-timeline). This is largely because both INGOs and the regulators needed some transitional time to explore the specific application of the law as large ambiguity was left when the law was passed. We use this temporal variable as a proxy for the motivation or eagerness of INGOs to register as an RO, since INGOs may have been inclined to avoid the cumbersome registration procedures at the early stage if there were no real consequences for delaying, while others took the time to talk with multiple potential PSUs to find a more suitable superior or regulatory dynamic [@Jia:2017a].
+
+```{r fig-registration-timeline, fig.width=6, fig.height=3}
+#| include: true
+#| echo: false
+#| fig-cap: "Count of international NGO registrations under the 2016 ONGO Law, 
+#|   divided by quarters"
+
+ggplot(ongo, aes(x = registration_date)) +
+  geom_histogram(binwidth = 365.25/4, boundary = ymd("2017-01-01"), 
+                 fill = clrs[6], color = "white") +
+  scale_x_date(date_breaks = "years", date_labels = "%Y") +
+  labs(x = NULL, y = "Count of new INGO registrations") +
+  theme_ongo()
+```
 
 ## Modeling approach
 
-In addition to presenting descriptive summary statistics, we use a multilevel Bayesian regression model to examine the complex effects that issue area, local connections, and registration timing have on organizational flexibility. This approach allows us to hold specific variables constant and generate predictions for hypothetical new, not-yet-registered INGOs, providing us with stronger empirical implications. Additionally, Bayesian modeling allows us to analyze the uncertainty associated with INGO operational space—instead of reporting a single value for the number of provinces INGOs have access to, we report posterior credible intervals that represent the probability that the average geographic reach falls within a specific range.
+We use a multilevel Bayesian regression model to examine the complex effects that issue area, local connections, and registration timing have on organizational flexibility. This approach allows us to hold specific variables constant and generate predictions for hypothetical new, not-yet-registered INGOs, providing us with stronger empirical implications. Additionally, Bayesian modeling allows us to analyze the uncertainty associated with INGO operational space---instead of reporting a single value for the number of provinces INGOs have access to, we report posterior credible intervals that represent the probability that the average geographic reach falls within a specific range.
 
 ```{r fig-province-count-collapsed, fig.width=6, fig.height=3}
 #| include: true
@@ -397,83 +540,11 @@ $$
 
 # Results and discussion
 
-## Descriptive overview
-
-We first describe some of the general patterns related to INGO operational space during the first 5 years of the ONGO law. First, @fig-registration-timeline shows the distribution of the count of new INGO registrations since January 1, 2017. A couple dozen organizations were able to become ROs immediately after the law took effect during the first quarter of 2017, while hundreds more registered during the rest of that year. Nearly half of all currently registered INGOs in China---48%---registered in 2017. After the initial first-year wave, the count of new registrations has declined slowly since 2018.
-
-```{r fig-registration-timeline, fig.width=6, fig.height=3}
-#| include: true
-#| echo: false
-#| fig-cap: "Count of international NGO registrations under the 2016 ONGO Law, 
-#|   divided by quarters"
-ggplot(ongo, aes(x = registration_date)) +
-  geom_histogram(binwidth = 365.25/4, boundary = ymd("2017-01-01"), 
-                 fill = clrs[6], color = "white") +
-  scale_x_date(date_breaks = "years", date_labels = "%Y") +
-  labs(x = NULL, y = "Count of new INGO registrations") +
-  theme_ongo()
-```
-
-Next, @fig-issue-props shows the distribution of issue areas that registered INGOs focus on. The two most common issues are economic, trade, and industry associations, representing 50% of all INGOs. Many of these organizations are bilateral chambers of commerce or other multilateral trade organizations such as the Japan-China Economic Association, the Silk Road Chamber of International Commerce, and the Canada China Business Council. Charitable, humanitarian, education, and health INGOs are far less common than their trade and industry counterparts: charity and humanitarian organizations like World Vision, Save the Children, and the Salvation Army comprise only 12% (73) of all INGOs.
-
-```{r fig-issue-props, fig.width=6, fig.height=3}
-#| include: true
-#| echo: false
-#| fig-cap: "Count of international NGO registrations, divided by issue area"
-# MAYBE: Use issue_area instead of work_field_code
-issue_count <- ongo |> 
-  drop_na(work_field_code1) |> 
-  group_by(work_field_code1) |>
-  summarize(n = n()) |> 
-  mutate(work_field_code1 = fct_reorder(work_field_code1, n))
-
-ggplot(issue_count, aes(y = work_field_code1, x = n)) +
-  geom_col(fill = clrs[5]) +
-  scale_x_continuous(sec.axis = sec_axis(trans = ~ . / sum(issue_count$n),
-                                         labels = label_percent())) +
-  labs(x = "Count of INGOs", y = NULL) +
-  theme_ongo() +
-  theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
-```
-
-Finally, there are clear geographic trends in INGO registration. As seen in @fig-home-office-map, the majority of INGOs are headquartered in Beijing (166), Shanghai (137), and Guangdong Province (46). INGOs must select a home office for their Chinese operations, but they are not necessarily limited to work within their home provinces. As described earlier, each INGO is authorized to work in a list of approved provinces, and the count of provinces follows a distinctive three-tiered distribution, seen previously in @fig-province-count-collapsed, with 30% of INGOs authorized to work in just one province, 40% authorized to work nationally, and 30% authorized to work in between 2--31 provinces.
-
-```{r fig-home-office-map}
-#| include: true
-#| echo: false
-#| fig-cap: "Count of registered organizations across provinces"
-# Extract the intersections of provinces so that we don't plot the outside
-# borders and distort the coastlines. See https://stackoverflow.com/a/57138069 
-# and https://ikashnitsky.phd/2023/map-borders/
-interior_borders <- st_intersection(ongo_mapdata) %>% 
-  filter(n.overlaps > 1) |> 
-  # Remove weird points that st_intersection() adds
-  filter(!(st_geometry_type(geometry) %in% c("POINT", "MULTIPOINT")))
-
-# Use aes(geometry) and stat = "sf_coordinates" to make geom_label_repel() work
-# with geom_sf(): https://github.com/slowkow/ggrepel/issues/111#issuecomment-416853013
-ggplot() +
-  geom_sf(data = ongo_mapdata, aes(fill = ro_count), color = NA) +
-  geom_sf(data = interior_borders, linewidth = 0.3, color = "white") +
-  scale_fill_distiller(palette = "Reds", direction = 1, guide = "none", na.value = "gray80") +
-  geom_label_repel(
-    data = filter(ongo_mapdata, ro_count > 0),
-    aes(label = ro_count, geometry = geometry),
-    stat = "sf_coordinates", seed = 1234, label.size = 0.05, size = 3,
-    color = "black", fill = scales::alpha("white", 0.7),
-    segment.color = "black", segment.size = 0.25, min.segment.length = 0
-  ) +
-  coord_sf(crs = st_crs("EPSG:4480")) +  # China Geodetic Coordinate System 2000
-  theme_void()
-```
-
-## Posterior predictions
-
-Next, we explore our data in more depth by generating and analyzing posterior predictions from our ordered Beta regression model, varying specific variables of interest while holding all others constant.
+## Model results
 
 ### Issue area
 
-Following our first empirical expectation, we predict that INGOs working on less contentious issues should be registered in more provinces and have more geographic flexibility to work throughout the country. To explore this, we can take advantage of the simultaneous continuous and discrete features of ordered Beta regression and see how often an INGO in each issue area is predicted to work in a single province, across all provinces, or some number in between. @fig-issue-preds(a) presents a summary of predicted posterior outcomes for 1,000 hypothetical INGOs, varying each possible issue area and holding all other variables at their mean or modal values. Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelming the most likely kind of organization to work nationally---arts and culture organizations are predicted to work in all 32 provinces 80% of the time (with a credible interval of 78--83%) and are only predicted to work in a single province a rare 3--5% of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only 32--38% of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing 24--29% of the time---at least 10 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly the patterns in predictions: the most common outcome is for organizations to work nationally (50--60% of the time), followed by working in at least 2 provinces (25--40% of the time), followed by working in a single province (10--20% of the time). @fig-issue-preds(b) shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend---arts and culture INGOs are predicted to work in 28--30 provinces on average, while education INGOs are only predicted to work in 12--20. All other issues range between 20--28 provinces.
+Next, we explore the data in more depth by generating and analyzing posterior predictions from our model. Following our first empirical expectation, we predict that INGOs working on less contentious issues should be registered in more provinces and thus have more geographic flexibility. We take advantage of the simultaneous continuous and discrete features of ordered Beta regression and see how often an INGO in each issue area is predicted to work in a single province, across all provinces, or some number in between. @fig-issue-preds(a) presents a summary of predicted posterior outcomes for 1,000 hypothetical INGOs, varying each issue area and holding all other variables at their mean or modal values. Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelming the most likely kind of organization to work nationally---arts and culture organizations are predicted to work in all 32 provinces `r p_issue$arts_and_culture.all_32_provinces$prop_ci_nice` of the time and are only predicted to work in a single province a rare `r p_issue$arts_and_culture.only_1_province$prop_ci_nice` of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only `r p_issue$education.all_32_provinces$prop_ci_nice` of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing `r p_issue$education.only_1_province$prop_ci_nice` of the time---15--20 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly similar patterns in predictions: the most common outcome is for organizations to work nationally (≈45--60% of the time), followed by working in at least 2 provinces (≈25--35% of the time), followed by working in a single province (≈15--30% of the time). @fig-issue-preds(b) shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend---arts and culture INGOs are predicted to work in 28--30 provinces on average, while education INGOs are only predicted to work in 12--20. All other issues range between 20--28 provinces.
 
 ```{r fig-issue-preds, fig.width=8, fig.height=6.5}
 #| include: true
@@ -483,33 +554,6 @@ Following our first empirical expectation, we predict that INGOs working on less
 #|   **A**: Predicted proportion of INGOs working in 1 province, all 32 
 #|   provinces, or somewhere in between. 
 #|   **B**: Expectation of posterior predictive distributions."
-
-preds_issue_plot_order <- preds_issue_plot |> 
-  filter(outcome == "All 32 provinces") |>
-  group_by(issue_area_nice) |> 
-  summarize(median_prop = median(prop)) |> 
-  arrange(median_prop) |> 
-  mutate(issue_area_nice_labels = str_wrap(issue_area_nice, 15)) |> 
-  mutate(issue_area_nice = fct_inorder(issue_area_nice))
-
-preds_issue_text <- preds_issue_plot |> 
-  group_by(outcome, issue_area_nice) |> 
-  summarize(median_prop = median_qi(prop)) |> 
-  unnest(median_prop) |> 
-  group_by(issue_area_nice) |> 
-  mutate(y_plot = (y / 2) + lag(cumsum(y), default = 0)) |> 
-  mutate(y_plot = 1 - y_plot) |> 
-  mutate(prop_nice = label_percent(accuracy = 1)(y)) |>
-  mutate(prop_ci_nice = glue::glue(
-    "{ymin}–{ymax}",
-    ymin = label_number(accuracy = 1, scale = 100)(ymin),
-    ymax = label_percent(accuracy = 1)(ymax)
-  )) |> 
-  mutate(issue_area_nice = factor(
-    issue_area_nice, 
-    levels = preds_issue_plot_order$issue_area_nice,
-    labels = preds_issue_plot_order$issue_area_nice_labels
-  ))
 
 p1 <- preds_issue_plot |>
   mutate(issue_area_nice = factor(
@@ -618,20 +662,6 @@ In our second empirical expectation, we posit that since INGOs that seek out loc
 #|   provinces, or somewhere in between. 
 #|   **B**: Expectation of posterior predictive distributions."
 
-preds_local_text <- preds_local_plot |> 
-  group_by(outcome, local_connect) |> 
-  summarize(median_prop = median_qi(prop)) |> 
-  unnest(median_prop) |> 
-  group_by(local_connect) |> 
-  mutate(y_plot = (y / 2) + lag(cumsum(y), default = 0)) |> 
-  mutate(y_plot = 1 - y_plot) |> 
-  mutate(prop_nice = label_percent(accuracy = 1)(y)) |>
-  mutate(prop_ci_nice = glue::glue(
-    "{ymin}–{ymax}",
-    ymin = label_number(accuracy = 1, scale = 100)(ymin),
-    ymax = label_percent(accuracy = 1)(ymax)
-  ))
-
 p1 <- preds_local_plot |> 
   ggplot(aes(x = draw, y = prop)) +
   geom_area(
@@ -718,7 +748,7 @@ International NGOs with locally focused missions and connections with local prov
 
 ### Registration timing
 
-The ONGO Law officially came into effect on January 1, 2017, and as seen previously in @fig-registration-timeline, the first year of the law saw the greatest total number of registrations. In our third empirical expectation, we propose that these early registrants under the new law were both less of a threat to regime stability and a higher priority for bureaucratic processing, and thus should be registered in more provinces and have more geographic flexibility throughout the country. However, the results of our model support the *reverse* of this expectation. @fig-timing-preds(a) once again shows the predicted posterior outcomes for 1,000 simulated INGOs across a range of time since January 2017. Organizations that registered in the first year are predicted to work in all provinces 41--46% of the time, and are predicted to work in two or more provinces 34--39% of the time. These early INGOs are the most likely to be registered in only one province and are predicted to do so 17--23% of the time. After the initial wave of registrations in 2017, the likelihood of nationwide reach steadily increases and replaces both the probability of a single province or a partial range of provinces. By the end of 2021---5 years after the ONGO Law took effect---the probability of national-level registration increases to 55--61% while the probability of working in a range of provinces increases to predicted to work in two or more provinces increase to 27--32%. These late INGOs are the least likely to be registered in only one province and are predicted to do so only 17--22% of the time. @fig-timing-preds(b) demonstrates the same results with the posterior distribution of the expected count of provinces over five years since 2017. INGOs that register early are predicted to work in 17--22 provinces, while those that wait until 2021 are predicted to work in 21--28.
+In our third empirical expectation, we propose that these early registrants were both less of a threat to regime stability and a higher priority for bureaucratic processing and thus should be registered in more provinces. However, the results of our model support the opposite of this expectation. @fig-timing-preds(a) presents the predicted posterior outcomes for 1,000 simulated INGOs over time. Organizations that registered in the first year have a 41--46% probability of working in all provinces and are predicted to work in two or more provinces 34--39% of the time. These early INGOs are the most likely to be registered in only one province and are predicted to do so 17--23% of the time. After 2017, the likelihood of nationwide reach steadily increases and replaces both the probability of a single province or a partial range of provinces. By the end of 2021 the probability of national-level registration increases to 55--61% while the probability of working in a range of provinces increases to predicted to work in two or more provinces increase to 27--32%. These later INGOs are the least likely to be registered in only one province. @fig-timing-preds(b) demonstrates the expected count of provinces over five years since 2017. INGOs that register early are predicted to work in 17--22 provinces, while those that wait until 2021 are predicted to work in 21--28.
 
 ```{r fig-timing-preds, fig.width=8, fig.height=4.5}
 #| include: true
@@ -767,8 +797,8 @@ p1 <- ggplot(preds_timing_plot, aes(x = years_since_law)) +
     tag = "A",
     caption = str_wrap(
       glue(
-        "Filled areas depict 50 posterior samples of the outcome category probabilities,",
-        "so the fuzziness represents the uncertainty in category boundaries; ",
+        "Filled areas depict 50 posterior samples of the outcome category probabilities;",
+        "the fuzziness represents the uncertainty in category boundaries; ",
         .sep = " "
       ),
       width = 60
@@ -905,11 +935,11 @@ Comparison of the work of The Nature Conservancy and Greenpeace in China
 
 # Conclusion
 
-Political institutions are central to authoritarian stability as autocrats work to co-opt and balance institutional challenges to their regime. Autocrats treat civil society—both domestic and international—as yet another actor in their stability-seeking calculus. The ongoing phenomenon of closing civic space, where governments worldwide continue to impose repressive regulations on civil society, can be seen as a strategy for stabilizing authoritarian rule [@DeMattee:2019; @CarothersBrechenmacher:2014; @Heiss:2019]. Notably, these laws are not enforced universally or consistently. The strategic enforcement of civil society laws creates a divergence between formal *de jure* regulations and the *de facto* implementation of those laws. Formal laws provide a legal framework for regulating INGOs, but government flexibility in enforcing those laws allows regimes to (1) act leniently towards organizations that offer services and expertise that benefit the regime, and (2) restrict, repress, or expel organizations that are deemed a risk to regime stability. 
+Political institutions are central to authoritarian stability as autocrats work to co-opt and balance institutional challenges to their regime. Autocrats treat civil society---both domestic and international---as yet another actor in their stability-seeking calculus. The ongoing phenomenon of closing civic space, where governments worldwide continue to impose repressive regulations on civil society, can be seen as a strategy for stabilizing authoritarian rule [@DeMattee:2019; @CarothersBrechenmacher:2014; @Heiss:2019]. Notably, these laws are not enforced universally or consistently. The strategic enforcement of civil society laws creates a divergence between formal *de jure* regulations and the *de facto* implementation of those laws. Formal laws provide a legal framework for regulating INGOs, but government flexibility in enforcing those laws allows regimes to (1) act leniently towards organizations that offer services and expertise that benefit the regime, and (2) restrict, repress, or expel organizations that are deemed a risk to regime stability. 
 
-We argue that regime preferences interact with organizations' issue areas to create variation in INGO operational space, or the *de facto* regulatory environment afforded to INGOs. We explore this theory by analyzing a novel dataset of all INGOs that have successfully registered in China since the implementation of the 2016 ONGO Law, a legal mechanism that provided the government with the ability to grow and shrink INGO operational space in strategic ways. By focusing on a specific law in one country, our work provides rich empirical illustrations of the mechanics of authoritarian administrative crackdown. We find that INGOs that work on issues that are less threatening and more aligned with regime preferences—such as arts & culture INGOs, industry associations, and scientific organizations—are registered in more provinces and thus enjoy a greater degree of operational space, while organizations that pose a potential threat—like education INGOs—are far more limited geographically. Our case study finds similar results. Because of its less confrontational approach and its connections to local government officials, The Nature Conservancy was able to obtain RO status and benefit from increased operational space while the more advocacy-focused Greenpeace has resorted to filing dozens of program-specific temporary activities.
+We argue that regime preferences interact with organizations' issue areas to create variation in INGO operational space, or the *de facto* regulatory environment afforded to INGOs. We explore this theory by analyzing a novel dataset of all INGOs that have successfully registered in China since the implementation of the 2016 ONGO Law, a legal mechanism that provided the government with the ability to grow and shrink INGO operational space in strategic ways. By focusing on a specific law in one country, our work provides rich empirical illustrations of the mechanics of authoritarian administrative crackdown. We find that INGOs that work on issues that are less threatening and more aligned with regime preferences---such as arts & culture INGOs, industry associations, and scientific organizations—are registered in more provinces and thus enjoy a greater degree of operational space, while organizations that pose a potential threat---like education INGOs---are far more limited geographically. Our case study finds similar results. Because of its less confrontational approach and its connections to local government officials, The Nature Conservancy was able to obtain RO status and benefit from increased operational space while the more advocacy-focused Greenpeace has resorted to filing dozens of program-specific temporary activities.
 
-Studying INGOs in authoritarian regimes poses a number of limitations, but the concept of operational space can address some of these issues in the future. First, we can only observe organizations that successfully registered as ROs. We cannot make comparisons with INGOs that left the country prior to 2017 or INGOs that have explicitly chosen to not work in China. This is not an issue specific to China—analyzing the international nonprofit sector of any country that has passed similar laws will raise similar issues of selection bias. The Chinese context provides one possible way forward: future research can further explore relationship between INGOs and regime preferences by comparing characteristics of INGOs that register as ROs or undertake temporary activities using already-available administrative data. Second, this paper focuses exclusively on INGO regulations in China, and the specific legal mechanisms for controlling INGOs in other countries will naturally differ. However, the findings are still instructive. We have illustrated how the interpretation and implementation of one INGO law has reshaped the role of international civil society, leading to a preponderance of regime-friendly NGOs, many of which have realigned their programming with government preferences. It is likely that a similar dynamic plays out in other countries—regimes legislate civil society broadly and enforce those laws specifically and individually. Future research can analyze the determinants of INGO operational space in other authoritarian states, which can help INGOs facing legal crackdown abroad strengthen their organizational flexibility in the face of restricted legal environments.
+Studying INGOs in authoritarian regimes poses a number of limitations, but the concept of operational space can address some of these issues in the future. First, we can only observe organizations that successfully registered as ROs. We cannot make comparisons with INGOs that left the country prior to 2017 or INGOs that have explicitly chosen to not work in China. This is not an issue specific to China---analyzing the international nonprofit sector of any country that has passed similar laws will raise similar issues of selection bias. The Chinese context provides one possible way forward: future research can further explore relationship between INGOs and regime preferences by comparing characteristics of INGOs that register as ROs or undertake temporary activities using already-available administrative data. Second, this paper focuses exclusively on INGO regulations in China, and the specific legal mechanisms for controlling INGOs in other countries will naturally differ. However, the findings are still instructive. We have illustrated how the interpretation and implementation of one INGO law has reshaped the role of international civil society, leading to a preponderance of regime-friendly NGOs, many of which have realigned their programming with government preferences. It is likely that a similar dynamic plays out in other countries---regimes legislate civil society broadly and enforce those laws specifically and individually. Future research can analyze the determinants of INGO operational space in other authoritarian states, which can help INGOs facing legal crackdown abroad strengthen their organizational flexibility in the face of restricted legal environments.
 
 
 # References
