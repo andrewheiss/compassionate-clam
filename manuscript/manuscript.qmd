@@ -60,6 +60,7 @@ library(tidygraph)
 library(ggraph)
 library(patchwork)
 library(glue)
+library(janitor)
 library(gt)
 library(targets)
 
@@ -96,32 +97,25 @@ civicus_prop <- civicus_clean |>
     prop = total / sum(total),
     prop_nice = label_percent(accuracy = 1)(prop)
   ) |> 
-  mutate(open = janitor::make_clean_names(open)) |> 
+  mutate(open = make_clean_names(open)) |> 
   split(~open)
 ```
 
-```{r calc-summaries}
+```{r calc-provinces}
 provinces <- ongo_mapdata |> 
   drop_na(province_code) |> 
   st_drop_geometry() |> 
   mutate(rank = dense_rank(-ro_count)) |> 
-  mutate(list_name = janitor::make_clean_names(province_en)) |> 
+  mutate(list_name = make_clean_names(province_en)) |> 
   split(~ list_name)
 
 # Get the RO count for the 4th-ranked province
 province4th <- provinces |> 
   map(~filter(.x, rank == 4)) |> 
   keep(~nrow(.x) > 0)
+```
 
-loc <- ongo |> 
-  count(local_connect) |> 
-  mutate(
-    prop = n / sum(n),
-    prop_nice = label_percent(accuracy = 1)(prop)
-  ) |> 
-  mutate(local_connect = janitor::make_clean_names(local_connect)) |> 
-  split(~ local_connect)
-
+```{r calc-issues}
 # MAYBE: Use issue_area instead of work_field_code
 issue_count <- ongo |> 
   drop_na(work_field_code1) |> 
@@ -132,30 +126,9 @@ issue_count <- ongo |>
 issues <- issue_count |> 
   mutate(prop = n / sum(n)) |> 
   mutate(prop_nice = label_percent(accuracy = 1)(prop)) |> 
-  mutate(work_field_code1 = janitor::make_clean_names(work_field_code1)) |> 
+  mutate(work_field_code1 = make_clean_names(work_field_code1)) |> 
   split(~ work_field_code1)
 
-isssue_province_counts <- epreds_issue |> 
-  group_by(issue_area) |> 
-  mutate(count = prop_to_provinces(.epred)) |> 
-  median_qi(count) |> 
-  mutate(across(c(.lower, .upper), list(whole = ~round(., 0)))) |> 
-  mutate(count_median = round(count, 0)) |> 
-  mutate(range = glue("{.lower_whole}–{.upper_whole}")) |> 
-  split(~ issue_area)
-
-ros_2017 <- ongo |> 
-  count(pre_2018 = registration_date < ymd("2018-01-01")) |> 
-  mutate(
-    prop = n / sum(n),
-    prop_nice = label_percent(accuracy = 1)(prop)
-  ) |> 
-  filter(pre_2018 == TRUE) |> 
-  as.list()
-```
-
-```{r calc-preds}
-# Issue area
 preds_issue_plot_order <- preds_issue_plot |> 
   filter(outcome == "All 32 provinces") |>
   group_by(issue_area_nice) |> 
@@ -185,13 +158,32 @@ preds_issue_text <- preds_issue_plot |>
 
 p_issue <- preds_issue_text |> 
   group_by(outcome) |> 
-  mutate(issue_area_nice = janitor::make_clean_names(issue_area_nice)) |> 
+  mutate(issue_area_nice = make_clean_names(issue_area_nice)) |> 
   group_by(issue_area_nice) |> 
-  mutate(outcome = janitor::make_clean_names(outcome)) |> 
+  mutate(outcome = make_clean_names(outcome)) |> 
   ungroup() |> 
   split(~ issue_area_nice + outcome)
 
-# Local connections
+c_issue <- epreds_issue |> 
+  group_by(issue_area) |> 
+  mutate(count = prop_to_provinces(.epred)) |> 
+  median_qi(count) |> 
+  mutate(across(c(.lower, .upper), list(whole = ~round(., 0)))) |> 
+  mutate(count_median = round(count, 0)) |> 
+  mutate(range = glue("{.lower_whole}–{.upper_whole}")) |> 
+  split(~ issue_area)
+```
+
+```{r calc-local-connections}
+loc <- ongo |> 
+  count(local_connect) |> 
+  mutate(
+    prop = n / sum(n),
+    prop_nice = label_percent(accuracy = 1)(prop)
+  ) |> 
+  mutate(local_connect = make_clean_names(local_connect)) |> 
+  split(~ local_connect)
+
 preds_local_text <- preds_local_plot |> 
   group_by(outcome, local_connect) |> 
   summarize(median_prop = median_qi(prop)) |> 
@@ -205,9 +197,36 @@ preds_local_text <- preds_local_plot |>
     ymin = label_number(accuracy = 1, scale = 100)(ymin),
     ymax = label_percent(accuracy = 1)(ymax)
   ))
+
+p_loc <- preds_local_text |> 
+  group_by(outcome) |> 
+  mutate(local_connect = make_clean_names(local_connect)) |> 
+  group_by(local_connect) |> 
+  mutate(outcome = make_clean_names(outcome)) |> 
+  ungroup() |> 
+  split(~ local_connect + outcome)
+
+c_local <- epreds_local |> 
+  mutate(local_connect = case_match(local_connect, TRUE ~ "true", FALSE ~ "false")) |> 
+  group_by(local_connect) |> 
+  mutate(count = prop_to_provinces(.epred)) |> 
+  median_qi(count) |> 
+  mutate(across(c(.lower, .upper), list(whole = ~round(., 0)))) |> 
+  mutate(count_median = round(count, 0)) |> 
+  mutate(range = glue("{.lower_whole}–{.upper_whole}")) |> 
+  split(~ local_connect)
 ```
 
-
+```{r calc-timing}
+ros_2017 <- ongo |> 
+  count(pre_2018 = registration_date < ymd("2018-01-01")) |> 
+  mutate(
+    prop = n / sum(n),
+    prop_nice = label_percent(accuracy = 1)(prop)
+  ) |> 
+  filter(pre_2018 == TRUE) |> 
+  as.list()
+```
 
 ::: {.content-visible when-format="html"}
 # Introduction {.hide}
@@ -223,7 +242,7 @@ In this paper, we use the case of China to explore how the demands to both restr
 
 By focusing on INGO operational space in China, we provide a unique empirical view into the *de facto* regulatory environment for foreign civil society in an authoritarian state. Broader indexes of civil society openness---such as the core civil society index from the Varieties of Democracy project [@LianMurdie:2023; @ChaudhryHeiss:2022]---capture the general regulatory environment for all civil society more broadly, but do not reflect the specific implementation of laws for INGOs. In this paper, we use a mixed methods approach to explore the regulatory environment for INGOs in particular, providing a much richer description and analysis of the impact of INGO laws.
 
-Below, we provide a brief overview of China's 2016 ONGO Law and the different regulatory mechanisms it provides for INGOs to obtain legal access to the country. We then synthesize existing research on authoritarian regulation of INGOs and the differential application of these laws based on regime preferences and organizational characteristics, and propose a set of empirical expectations based on this literature. We test these expectations with a mixed methods research design, combining Bayesian analysis of administrative data from all `r nrow(ongo)` formally registered INGOs with a comparative case study of Greenpeace and The Nature Conservancy, two environmental INGOs that took different approaches to operating in China after 2017. We conclude with a broader discussion of authoritarian civil society regulations and propose future approaches for exploring the practical operating environment for INGOs working in such regimes.
+Below, we provide a brief overview of China's 2016 ONGO Law and the different regulatory mechanisms it provides for INGOs to obtain legal access to the country. We then synthesize existing research on authoritarian regulation of INGOs and the differential application of these laws based on regime preferences and organizational characteristics, and propose a set of theoretical expectations based on this literature. We test these expectations with a mixed methods research design, combining Bayesian analysis of administrative data from all `r nrow(ongo)` formally registered INGOs with a comparative case study of Greenpeace and The Nature Conservancy, two environmental INGOs that took different approaches to operating in China after 2017. We conclude with a broader discussion of authoritarian civil society regulations and propose future approaches for exploring the practical operating environment for INGOs working in such regimes.
 
 
 # The legal framework established by the 2016 ONGO law
@@ -565,9 +584,9 @@ $$
 
 ### Issue area
 
-Next, we explore the data in more depth by generating and analyzing posterior predictions from our model. Following our first empirical expectation, we predict that INGOs working on less contentious issues should be registered in more provinces and thus have more geographic flexibility. We take advantage of the simultaneous continuous and discrete features of ordered Beta regression and see how often an INGO in each issue area is predicted to work in a single province, across all provinces, or some number in between. @fig-issue-preds(a) presents a summary of predicted posterior outcomes for 1,000 hypothetical INGOs, varying each issue area and holding all other variables at their mean or modal values. 
+Next, we explore the data in more depth by generating and analyzing posterior predictions from our model. Following our first theoretical expectation, we predict that INGOs working on less contentious issues should be registered in more provinces and thus have more geographic flexibility. We take advantage of the simultaneous continuous and discrete features of ordered Beta regression and see how often an INGO in each issue area is predicted to work in a single province, across all provinces, or some number in between. @fig-issue-preds(a) presents a summary of predicted posterior outcomes for 1,000 hypothetical INGOs, varying each issue area and holding all other variables at their mean or modal values. 
 
-Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelming the most likely kind of organization to work nationally---arts and culture organizations are predicted to work in all 32 provinces `r p_issue$arts_and_culture.all_32_provinces$prop_ci_nice` of the time and are only predicted to work in a single province a rare `r p_issue$arts_and_culture.only_1_province$prop_ci_nice` of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only `r p_issue$education.all_32_provinces$prop_ci_nice` of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing `r p_issue$education.only_1_province$prop_ci_nice` of the time---15--20 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly similar patterns in predictions: the most common outcome is for organizations to work nationally (≈45--60% of the time), followed by working in at least 2 provinces (≈25--35% of the time), followed by working in a single province (≈15--30% of the time). @fig-issue-preds(b) shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend---arts and culture INGOs are predicted to work in `r isssue_province_counts$arts_and_culture$range` provinces on average, while education INGOs are only predicted to work in `r isssue_province_counts$education$range`. All other issues range between 15--25 provinces.
+Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelming the most likely kind of organization to work nationally---arts and culture organizations are predicted to work in all 32 provinces `r p_issue$arts_and_culture.all_32_provinces$prop_ci_nice` of the time and are only predicted to work in a single province a rare `r p_issue$arts_and_culture.only_1_province$prop_ci_nice` of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only `r p_issue$education.all_32_provinces$prop_ci_nice` of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing `r p_issue$education.only_1_province$prop_ci_nice` of the time---15--20 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly similar patterns in predictions: the most common outcome is for organizations to work nationally (≈45--60% of the time), followed by working in at least 2 provinces (≈25--35% of the time), followed by working in a single province (≈15--30% of the time). @fig-issue-preds(b) shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend---arts and culture INGOs are predicted to work in `r c_issue$arts_and_culture$range` provinces on average, while education INGOs are only predicted to work in `r c_issue$education$range`. All other issues range between 15--25 provinces.
 
 ```{r fig-issue-preds, fig.width=8, fig.height=6.5}
 #| include: true
@@ -669,13 +688,14 @@ p2 <- epreds_issue |>
 p1 / p2
 ```
 
-As explained previously, we expect that the contentiousness of an NGO's issue area should influence its geographic reach and overall flexibility. No INGOs engaged in contentious issues like human rights advocacy have successfully registered in China, but there is some slight variation in the level of contention even among organizations working on less contentious issues like humanitarian assistance, health, and the environment. Education is particularly notable as the least flexible and most geographically restricted subsector. While education is typically considered a low-contention issue, in China fears of Western influence through educational institutions were an original impetus for the ONGO law. In 2006, an article in a CCP-owned newspaper warned that the growing presence of international NGOs would "undermine national security," "destroy political stability," "foster corruption," "propagate foreign practices," and "spy on and gather information on China's military, political, and economic information" [@Yin:2009, 534]. The idea that INGOs would "propagate foreign practices" had especially powerful salience, since increased exposure to the West through international NGOs had the potential to "lead to adoption of Western ideas of liberty, further endangering government control over the populace" [@HsiaWhite:2002, 337]. Educational NGOs were one particular avenue for the West to exert influence in the country---the directors and presidents of dozens of China's largest domestic NGOs have received doctoral degrees from and hold visiting appointments at Cornell, Duke, UNC-Chapel Hill, Harvard, Yale, and other prominent US universities [@Wang:2012, 108--9], and their training and connections abroad have influenced their programming and advocacy at home. In 2006, one Chinese NGO leader candidly explained that "foreign influence is definitely great. There is conceptual influence. Foreign NGOs' working methods also affect Chinese NGOs" [@Wang:2012, 110]. Education can thus be seen as one of the more contentious issues allowed under the ONGO law, and thus more closely regulated and restricted.
+As explained previously, we expect that the contentiousness of an NGO's issue area should influence its geographic reach and overall flexibility. No INGOs engaged in contentious issues like human rights advocacy have successfully registered in China, but there is some slight variation in the level of contention even among organizations working on less contentious issues like humanitarian assistance, health, and the environment. INGOs that survived the registration thresholds are those already "censored" and deemed to be safe and non-contentious. This can help explain why some seemingly more contentious issue areas such as environmental INGOs enjoy relatively more operational space. Chinese authorities can see the work of environmental INGOs as providing benefits such as political stability and "selectively encourage low risk groups and selectively channel higher risk groups into permitted areas" [@Plantan:2022, 504].
 
-Additionally, the INGOs that survived the registration thresholds are those already "censored" to be relatively safe and non-contentious. This can help explain why some seemingly more contentious issue areas, e.g., environmental INGOs enjoy relatively more operational space. According to [@Plantan:2022], Chinese authorities can see the work of environmental INGOs as providing benefits such as political stability and "selectively encourage low risk groups and selectively channel higher risk groups into permitted areas". We will further this discussion with the case analysis of two environmental INGOs later. 
+Education is particularly notable as the least flexible and most geographically restricted subsector. While education is typically considered a low-contention issue, in China fears of Western influence through educational institutions were an original impetus for the ONGO law. In 2006, an article in a CCP-owned newspaper warned that the growing presence of international NGOs would "undermine national security," "destroy political stability," "foster corruption," "propagate foreign practices," and "spy on and gather information on China's military, political, and economic information" [@Yin:2009, 534]. The idea that INGOs would "propagate foreign practices" had especially powerful salience, since increased exposure to the West through international NGOs had the potential to "lead to adoption of Western ideas of liberty, further endangering government control over the populace" [@HsiaWhite:2002, 337]. Educational NGOs were one particular avenue for the West to exert influence in the country---the directors and presidents of dozens of China's largest domestic NGOs have received doctoral degrees from and hold visiting appointments at Cornell, Duke, UNC-Chapel Hill, Harvard, Yale, and other prominent US universities [@Wang:2012, 108--9], and their training and connections abroad have influenced their programming and advocacy at home. In 2006, one Chinese NGO leader candidly explained that "foreign influence is definitely great. There is conceptual influence. Foreign NGOs' working methods also affect Chinese NGOs" [@Wang:2012, 110]. Education is therefore one of the more contentious issues allowed under the ONGO law, and thus more closely regulated and restricted.
+
 
 ### Local connections
 
-In our second empirical expectation, we posit that since INGOs that seek out local connections and that are focused on more local China-specific issues, those organizations should be registered in fewer provinces. The results from our model confirm this expectation. @fig-local-preds(a) shows the distribution of predicted posterior outcomes for 1,000 hypothetical INGOs. Organizations without local connections are predicted to work nationally across all provinces nearly half of the time (with a 95% credible interval of 46--51%), and are predicted to work in two or more provinces 32--37% of the time. These organizations with no local connections or local programmatic focus are only predicted to work in a single province 15--19% of the time. In contrast, INGOs *with* local connections are far more likely to only work in one province (32--38%), or only work in a handful of provinces (36--41%). For these locally-focused organizations, the least common prediction is to work nationally, with only a 23--29% probability. @fig-local-preds(b) shows the posterior distribution of the average number of provinces INGOs are expected to be registered in, conditional on their local connections. The same relationship holds---an INGO without local connections is predicted to work in 19--24 provinces on average, while an organization with local connections is only predicted to work in 8--17.
+In our second theoretical expectation, we posit that since INGOs that seek out local connections and that are focused on more local China-specific issues, those organizations should be registered in fewer provinces. The results from our model confirm this expectation. @fig-local-preds(a) shows that organizations without local connections are predicted to work nationally across all provinces nearly half of the time (with a 95% credible interval of `r p_loc$no_local_connections.all_32_provinces$prop_ci_nice`), with a `r p_loc$no_local_connections.between_1_32_provinces$prop_ci_nice` probability of working in two or more provinces. INGOs without local connections only have a `r p_loc$no_local_connections.only_1_province$prop_ci_nice` probability of working in a single province. In contrast, INGOs with local connections are far more likely to only work in one province (`r p_loc$local_connections.only_1_province$prop_ci_nice`), or only work in a handful of provinces (`r p_loc$local_connections.between_1_32_provinces$prop_ci_nice`). For these locally-focused organizations, the least common prediction is to work nationally, with only a `r p_loc$local_connections.all_32_provinces$prop_ci_nice` probability. @fig-local-preds(b) shows the posterior distribution of the average number of provinces INGOs are expected to be registered in, conditional on their local connections. The same relationship holds---an INGO without local connections is predicted to work in `r c_local$false$range` provinces on average, while an organization with local connections is only predicted to work in `r c_local$true$range`.
 
 ```{r fig-local-preds, fig.width=8, fig.height=4.5}
 #| include: true
@@ -767,11 +787,11 @@ p2 <- epreds_local |>
   plot_layout(widths = c(0.63, 0.37), guides = "collect")
 ```
 
-International NGOs with locally focused missions and connections with local provincial officials are thus far more likely to purposely limit their activities to specific provinces, while organizations with broader non-local missions have a larger geographic reach. While we cannot precisely tell which direction the causal story works with this phenomenon, we can make some reasonable speculations. It is likely that locally-oriented INGOs purposely network and seek out connections with local PSUs before formally registering, thus fostering better relationships with government officials and furthering the organization's mission within its limited provinces. It is also likely, given the high probability of national reach, that organizations without local connections purposely do not spend the time and effort to cultivate those relationships, as it is not necessary to operate across many provinces. A rival explanation that having local connections reduces an organization's flexibility does not seem warranted. Although INGOs with local connections do have a more limited geographic scope, INGOs appear to purposely limit the number of provinces they work in in order to focus more on their local work.
+International NGOs with locally focused missions and connections with provincial officials are thus far more likely to purposely limit their activities to specific provinces, while organizations with broader missions have a larger geographic reach. While we cannot precisely tell which direction the causal story works with this phenomenon, we can make some reasonable speculations. It is likely that locally-oriented INGOs purposely network and seek out connections with local PSUs before formally registering, thus fostering better relationships with government officials and furthering the organization's mission within its limited provinces. It is also likely, given the high probability of national reach, that organizations without local connections purposely do not spend the time and effort to cultivate those relationships, as it is not necessary to operate across many provinces. A rival explanation that having local connections reduces an organization's operational space does not seem warranted—although INGOs with local connections do have a more limited geographic scope, organizations appear to purposely limit the number of provinces they work in in order to focus more on their local work.
 
 ### Registration timing
 
-In our third empirical expectation, we propose that these early registrants were both less of a threat to regime stability and a higher priority for bureaucratic processing and thus should be registered in more provinces. However, the results of our model support the opposite of this expectation. @fig-timing-preds(a) presents the predicted posterior outcomes for 1,000 simulated INGOs over time. Organizations that registered in the first year have a 41--46% probability of working in all provinces and are predicted to work in two or more provinces 34--39% of the time. These early INGOs are the most likely to be registered in only one province and are predicted to do so 17--23% of the time. After 2017, the likelihood of nationwide reach steadily increases and replaces both the probability of a single province or a partial range of provinces. By the end of 2021 the probability of national-level registration increases to 55--61% while the probability of working in a range of provinces increases to predicted to work in two or more provinces increase to 27--32%. These later INGOs are the least likely to be registered in only one province. @fig-timing-preds(b) demonstrates the expected count of provinces over five years since 2017. INGOs that register early are predicted to work in 17--22 provinces, while those that wait until 2021 are predicted to work in 21--28.
+In our third theoretical expectation, we propose that these early registrants were both less of a threat to regime stability and a higher priority for bureaucratic processing and thus should be registered in more provinces. However, the results of our model support the opposite of this expectation. @fig-timing-preds(a) presents the predicted posterior outcomes for 1,000 simulated INGOs over time. Organizations that registered in the first year have a 41--46% probability of working in all provinces and are predicted to work in two or more provinces 34--39% of the time. These early INGOs are the most likely to be registered in only one province and are predicted to do so 17--23% of the time. After 2017, the likelihood of nationwide reach steadily increases and replaces both the probability of a single province or a partial range of provinces. By the end of 2021 the probability of national-level registration increases to 55--61% while the probability of working in a range of provinces increases to predicted to work in two or more provinces increase to 27--32%. These later INGOs are the least likely to be registered in only one province. @fig-timing-preds(b) demonstrates the expected count of provinces over five years since 2017. INGOs that register early are predicted to work in 17--22 provinces, while those that wait until 2021 are predicted to work in 21--28.
 
 ```{r fig-timing-preds, fig.width=8, fig.height=4.5}
 #| include: true
