@@ -104,7 +104,7 @@ civicus_prop <- civicus_clean |>
 # Introduction {.hide}
 :::
 
-In the past two decades, nearly 100 countries have proposed or enacted legal measures designed to restrict nongovernmental organizations (NGOs) and civil society more broadly [@Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyPrakash:2020; @DupuyRonPrakash:2016].[^ngo-clarification] According to the CIVICUS Civil Society Monitor, as of 2023 only `r civicus_prop$true$prop_nice` of countries have open and unrestricted civic space [@CIVICUSMonitor]. On April 28, 2016, China passed its own set of civil society restrictions with its Law of the People's Republic of China on Administration of Activities of Overseas Nongovernmental Organizations in the Mainland of China---or "2016 ONGO Law"---which formally took effect on January 1, 2017. The law requires all international NGOs (INGOs) to either establish formal in-country representative offices (ROs) or file short-term temporary activities to lawfully operate in mainland China. Without recognized legal status, INGOs are prohibited from working in the country, and even with legal recognition, INGO programming is limited to government-approved activities.
+In the past two decades, nearly 100 countries have proposed or enacted legal measures designed to restrict nongovernmental organizations (NGOs) and civil society more broadly [@Chaudhry:2022; @ChaudhryHeiss:2021; @CarothersBrechenmacher:2014; @DupuyPrakash:2018; @DupuyRonPrakash:2016].[^ngo-clarification] According to the CIVICUS Civil Society Monitor, as of 2023 only `r civicus_prop$true$prop_nice` of countries have open and unrestricted civic space [@CIVICUSMonitor]. On April 28, 2016, China passed its own set of civil society restrictions with its Law of the People's Republic of China on Administration of Activities of Overseas Nongovernmental Organizations in the Mainland of China---or "2016 ONGO Law"---which formally took effect on January 1, 2017. The law requires all international NGOs (INGOs) to either establish formal in-country representative offices (ROs) or file short-term temporary activities to lawfully operate in mainland China. Without recognized legal status, INGOs are prohibited from working in the country, and even with legal recognition, INGO programming is limited to government-approved activities.
 
 [^ngo-clarification]: "Civil society" is a broad concept that includes a range of organizational forms, both formal and informal. In this paper, we look at nonprofit organizations or third sector organizations---formal non-profit-seeking organizations that are neither privately-owned nor government-controlled. We define international NGOs as organizations that work predominantly in at least one other country outside of their home country.
 
@@ -395,14 +395,13 @@ $$
 
 ## Descriptive overview
 
-Before examining the posterior results of our statistical model, we first describe some of the general trends in INGO registration during the first 5 years of the ONGO law. We use our data to explore (1) when INGOs registered, (2) what kinds of issues registered INGOs work on, and (3) how large of a geographic reach INGOs have.
-
-First, @fig-registration-timeline shows the distribution of the count of new INGO registrations since January 1, 2017. A couple dozen organizations were able to register immediately after the law took effect during the first quarter of 2017, while hundreds more registered during the rest of that year. Nearly half of all currently-registered INGOs in China---48%---registered in 2017. After the initial first-year wave, the count of new registrations has declined slowly since 2018.
+W first describe some of the general patterns related to INGO operational space during the first 5 years of the ONGO law. First, @fig-registration-timeline shows the distribution of the count of new INGO registrations since January 1, 2017. A couple dozen organizations were able to become ROs immediately after the law took effect during the first quarter of 2017, while hundreds more registered during the rest of that year. Nearly half of all currently-registered INGOs in China---48%---registered in 2017. After the initial first-year wave, the count of new registrations has declined slowly since 2018.
 
 ```{r fig-registration-timeline, fig.width=6, fig.height=3}
 #| include: true
 #| echo: false
-#| fig-cap: "Count of international NGO registrations under the 2016 ONGO Law, divided by quarters"
+#| fig-cap: "Count of international NGO registrations under the 2016 ONGO Law, 
+#|   divided by quarters"
 ggplot(ongo, aes(x = registration_date)) +
   geom_histogram(binwidth = 365.25/4, boundary = ymd("2017-01-01"), 
                  fill = clrs[6], color = "white") +
@@ -411,13 +410,13 @@ ggplot(ongo, aes(x = registration_date)) +
   theme_ongo()
 ```
 
-Next, @fig-issue-props shows the distribution of issue areas that registered INGOs focus on. The two most common issues are economic, trade, and industry associations, representing 50% of all INGOs. Many of these organizations are bilateral chambers of commerce or other multilateral trade organizations such as the Japan-China Economic Association, the Silk Road Chamber of International Commerce, and the Canada China Business Council, and most are not more stereotypical international humanitarian organizations. Charitable, humanitarian, education, and health INGOs are far less common than their trade and industry counterparts. For instance, charity and humanitarian organizations like World Vision, Save the Children, and the Salvation Army comprise only 12% (73) of all INGOs.
+Next, @fig-issue-props shows the distribution of issue areas that registered INGOs focus on. The two most common issues are economic, trade, and industry associations, representing 50% of all INGOs. Many of these organizations are bilateral chambers of commerce or other multilateral trade organizations such as the Japan-China Economic Association, the Silk Road Chamber of International Commerce, and the Canada China Business Council. Charitable, humanitarian, education, and health INGOs are far less common than their trade and industry counterparts: charity and humanitarian organizations like World Vision, Save the Children, and the Salvation Army comprise only 12% (73) of all INGOs.
 
 ```{r fig-issue-props, fig.width=6, fig.height=3}
 #| include: true
 #| echo: false
 #| fig-cap: "Count of international NGO registrations, divided by issue area"
-# TODO: Use issue_area instead of work_field_code
+# MAYBE: Use issue_area instead of work_field_code
 issue_count <- ongo |> 
   drop_na(work_field_code1) |> 
   group_by(work_field_code1) |>
@@ -433,7 +432,7 @@ ggplot(issue_count, aes(y = work_field_code1, x = n)) +
   theme(axis.ticks.x.top = element_line(linewidth = 0.25, color = "grey50"))
 ```
 
-Finally, there are clear geographic trends in INGO registration. As seen in @fig-home-office-map, the majority of INGOs are headquartered in Beijing (166), Shanghai (137), and Guangdong Province (46). INGOs must select a home office for their Chinese operations, but they are not necessarily limited to work within their home provinces. As described earlier, each INGO is authorized to work in a list of approved provinces, and the count provinces follows a unique three-level distribution, seen previously in @fig-province-count-collapsed, with 30% of INGOs authorized to work in just one province, 40% authorized to work nationally, and 30% authorized to work in a multiple provinces, but not in the whole country.
+Finally, there are clear geographic trends in INGO registration. As seen in @fig-home-office-map, the majority of INGOs are headquartered in Beijing (166), Shanghai (137), and Guangdong Province (46). INGOs must select a home office for their Chinese operations, but they are not necessarily limited to work within their home provinces. As described earlier, each INGO is authorized to work in a list of approved provinces, and the count of provinces follows a distinctive three-tiered distribution, seen previously in @fig-province-count-collapsed, with 30% of INGOs authorized to work in just one province, 40% authorized to work nationally, and 30% authorized to work in between 2--31 provinces.
 
 ```{r fig-home-office-map}
 #| include: true
