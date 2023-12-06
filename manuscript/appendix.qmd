@@ -1,0 +1,79 @@
+---
+title: 'Online appendix for "Operational constraints and closing civic space: International NGO restrictions and China’s Overseas NGO law"'
+short-title: 'Online appendix for "Operational constraints and closing civic space"'
+date: "2023-12-06"
+author:
+- name: Meng Ye
+  affiliation: Georgia State University
+  email: mye2@gsu.edu
+  orcid: 0000-0002-6552-8338
+- name: Andrew Heiss
+  affiliation: Georgia State University
+  email: aheiss@gsu.edu
+  orcid: 0000-0002-3948-3914
+code-repo: "Access the code, data, and analysis at <https://github.com/andrewheiss/compassionate-clam>"
+bibliography: references.bib
+link-citations: true
+crossref: 
+  tbl-title: Appendix Table
+  fig-title: Appendix Figure
+---
+
+```{r setup, include=FALSE}
+if (is.null(knitr::pandoc_to())) {
+  fmt_out <- "interactive"
+} else {
+  fmt_out <- knitr::pandoc_to()
+}
+
+knitr::opts_chunk$set(
+  echo = FALSE, include = FALSE,
+  warning = FALSE, message = FALSE
+)
+
+knitr::opts_chunk$set(
+  fig.align = "center", fig.retina = 3,
+  fig.width = 6, fig.height = (6 * 0.618),
+  out.width = "100%", collapse = TRUE
+)
+
+options(
+  digits = 3, width = 120,
+  dplyr.summarise.inform = FALSE,
+  knitr.kable.NA = ""
+)
+```
+
+# Appendix
+
+## Coding rules for issue ares
+
+1. Education vs. Charity
+If charitable activities are all education related, e.g. building schools, donating education facilities and books, coded as education
+If the aids provided include other community support, e.g. building bridges, roads, medical facilities, coded as charity
+
+2. Economy and trade vs. Industry association
+If the trade promoted is focused on a particular industry (poultry, grains etc.), coded as industry association
+
+3. Arts and culture 
+Include sports organizations too.
+
+4. Industry association vs. health, science and technology, arts and culture
+
+There are professional association on health providers and certain techniques. Coded as health, science & technology if work areas go beyond serving members only: for example conducting activities of promoting and training about certain techniques. 
+
+If specialized association only serves the member companies: coded as industry associations 
+
+5. Health vs. Charity 
+If only providing medical aids to underprivileged communities, not building schools etc., coded as health 
+
+6. Charity vs. General 
+If multiple work, e.g., poverty alleviation, education, health can be encompassed by Charity and humanitarian, then the former
+
+7. Multiple ROs are coded based on the overall work area spans of the INGO, not the specific RO, so to ensure the issue area coding is consistent across ROs
+
+## Modeling details
+
+We use Stan through R and brms to estimate the model. We simulate 4 MCMC chains with 2,000 draws in each chain, 1,000 of which are used for warmup, resulting in 4,000 (1,000 × 4) draws per model parameter. We assess convergence with visual inspection, and all chains converge. Complete results from all the models, along with posterior predictive checks, goodness-of-fit measures, and model diagnostics—as well as our code and data—are available `ANONYMIZED_URL`.
+
+TODO: Model definition and priors like NVSQ paper

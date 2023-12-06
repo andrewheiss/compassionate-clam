@@ -912,38 +912,3 @@ Studying INGOs in authoritarian regimes poses a number of limitations, but the c
 
 ::: {#refs .bibliography}
 :::
-
-\newpage
-
-:::: {#appendix-count}
-
-# Appendix
-
-## Coding rules for issue ares
-
-1. Education vs. Charity
-If charitable activities are all education related, e.g. building schools, donating education facilities and books, coded as education
-If the aids provided include other community support, e.g. building bridges, roads, medical facilities, coded as charity
-
-2. Economy and trade vs. Industry association
-If the trade promoted is focused on a particular industry (poultry, grains etc.), coded as industry association
-
-3. Arts and culture 
-Include sports organizations too.
-
-4. Industry association vs. health, science and technology, arts and culture
-
-There are professional association on health providers and certain techniques. Coded as health, science & technology if work areas go beyond serving members only: for example conducting activities of promoting and training about certain techniques. 
-
-If specialized association only serves the member companies: coded as industry associations 
-
-5. Health vs. Charity 
-If only providing medical aids to underprivileged communities, not building schools etc., coded as health 
-
-6. Charity vs. General 
-If multiple work, e.g., poverty alleviation, education, health can be encompassed by Charity and humanitarian, then the former
-
-7. Multiple ROs are coded based on the overall work area spans of the INGO, not the specific RO, so to ensure the issue area coding is consistent across ROs
-
-
-::::
