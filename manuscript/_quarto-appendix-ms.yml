@@ -1,13 +1,13 @@
 project:
   output-dir: output-ms
   render:
-    - manuscript.qmd
+    - appendix.qmd
 
 format:
   # Manuscript-y PDF output
   hikmah-manuscript-pdf:
     cite-method: citeproc
-    output-file: "manuscript-ms.pdf"
+    output-file: "appendix-ms.pdf"
     # Custom fonts
     mainfont: "Linux Libertine O"
     mainfontoptions:
@@ -31,7 +31,7 @@ format:
 
   # Manuscript-y Word output
   hikmah-manuscript-odt:
-    output-file: "manuscript-ms.odt"
+    output-file: "appendix-ms.odt"
     prefer-html: true
 
     knitr:

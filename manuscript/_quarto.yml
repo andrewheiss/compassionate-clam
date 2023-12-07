@@ -1,8 +1,7 @@
 project:
   title: "Manuscript"
 
-  render: 
-    - "*.qmd"
+  render:
     - "!submissions/*.qmd"
 
 csl: csl/apa.csl

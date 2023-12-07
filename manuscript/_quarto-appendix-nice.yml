@@ -1,6 +1,6 @@
 project:
   output-dir: output
-  render:
+  render: 
     - manuscript.qmd
 
 format:
