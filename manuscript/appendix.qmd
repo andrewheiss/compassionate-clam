@@ -46,6 +46,29 @@ options(
 
 # Appendix
 
+$$
+\begin{aligned}
+&\ \textbf{Registered provinces for INGO } i \\
+\text{Count of provinces}\ \sim&\ \operatorname{Ordered\,Beta}(\mu_i, \phi_y, k_{1_y}, k_{2_y}) \\[8pt]
+&\ \textbf{Model of outcome average} \\
+\mu_i =&\ 
+  \mathrlap{\begin{aligned}[t]
+  & \beta_0 + \beta_1\ \text{Issue[Arts and culture]} + \beta_2\ \text{Issue[Education]}\ +\\
+  & \beta_3\ \text{Issue[Industry association]} + \beta_4\ \text{Issue[Economy and trade]}\ + \\
+  & \beta_5\ \text{Issue[Charity and humanitarian]} + \beta_6\ \text{Issue[General]}\ + \\
+  & \beta_7\ \text{Issue[Health]} + \beta_8\ \text{Issue[Environment]}\ + \\
+  & \beta_9\ \text{Issue[Science and technology]} + \beta_{10}\ \text{Local connections}\ + \\
+  & \beta_{11}\ \text{Time since January 2017} + \beta_{12}\ \text{Year registered}
+  \end{aligned}}\\[8pt]
+&\ \textbf{Priors} \\
+\beta_0\ \sim&\ \operatorname{Student\,t}(\nu = 3, \mu = 0, \sigma = 2.5) && \text{Intercept} \\
+\beta_{1..12}\ \sim&\ \mathcal{N}(0, 5) && \text{Coefficients} \\
+\phi_y\ \sim&\ \operatorname{Exponential}(1 / 100) && \text{Variability in province count} \\
+k_{1_y}, k_{2_y}\ \sim&\ \operatorname{Induced\,Dirichlet}(1, 1, 1), && \text{0–continuous and continuous–1 cutpoints} \\
+&\ \quad \text{or } \bigl[P(\alpha_1), P(\alpha_1 + \alpha_2)\bigr] && \quad\text{(boundaries between 3 Dirichlet columns)}
+\end{aligned}
+$$
+
 ## Coding rules for issue ares
 
 Author 1 assigned each organization to one of the issue areas defined in Article 3 of the ONGO Law, and Author 2 cross-checked the coding for ambiguous cases

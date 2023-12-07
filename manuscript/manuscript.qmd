@@ -626,31 +626,7 @@ p2 <- ggplot(provinces_collapsed, aes(x = province_count)) +
 
 Modeling the count of provinces each INGO is authorized to operate in presents a unique statistical challenge. As seen in @fig-province-count-collapsed, roughly 30% of INGOs are registered in only one province, 40% are registered nationwide, while the remaining 30% are registered in 2--31 provinces. Our main variable of interest is thus a mix of continuous outcomes (i.e. a range of provinces) bounded between two discrete outcomes (i.e. one province and all provinces). Standard modeling approaches like ordinary least squares regression (OLS) cannot accurately capture the unique features of the data and will generate predictions that fall outside allowable bounds (i.e. negative counts of provinces or more than 32 provinces). To account for values at the bounds, we rely on ordered Beta regression [@Kubinec:2022], an extension of zero-and-one-inflated Beta regression that allows us to simultaneously model the continuous range of provinces (2--31) and the discrete outcomes (1 province and 32 provinces). We can thus explore the dynamics of each of our independent variables of interest in multiple ways---we can see how each variable (1) predicts that an organization works in one province, nationwide, or somewhere in between, and (2) predicts the overall expected count of provinces. 
 
-Since we are primarily interested in the influence of INGO's issue area, its local connections, and the timing of its registration on its operational space, we include these as explanatory variables. We also include random province intercepts to account for between-region differences in how INGOs are regulated, since every RO is overseen by provincial-level Public Security Bureaus. We use the following model and priors; additional model details and results are available in the appendix and in TABLE TODO:
-
-$$
-\begin{aligned}
-&\ \textbf{Registered provinces for INGO } i \\
-\text{Count of provinces}\ \sim&\ \operatorname{Ordered\,Beta}(\mu_i, \phi_y, k_{1_y}, k_{2_y}) \\[8pt]
-&\ \textbf{Model of outcome average} \\
-\mu_i =&\ 
-  \mathrlap{\begin{aligned}[t]
-  & \beta_0 + \beta_1\ \text{Issue[Arts and culture]} + \beta_2\ \text{Issue[Education]}\ +\\
-  & \beta_3\ \text{Issue[Industry association]} + \beta_4\ \text{Issue[Economy and trade]}\ + \\
-  & \beta_5\ \text{Issue[Charity and humanitarian]} + \beta_6\ \text{Issue[General]}\ + \\
-  & \beta_7\ \text{Issue[Health]} + \beta_8\ \text{Issue[Environment]}\ + \\
-  & \beta_9\ \text{Issue[Science and technology]} + \beta_{10}\ \text{Local connections}\ + \\
-  & \beta_{11}\ \text{Time since January 2017} + \beta_{12}\ \text{Year registered}
-  \end{aligned}}\\[8pt]
-&\ \textbf{Priors} \\
-\beta_0\ \sim&\ \operatorname{Student\,t}(\nu = 3, \mu = 0, \sigma = 2.5) && \text{Intercept} \\
-\beta_{1..12}\ \sim&\ \mathcal{N}(0, 5) && \text{Coefficients} \\
-\phi_y\ \sim&\ \operatorname{Exponential}(1 / 100) && \text{Variability in province count} \\
-k_{1_y}, k_{2_y}\ \sim&\ \operatorname{Induced\,Dirichlet}(1, 1, 1), && \text{0–continuous and continuous–1 cutpoints} \\
-&\ \quad \text{or } \bigl[P(\alpha_1), P(\alpha_1 + \alpha_2)\bigr] && \quad\text{(boundaries between 3 Dirichlet columns)}
-\end{aligned}
-$$
-
+Since we are primarily interested in the influence of INGO's issue area, its local connections, and the timing of its registration on its operational space, we include these as explanatory variables. We also include random province intercepts to account for between-region differences in how INGOs are regulated, since every RO is overseen by provincial-level Public Security Bureaus. The appendix contains complete details of our modeling approach, priors, model definition, and tables of raw results.
 
 # Results and discussion
 
