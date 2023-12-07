@@ -513,6 +513,9 @@ Our key independent variables correspond to each of our three theoretical expect
 
 ::: {#tbl-issues}
 
+\footnotesize
+\renewcommand*{\arraystretch}{1.75}
+
 ```{r}
 #| label: table-issues
 #| include: true
@@ -521,7 +524,7 @@ tribble(
   "Arts and culture", "World Dance Council; Special Olympics",
   "Charity and humanitarian", "Save the Children; World Vision",
   "Economy and trade", "World Economic Forum; Canada China Business Council",
-  "Education", "Children’s Education Foundation; BSK International",
+  "Education", "Children's Education Foundation; BSK International",
   "Environment", "The Nature Conservancy; World Wide Fund for Nature",
   "General", "Bill and Melinda Gates Foundation; Ford Foundation",
   "Health", "American Heart Association; Operation Smile",
@@ -998,6 +1001,9 @@ In contrast, Greenpeace engages in direct advocacy, using peaceful---but confron
 
 ::: {#tbl-case-study}
 
+\footnotesize
+\renewcommand*{\arraystretch}{1.75}
+
 ```{r}
 #| label: table-case-study
 #| include: true
@@ -1034,6 +1040,7 @@ We argue that regime preferences interact with organizations' issue areas to cre
 
 Studying INGOs in authoritarian regimes poses a number of limitations, but the concept of operational space can address some of these issues in the future. First, we can only observe organizations that successfully registered as ROs. We cannot make comparisons with INGOs that left the country prior to 2017 or INGOs that have explicitly chosen to not work in China. This is not an issue specific to China---analyzing the international nonprofit sector of any country that has passed similar laws will raise similar issues of selection bias. The Chinese context provides one possible way forward: future research can further explore the relationship between INGOs and regime preferences by comparing characteristics of INGOs that register as ROs or undertake temporary activities using already-available administrative data. Second, this paper focuses exclusively on INGO regulations in China, and the specific legal mechanisms for controlling INGOs in other countries will naturally differ. However, the findings are still instructive. We have illustrated how the implementation of one INGO law has reshaped the role of international civil society, leading to a preponderance of regime-friendly NGOs, many of which have realigned their programming with government preferences. It is likely that a similar dynamic plays out in other countries---regimes legislate civil society broadly and enforce those laws specifically. Future research might analyze the determinants of INGO operational space in other authoritarian states, which can help INGOs facing legal crackdown abroad strengthen their organizational flexibility in the face of legal restrictions.
 
+\newpage
 
 # References
 

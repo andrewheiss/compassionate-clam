@@ -23,6 +23,11 @@ format:
         
         \usepackage{xeCJK}
         \setCJKmainfont{Noto Serif SC}
+        
+        % Add a little bit of extra space above minipages 
+        % for gt table footnotes
+        \usepackage{etoolbox}
+        \AtBeginEnvironment{minipage}{\vspace{\baselineskip}}
 
     knitr:
       opts_chunk:
