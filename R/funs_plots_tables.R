@@ -37,6 +37,41 @@ gt_pct <- function(x, page_width = 6) {
   }
 }
 
+build_modelsummary <- function(models) {
+  suppressPackageStartupMessages(library(modelsummary))
+  
+  nice_coefs <- c(
+    "b_Intercept" = "Intercept",
+    "b_issue_arts_and_cultureTRUE" = "Issue [Arts and culture]",
+    "b_issue_educationTRUE" = "Issue [Education]",
+    "b_issue_industry_associationTRUE" = "Issue [Industry association]",
+    "b_issue_economy_and_tradeTRUE" = "Issue [Economy and trade]",
+    "b_issue_charity_and_humanitarianTRUE" = "Issue [Charity and humanitarian]",
+    "b_issue_generalTRUE" = "Issue [General]",
+    "b_issue_healthTRUE" = "Issue [Health]",
+    "b_issue_environmentTRUE" = "Issue [Environment]",
+    "b_issue_science_and_technologyTRUE" = "Issue [Science and technology]",
+    "b_local_connectTRUE" = "Local connections",
+    "b_years_since_law" = "Years since law",
+    "b_year_registered_cat2018" = "Year registered [2018]",
+    "b_year_registered_cat2019" = "Year registered [2019]",
+    "b_year_registered_cat2020" = "Year registered [2020]",
+    "b_year_registered_cat2021" = "Year registered [2021]",
+    "b_local_connectTRUE:years_since_law" = "Local connections × years since law",
+    "phi" = "φ"
+  )
+  
+  msl <- modelsummary(
+    models, 
+    output = "modelsummary_list",
+    statistic = "[{conf.low}, {conf.high}]",
+    ci_method = "hdi",
+    metrics = c("R2")
+  )
+  
+  return(lst(msl, nice_coefs))
+}
+
 
 # Storing ggplot objects as rds files is BAD 
 #   (https://github.com/hadley/ggplot2-book/issues/344)

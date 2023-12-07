@@ -15,9 +15,6 @@ author:
 code-repo: "Access the code, data, and analysis at <https://github.com/andrewheiss/compassionate-clam>"
 bibliography: references.bib
 link-citations: true
-crossref: 
-  tbl-title: Appendix Table
-  fig-title: Appendix Figure
 ---
 
 ```{r setup, include=FALSE}
@@ -45,7 +42,35 @@ options(
 )
 ```
 
-# Appendix
+```{r libraries-data}
+library(tidyverse)
+library(scales)
+library(modelsummary)
+library(gt)
+library(targets)
+
+# Generated via random.org
+set.seed(8511)
+
+# Targets stuff
+tar_config_set(
+  store = here::here("_targets"),
+  script = here::here("_targets.R")
+)
+ 
+tar_load(c(models_tbl))
+
+# Plotting and modelsummary functions
+invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
+invisible(list2env(tar_read(table_functions), .GlobalEnv))
+
+theme_set(theme_ongo())
+set_annotation_fonts()
+```
+
+# Model details and results
+
+We use Stan [@Stan-2-26-1 v2.26.1; @cmdstan-2-3-1 v2.3.1] through R [@rproject-4-3-1 v4.3.1] and **brms** [@Burkner:2017 v2.20.5] to estimate our ordered Beta regression models [@Kubinec:2022]. We simulate 4 MCMC chains with 2,000 draws in each chain, 1,000 of which are used for warmup, resulting in 4,000 (1,000 × 4) draws per model parameter. We assess convergence with visual inspection, and all chains converge. Complete results from all the models, along with posterior predictive checks, goodness-of-fit measures, and model diagnostics—as well as our code and data—are available `ANONYMIZED_URL`. We include the formal definition and priors for our model below.
 
 $$
 \begin{aligned}
@@ -70,36 +95,56 @@ k_{1_y}, k_{2_y}\ \sim&\ \operatorname{Induced\,Dirichlet}(1, 1, 1), && \text{0�
 \end{aligned}
 $$
 
-## Coding rules for issue ares
+\newpage
 
-Author 1 assigned each organization to one of the issue areas defined in Article 3 of the ONGO Law, and Author 2 cross-checked the coding for ambiguous cases
+::: {#tbl-coefs-orig}
 
-1. Education vs. Charity
-If charitable activities are all education related, e.g. building schools, donating education facilities and books, coded as education
-If the aids provided include other community support, e.g. building bridges, roads, medical facilities, coded as charity
+\footnotesize
 
-2. Economy and trade vs. Industry association
-If the trade promoted is focused on a particular industry (poultry, grains etc.), coded as industry association
+```{r}
+#| label: table-coefs-orig
+#| include: true
 
-3. Arts and culture 
-Include sports organizations too.
+notes <- c(
+  "Estimates are median posterior log odds from ordered Beta regression models;",
+  "95% credible intervals (highest density posterior interval, or HDPI) in brackets."
+)
 
-4. Industry association vs. health, science and technology, arts and culture
+modelsummary(
+  models_tbl$msl, 
+  estimate = "{estimate}",
+  statistic = "[{conf.low}, {conf.high}]",
+  fmt = fmt_significant(2),
+  coef_map = models_tbl$nice_coefs,
+  output = "gt"
+) |> 
+  opts_theme() |>
+  tab_footnote(
+    footnote = paste(notes, collapse = " ")
+  ) %>%
+  opts_theme() |>
+  tab_options(
+    quarto.disable_processing = TRUE
+  )
+```
 
-There are professional association on health providers and certain techniques. Coded as health, science & technology if work areas go beyond serving members only: for example conducting activities of promoting and training about certain techniques. 
+Complete model coefficients
 
-If specialized association only serves the member companies: coded as industry associations 
+:::
 
-5. Health vs. Charity 
-If only providing medical aids to underprivileged communities, not building schools etc., coded as health 
+\clearpage
 
-6. Charity vs. General 
-If multiple work, e.g., poverty alleviation, education, health can be encompassed by Charity and humanitarian, then the former
+# Coding rules for issue ares
 
-7. Multiple ROs are coded based on the overall work area spans of the INGO, not the specific RO, so to ensure the issue area coding is consistent across ROs
+Author 1 assigned each organization to one of the issue areas defined in Article 3 of the ONGO Law, and Author 2 cross-checked the coding for ambiguous cases. Organizations with multiple ROs are coded based on the overall issue area of the INGO, not the specific RO, so to ensure the issue area coding is consistent across ROs.
 
-## Modeling details
+We followed these rules for categorizing INGOs' stated missions into issue areas:
 
-We use Stan [@Stan-2-26-1 v2.26.1; @cmdstan-2-3-1 v2.3.1] through R [@rproject-4-3-1 v4.3.1] and **brms** [@Burkner:2017 v2.20.5] to estimate the model We simulate 4 MCMC chains with 2,000 draws in each chain, 1,000 of which are used for warmup, resulting in 4,000 (1,000 × 4) draws per model parameter. We assess convergence with visual inspection, and all chains converge. Complete results from all the models, along with posterior predictive checks, goodness-of-fit measures, and model diagnostics—as well as our code and data—are available `ANONYMIZED_URL`.
+- **Education vs. Charity and humanitarian**: If charitable activities are all education related (e.g., building schools, donating education facilities and books), code as *Education*. If activities include other community support (e.g., building bridges, roads, medical facilities), code as *Charity and humanitarian*.
+- **Economy and trade vs. Industry association**: If the trade promoted is focused on a particular industry (e.g., poultry, grains, etc.), code as *Industry association*.
+- **Arts and culture**: Include sports organizations.
+- **Industry association vs. Health & Science and technology & Arts and culture**: There are professional associations for health providers, scientific associations, and artistic industries. If activities go beyond only serving members only, code as *Health* or *Science and technology* or *Arts and culture*; if activities are limited to member-only service, code as *Industry association*.
+- **Health vs. Charity and humanitarian**: If activities only provide medical assistance to underprivileged communities, code as *Health*.
+- **Charity and humanitarian vs. General**: If there are overlapping issue areas (e.g., poverty alleviation, education, health), code as *General*, then code the apparent primary issue area as a second work area.
 
-TODO: Model definition and priors like NVSQ paper
+# References

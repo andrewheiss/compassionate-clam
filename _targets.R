@@ -91,6 +91,9 @@ list(
   tar_quarto(appendix_manuscripty, path = "manuscript", quiet = FALSE, profile = "appendix-ms"),
   tar_quarto(website, path = ".", quiet = FALSE),
   
+  # Build tables here because they take a while
+  tar_target(models_tbl, build_modelsummary(list(m_full_ordbeta, m_full_ordbeta_interaction))),
+  
   tar_target(deploy_script, here_rel("deploy.sh"), format = "file"),
   tar_target(deploy, {
     # Force a dependency
