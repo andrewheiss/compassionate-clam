@@ -4,6 +4,7 @@ project:
 format:
   # Manuscript-y PDF output
   hikmah-manuscript-pdf:
+    cite-method: citeproc
     output-file: "manuscript-ms.pdf"
     # Custom fonts
     mainfont: "Linux Libertine O"
@@ -17,6 +18,9 @@ format:
       text: |
         \usepackage{mathtools}
         \everydisplay\expandafter{\the\everydisplay\small }
+        
+        \usepackage{xeCJK}
+        \setCJKmainfont{Arial Unicode MS}
 
     knitr:
       opts_chunk:
