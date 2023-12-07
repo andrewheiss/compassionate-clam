@@ -47,7 +47,9 @@ website:
       - text: "Presentations"
         file: presentations/index.qmd
       - text: "Manuscript"
-        file: notebook/manuscript.qmd
+        menu:
+          - file: notebook/manuscript.qmd
+          - file: notebook/appendix.qmd
     
     right:
       - icon: github
