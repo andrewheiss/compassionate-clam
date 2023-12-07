@@ -1,7 +1,8 @@
 ---
-title: 'Online appendix for "Operational constraints and closing civic space: International NGO restrictions and China’s Overseas NGO law"'
-short-title: 'Online appendix for "Operational constraints and closing civic space"'
-date: "2023-12-06"
+title: >-
+  Online appendix for "Enforcing Boundaries: China's Overseas NGO Law and Operational Constraints for Global Civil Society"
+short-title: 'Online appendix for "Enforcing Boundaries"'
+date: "2023-12-07"
 author:
 - name: Meng Ye
   affiliation: Georgia State University

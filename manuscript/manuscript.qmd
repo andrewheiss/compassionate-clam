@@ -1,6 +1,6 @@
 ---
-title: "Operational constraints and closing civic space: International NGO restrictions and China’s Overseas NGO law"
-short-title: "Operational constraints and closing civic space"
+title: "Enforcing Boundaries: China's Overseas NGO Law and Operational Constraints for Global Civil Society"
+short-title: "Enforcing Boundaries"
 date: "2023-12-07"
 author:
 - name: Meng Ye
