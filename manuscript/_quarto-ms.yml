@@ -22,7 +22,7 @@ format:
         \everydisplay\expandafter{\the\everydisplay\small }
         
         \usepackage{xeCJK}
-        \setCJKmainfont{Arial Unicode MS}
+        \setCJKmainfont{Noto Serif SC}
 
     knitr:
       opts_chunk:
