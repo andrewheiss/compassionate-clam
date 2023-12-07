@@ -8,9 +8,20 @@ author:
   email: mye2@gsu.edu
   orcid: 0000-0002-6552-8338
 - name: Andrew Heiss
-  affiliation: Georgia State University
+  affiliations: 
+    - id: gsu
+      name: Georgia State University
+      department: Andrew Young School of Policy Studies, Department of Public Management and Policy
+      address: "55 Park Place NE, #464"
+      city: Atlanta
+      region: GA
+      country: USA
+      postal-code: 30303
   email: aheiss@gsu.edu
   orcid: 0000-0002-3948-3914
+  attributes:
+    corresponding: true
+correspondence-prefix: "Correspondence concerning this article should be addressed to"
 abstract: |
   China's 2016 Overseas NGO (ONGO) Law is part of a larger global trend of increased legal restrictions on international nongovernmental organizations (INGOs). A growing body of research analyzes the broad effects of this crackdown on INGOs, finding a divergence in formal *de jure* laws and the *de facto* implementation of those laws. The causes and mechanisms of this divergence remain less explored. Why do authoritarian governments allow—and often collaborate—with some INGOs while harshly regulating or expelling others? What determines the openness of the practical legal operating environment for INGOs? In this paper, we use the case of China to explore how political demands to both restrict and embrace INGOs have shaped the international nonprofit sector in the five years since the ONGO Law came into effect. We argue that in an effort to bolster regime stability, governments use civil society laws as policy tools to influence INGO behavior. We find that INGO issue areas, missions, and pre-existing relationships with local government officials influence the degree of operating space available for INGOs. We test this argument with a mixed methods research design, combining Bayesian analysis of administrative data from all formally registered INGOs with a comparative case study of two environmental INGOs. Our findings offer insights into the practical effects of INGO restrictions and the dynamics of closing civic space worldwide.
 keywords:
@@ -18,7 +29,7 @@ keywords:
   - civil society
   - authoritarianism
   - Chinese ONGO law
-word-count: 7,984
+word-count: "7,984"
 code-repo: "Access the code, data, and analysis at <https://github.com/andrewheiss/compassionate-clam>"
 bibliography: references.bib
 link-citations: true
@@ -641,7 +652,7 @@ Next, we explore the data in more depth by generating and analyzing posterior pr
 
 Several notable trends emerge from the model results. INGOs focused on arts and culture are overwhelmingly the most likely kind of organization to work nationally---arts and culture organizations are predicted to work in all 32 provinces `r p_issue$arts_and_culture.all_32_provinces$prop_ci_nice` of the time and are only predicted to work in a single province a rare `r p_issue$arts_and_culture.only_1_province$prop_ci_nice` of the time. Education-focused INGOs, on the other hand, are the least likely kind of organization to be registered in all 32 provinces and are predicted to do so only `r p_issue$education.all_32_provinces$prop_ci_nice` of the time. Education INGOs are the most likely to be registered in only one province, with that predicted outcome appearing `r p_issue$education.only_1_province$prop_ci_nice` of the time, 15--20 percentage points higher than any other issue area's predicted proportion. All other issue areas follow roughly similar patterns in predictions: the most common outcome is for organizations to work nationally (≈45--60% of the time), followed by working in at least 2 provinces (≈25--35% of the time), followed by working in a single province (≈15--30% of the time). @fig-issue-preds(b) shows the continuous posterior distribution of the average number of provinces INGOs are expected to be registered in across all types of issue areas, but accounting for the 1- and 32-only provinces simultaneously. We can see a similar trend---arts and culture INGOs are predicted to work in `r c_issue$arts_and_culture$range` provinces on average, while education INGOs are only predicted to work in `r c_issue$education$range`. All other issues range between 15--25 provinces.
 
-```{r fig-issue-preds, fig.width=8, fig.height=6.5}
+```{r fig-issue-preds, fig.width=8.5, fig.height=7.5}
 #| include: true
 #| echo: false
 #| column: body-outset
