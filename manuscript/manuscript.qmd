@@ -18,7 +18,7 @@ keywords:
   - civil society
   - authoritarianism
   - Chinese ONGO law
-word-count: 7984
+word-count: 7,984
 code-repo: "Access the code, data, and analysis at <https://github.com/andrewheiss/compassionate-clam>"
 bibliography: references.bib
 link-citations: true
