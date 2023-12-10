@@ -24,6 +24,14 @@ author:
 correspondence-prefix: "Correspondence concerning this article should be addressed to"
 abstract: |
   China's 2016 Overseas NGO (ONGO) Law is part of a larger global trend of increased legal restrictions on international nongovernmental organizations (INGOs). A growing body of research analyzes the broad effects of this crackdown on INGOs, finding a divergence in formal *de jure* laws and the *de facto* implementation of those laws. The causes and mechanisms of this divergence remain less explored. Why do authoritarian governments allow—and often collaborate—with some INGOs while harshly regulating or expelling others? What determines the openness of the practical legal operating environment for INGOs? In this paper, we use the case of China to explore how political demands to both restrict and embrace INGOs have shaped the international nonprofit sector in the five years since the ONGO Law came into effect. We argue that in an effort to bolster regime stability, governments use civil society laws as policy tools to influence INGO behavior. We find that INGO issue areas, missions, and pre-existing relationships with local government officials influence the degree of operating space available for INGOs. We test this argument with a mixed methods research design, combining Bayesian analysis of administrative data from all formally registered INGOs with a comparative case study of two environmental INGOs. Our findings offer insights into the practical effects of INGO restrictions and the dynamics of closing civic space worldwide.
+additional-info: |
+  **Compliance with Ethical Standards:** This study does not involve human subjects, so the need for participant protection measures such as informed consent, confidentiality, and privacy safeguards was not applicable.
+  
+  **Data Availability:** All data and replication code will be made publicly available. Organization names will be omitted for anonymity.
+  
+  **Funding:** This research received no external funding.
+  
+  **Conflict of Interest:** The authors declare that they have no conflict of interest.
 keywords:
   - international NGOs
   - civil society
