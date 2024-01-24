@@ -147,4 +147,42 @@ We followed these rules for categorizing INGOs' stated missions into issue areas
 - **Health vs. Charity and humanitarian**: If activities only provide medical assistance to underprivileged communities, code as *Health*.
 - **Charity and humanitarian vs. General**: If there are overlapping issue areas (e.g., poverty alleviation, education, health), code as *General*, then code the apparent primary issue area as a second work area.
 
+
+# Comparison of the cases of TNC and Greenpeace
+
+@tbl-case-study summarizes the cases of TNC and Greenpeace. In addition to confirming the correlation between issue area and operational space found in the statistical model, the cases highlight how government preferences exert influence on both the degree of contentious programming INGOs are allowed to undertake and the severity of legal restrictions INGOs can face.
+
+::: {#tbl-case-study}
+
+\footnotesize
+\renewcommand*{\arraystretch}{1.75}
+
+```{r}
+#| label: table-case-study
+#| include: true
+
+compare_table <- read_csv(here::here("data", "manual_data", "table-case-study.csv"))
+
+compare_table |> 
+  gt(rowname_col = "Characteristic") |> 
+  cols_width(Characteristic ~ gt_pct(20), everything() ~ gt_pct(30)) |>
+  tab_style(
+    style = cell_text(v_align = "top"),
+    locations = cells_body()
+  ) |>
+  tab_style(
+    style = cell_text(v_align = "top", weight = "bold"),
+    locations = cells_stub()
+  ) |>
+  opts_theme() |> 
+  tab_options(
+    quarto.disable_processing = TRUE
+  )
+```
+
+Comparison of the work of The Nature Conservancy and Greenpeace in China
+
+:::
+
+
 # References
