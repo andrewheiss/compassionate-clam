@@ -386,28 +386,29 @@ China's ONGO law illustrates this dynamic well. The ONGO law requirement to part
 
 The strategic and individualized enforcement of broad civil society laws in authoritarian regimes creates a regulatory environment where each INGO faces a different set of constraints. We term this an INGO's "operational space," or the degree of legal and practical flexibility an organization faces in its target country. INGOs with a large amount of operational space can engage in a wider range of programs, address more contentious issues, and enjoy broader geographic scope without fear of interference from the host government, even in the presence of formal *de jure* restrictive INGO laws. Organizations with less operational space face stricter *de facto* regulatory environments and are more constrained in the programs, strategies, issues, and regions they can work on. 
 
-```{r fig-theory, fig.width=6, fig.height=1.75}
+```{r fig-theory, fig.width=6, fig.height=2}
 #| echo: false
 #| include: true
 #| warning: false
 #| message: false
 #| fig-cap: "Three proposed determinants of INGO operational space."
 theory_nodes <- tribble(
-  ~id, ~name, ~x, ~y, ~highlight,
-  1,   "Issue contentiousness", 2, 1, FALSE,
-  2,   "Operational space", 2, 0, TRUE,
-  3,   "Local focus", 3, 1, FALSE,
-  4,   "Government preferences", 1, 1, FALSE
+  ~id, ~name,                         ~x,   ~y, ~highlight,
+  1,   "INGO operational space",      2,    1,  "Outcome",
+  2,   "INGO issue\ncontentiousness", 2,    3,  "INGO",
+  3,   "INGO preferences\nand resources", 2.5,    2,  "INGO",
+  4,   "Government\npreferences",     1,    3,  "Government",
+  5,   "Enforcement of law",          1.5,  2,  "Government"
 )
 
 theory_edges <- tribble(
   ~from, ~to,
-  1, 2,
   3, 1,
-  3, 2,
-  1, 4,
-  4, 1,
-  4, 2
+  5, 1,
+  2, 4,
+  4, 2,
+  4, 5,
+  2, 5
 )
 
 theory_graph <- tbl_graph(nodes = theory_nodes, edges = theory_edges, directed = TRUE)
@@ -415,29 +416,38 @@ theory_graph <- tbl_graph(nodes = theory_nodes, edges = theory_edges, directed =
 ggraph(theory_graph, x = x, y = y) + 
   geom_edge_link(
     aes(
-      start_cap = label_rect(node1.name, padding = margin(10, 0, 10, -05, "pt")),
-      end_cap = label_rect(node2.name, padding = margin(10, -5, 10, -5, "pt"))
+      start_cap = label_rect(node1.name, padding = margin(6, 0, 6, 0, "pt")),
+      end_cap = label_rect(node2.name, padding = margin(6, 0, 6, 0, "pt"))
     ),
-    arrow = arrow(angle = 30, length = unit(6, "pt"), type = "closed"),
+    arrow = arrow(angle = 30, length = unit(4, "pt"), type = "closed"),
     edge_linewidth = 0.25
   ) +
   geom_node_label(
-    aes(x = x, y = y, label = name, fill = highlight), 
-    size = 3, label.r = unit(0, units = "pt"), fontface = "bold"
+    aes(x = x, y = y, label = name, fill = highlight, color = highlight), 
+    size = 3, label.r = unit(0, units = "pt"), fontface = "bold", lineheight = 1, label.size = NA
   ) +
   scale_x_continuous(expand = expansion(add = 0.4)) +
   scale_y_continuous(expand = expansion(add = 0.2)) +
-  scale_fill_manual(values = c("white", clrs[1]), guide = "none") +
+  scale_fill_manual(values = 
+      c("Government" = clrs[7], "INGO" = clrs[5], "Outcome" = clrs[1]), 
+    guide = "none"
+  ) +
+  scale_color_manual(values = 
+      c("Government" = "white", "INGO" = "white", "Outcome" = "black"), 
+    guide = "none"
+  ) +
   labs(x = NULL, y = NULL) +
   theme_ongo() +
   theme(
     panel.grid.major = element_blank(),
     panel.border = element_blank(),
-    axis.text = element_blank(),
+    axis.text = element_blank()
   )
 ```
 
-In @fig-theory, we propose that INGOs' issue areas, capturing the the interplay between INGO characteristics and government preferences is a key determinant of individual INGO operating space [@LiFarid:2023; @ChaudhryHeiss:2021]. INGO laws that are intentionally ambiguous with large room of discretion can serve as policy tools for authoritarian states to seek out INGOs that provide direct benefits, while avoiding INGOs that threaten their stability. For instance, states in need of foreign aid and development will be more open to INGOs working on those issues, while states looking for increased trade will seek out INGOs focused on economic partnerships. Because their primary issue areas are aligned with regime preferences, INGOs benefit from greater operational space and face fewer restrictions. In contrast, states engaged in human rights abuses or fearful of foreign influence over other domestic policies will reduce---or even close---the operational space allowed for INGOs addressing these issues. Notably, the arrow between government preferences and issue area is bidirectional, reflecting the government's ability to use civil society regulations to realign INGO programming in the regime's favor, and the INGO's potential ability to reshape government preferences [@Heiss:2019a]. Additionally, the natural scope of an INGO's activities influences its approved operational space outside of authoritarian stability-seeking calculus. Many INGOs have a mission that focuses on local issues and communities. Also, the timing the of registration and the choice of office location in various provinces with great disparities in socio-economic environment can influence the inherent scope of INGOs. We will account for such factors in the study too. 
+We sketch this relationship in @fig-theory, which demonstrates several key determinants of INGO operating space in authoritarian contexts. The left half of the diagram illustrates how the interplay of government preferences and INGO issue areas shapes how the government enforces its civil society laws, which in turn helps determine how much operating space an INGO can enjoy. In general, the alignment of an INGO's programming with government preferences determines how laws are enforced, which in turn helps determine how much operating space an INGO can enjoy. INGO laws that are intentionally ambiguous with large room for discretion can serve as policy tools for authoritarian states to seek out INGOs that provide direct benefits, while avoiding INGOs that threaten their stability [@LiFarid:2023; @ChaudhryHeiss:2021]. For instance, states in need of foreign aid and development assistance will be more open to INGOs working on those issues, while states looking for increased trade will seek out INGOs focused on economic partnerships. Because their primary issue areas are aligned with regime preferences, the practical *de facto* enforcement of civil society will be less strict and INGOs will benefit from greater operational space and face fewer restrictions. In contrast, states engaged in human rights abuses or fearful of foreign influence over other domestic policies will reduce---or even close---the operational space allowed for INGOs addressing these issues. Notably, the arrow between government preferences and issue area is bidirectional. Restrictive civil society regulations create a population of allowed INGOs aligned with government preferences, either by attracting safe and noncontentious organizations, or by encouraging potentially contentious organizations to "tame" their programming [@Bush:2015]. Conversely, once allowed in the country, INGOs can reshape government views and policies regarding both their given issue areas and civil society regulations more broadly [@Teets:2014; @Heiss:2019a].
+
+The right half of @fig-theory illustrates alternative determinants of INGO operational space that lie outside of organizations' potential contentiousness or relationships with the government. INGO preferences—that is, the strategy, mission, and goals—influence how much operational space is available in host countries. For instance, many INGOs have missions focused on local issues and communities—they work on specific projects with naturally limited scopes and have no need to expand their work. An INGO's available resources also determine its in-country flexibility. An organization with more funding, more employees, more connections with local regulators or politicians, or other types of resources can benefit from additional flexibility when working in its host country by, for instance, enjoying greater geographic access, more leeway in adherence to regulations, or a wider menu of possible strategies available to accomplish its mission. Organizations with fewer resources, on the other hand, will have more limited operational space. 
 
 To test the relationships between government preferences, INGO issue area, and INGO operational space, we apply this conceptual model to China's ONGO law. Previous research has looked at *A posteriori* (notes: I don't know if it is a correct use of latin words, I want to say how the INGO sector is like in a timeframe after the law) effects of civil society laws on a global scale [@LianMurdie:2023; @Chaudhry:2022], which naturally blurs the specific policy mechanisms regimes use for controlling and leveraging global civil society. By analyzing the population of formally registered INGOs between 2017–2021, we can more precisely explore how a single formal restrictive INGO law has shaped the operational space for foreign organizations working in the country. Specifically, we can observe exactly how the Chinese government has used the RO registration process to strategically limit the legal presence and potential reach of INGOs and reshape their issue areas. We conducted both a descriptive analysis of the composition of the issue areas of INGOs successfully registered under the INGO law and a regression analysis of the relationshp between INGO issue areas and their operational space.
 
