@@ -10,6 +10,24 @@ thead th {
   text-transform: none;
 }
 
+.table tfoot {
+  text-align: left;
+  font-size: 0.9em;
+}
+
+.table tfoot tr:first-child {
+  border-top: 1.5px solid #d3d8dc;
+
+  td {
+    padding-top: 0.5rem !important;
+  }
+}
+
+tfoot td {
+  padding-top: 0 !important;
+  padding-bottom: 0.3em !important;
+}
+
 .MathJax, .MathJax_Display {
   font-size: 100% !important;
 }

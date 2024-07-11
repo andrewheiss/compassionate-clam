@@ -64,8 +64,7 @@ knitr::opts_chunk$set(
 
 options(
   digits = 3, width = 120,
-  dplyr.summarise.inform = FALSE,
-  knitr.kable.NA = ""
+  dplyr.summarise.inform = FALSE
 )
 ```
 
@@ -81,7 +80,7 @@ library(ggraph)
 library(patchwork)
 library(glue)
 library(janitor)
-library(gt)
+library(tinytable)
 library(targets)
 
 # Generated via random.org
@@ -103,7 +102,6 @@ tar_load(c(preds_issue_plot, preds_local_plot, preds_timing_plot))
 
 # Plotting and modelsummary functions
 invisible(list2env(tar_read(graphic_functions), .GlobalEnv))
-invisible(list2env(tar_read(table_functions), .GlobalEnv))
 
 theme_set(theme_ongo())
 set_annotation_fonts()
@@ -550,14 +548,11 @@ Our key independent variables correspond to each of our three theoretical expect
 
 The composition of INGOs successfully got registered under the ONGO law shows that the populations of INGOs that are allowed a long-standing legal presence are predominantly trade and economic organisations and industry associations, or non-civil-society organizations. 
 
-::: {#tbl-issues}
-
-\footnotesize
-\renewcommand*{\arraystretch}{1.75}
-
 ```{r}
-#| label: table-issues
+#| label: tbl-issues
+#| tbl-cap: "Possible INGO issue areas and example organizations"
 #| include: true
+
 tribble(
   ~Issue, ~Examples,
   "Arts and culture", "World Dance Council; Special Olympics",
@@ -569,30 +564,20 @@ tribble(
   "Health", "American Heart Association; Operation Smile",
   "Industry association", "World Cement Association; Colombian Coffee Growers Federation",
   "Science and technology", "Royal Aeronautical Society; American Society of Civil Engineers"
-) |> 
-  gt() |> 
-  tab_footnote(
-    footnote = "Includes poverty alleviation, disaster relief, rural development, etc.",
-    locations = cells_body(columns = Issue, rows = 2)
-  ) |> 
-  tab_footnote(
-    footnote = "Includes grant-making organizations, organizations working on general international communication, and organizations working on multiple non-overlapping issues",
-    locations = cells_body(columns = Issue, rows = 6)
-  ) |> 
-  cols_width(Issue ~ gt_pct(20), Examples ~ gt_pct(50)) |> 
-  tab_style(
-    style = cell_text(v_align = "top"),
-    locations = cells_body()
+) |>
+  tt(
+    width = c(20, 50),
+    notes = list(
+      "1" = list(i = 2, j = 1, text = "Includes poverty alleviation, disaster relief, rural development, etc."),
+      "2" = list(i = 6, j = 1, text = "Includes grant-making organizations, organizations working on general international communication, and organizations working on multiple non-overlapping issues")
+    )
   ) |>
-  opts_theme() |> 
-  tab_options(
-    quarto.disable_processing = TRUE
+  style_tt(j = 1:2, align = "l") |>
+  style_tt(
+    bootstrap_class = "table table-sm",
+    tabularray_inner = "rowsep=1pt, cells={font=\\footnotesize}"
   )
 ```
-
-Possible INGO issue areas and example organizations
-
-:::
 
 ```{r fig-issue-props, fig.width=6, fig.height=3}
 #| include: true
