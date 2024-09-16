@@ -1,7 +1,7 @@
 ---
 title: "Enforcing Boundaries: China's Overseas NGO Law and Operational Constraints for Global Civil Society"
 short-title: "Enforcing Boundaries"
-date: "2024-02-23"
+date: "2024-09-16"
 author:
 - name: Meng Ye
   affiliation: Georgia State University
