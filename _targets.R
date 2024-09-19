@@ -75,6 +75,9 @@ list(
   tar_target(preds_local, f_preds_local(m_full_ordbeta)),
   tar_target(preds_timing, f_preds_timing(m_full_ordbeta)),
   
+  # Build tables here because they take a while
+  tar_target(models_tbl, build_modelsummary(list(m_full_ordbeta, m_full_ordbeta_interaction))),
+  
   tar_target(epreds_issue, f_epreds_issue(m_full_ordbeta, issue_indicator_lookup)),
   tar_target(epreds_local, f_epreds_local(m_full_ordbeta)),
   tar_target(epreds_timing, f_epreds_timing(m_full_ordbeta)),
@@ -84,15 +87,9 @@ list(
   tar_target(preds_local_plot, build_preds_local_plot_data(preds_local)),
   tar_target(preds_timing_plot, build_preds_timing_plot_data(preds_timing)),
   
-  ## Analysis notebook ----
-  tar_quarto(manuscript_nice, path = "manuscript", quiet = FALSE, profile = "nice"),
-  tar_quarto(appendix_nice, path = "manuscript", quiet = FALSE, profile = "appendix-nice"),
-  tar_quarto(manuscript_manuscripty, path = "manuscript", quiet = FALSE, profile = "ms"),
-  tar_quarto(appendix_manuscripty, path = "manuscript", quiet = FALSE, profile = "appendix-ms"),
+  ## Manuscript and analysis notebook ----
+  tar_quarto(manuscript, path = "manuscript", quiet = FALSE),
   tar_quarto(website, path = ".", quiet = FALSE),
-  
-  # Build tables here because they take a while
-  tar_target(models_tbl, build_modelsummary(list(m_full_ordbeta, m_full_ordbeta_interaction))),
   
   tar_target(deploy_script, here_rel("deploy.sh"), format = "file"),
   tar_target(deploy, {

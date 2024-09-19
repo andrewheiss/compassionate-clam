@@ -18,6 +18,13 @@ manuscript/output/
 *.log
 *.aux
 manuscript/manuscript.tex
+manuscript/output/
+manuscript/submissions/
+manuscript/*_files/
+manuscript/*.html.md
+manuscript/*.pdf.md
+manuscript/*.docx.md
+manuscript/*.odt.md
 
 !manuscript/html/title-metadata.html
 
